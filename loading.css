@@ -1,0 +1,29 @@
+/* Ensure body uses full viewport and flexbox centering */
+body, html {
+  margin: 0;
+  padding: 0;
+  height: 100%;
+  width: 100%;
+background: linear-gradient(135deg, #aa367c, #4a2fbd);
+  font-family: 'Segoe UI', sans-serif;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+/* This wraps everything and keeps it centered */
+#landing-page {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  color: white;
+}
+
+/* Center the Lottie animation */
+#lottie-animation {
+  width: 100%;
+  max-width: 300px;
+  height: auto;
+  margin: 0 auto;
+}
