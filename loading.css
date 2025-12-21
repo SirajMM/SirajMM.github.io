@@ -1,0 +1,152 @@
+body,
+html {
+  margin: 0;
+  padding: 0;
+  height: 100%;
+  width: 100%;
+  overflow: hidden;
+  font-family: 'Montserrat', 'Poppins', sans-serif;
+  background-color: #000;
+  /* Behind the curtain */
+}
+
+/* Container for the loading screen (curtains) */
+#loading-container {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 9999;
+  display: flex;
+  pointer-events: all;
+}
+
+/* Base style for both curtain panels */
+.curtain-panel {
+  position: absolute;
+  top: 0;
+  height: 100%;
+  width: 50%;
+  /* Deep Blue Velvet Base */
+  background-color: #1a1a2e;
+
+  /* 
+     REALISTIC FOLDS: 
+     We overlay a repeating gradient of lighter/darker vertical bands 
+     to simulate the 3D shape of draped fabric.
+  */
+  background-image: repeating-linear-gradient(90deg,
+      rgba(255, 255, 255, 0.03) 0%,
+      rgba(255, 255, 255, 0.03) 2%,
+      rgba(0, 0, 0, 0.4) 6%,
+      rgba(0, 0, 0, 0.6) 10%,
+      rgba(255, 255, 255, 0.03) 14%);
+
+  display: flex;
+  align-items: center;
+
+  /* "Heavy" physics: Starts slow (inertia), speeds up, then heavy stop */
+  transition: transform 1.8s cubic-bezier(0.7, 0, 0.2, 1);
+
+  overflow: hidden;
+
+  /* Deep shadow behind the curtain to lift it off the "stage" */
+  box-shadow: 0 0 50px 10px rgba(0, 0, 0, 0.8);
+}
+
+/* Left Panel */
+.left {
+  left: 0;
+  justify-content: flex-end;
+  /* Text to right edge */
+
+  /* The "Seam": Darker edge where they meet */
+  border-right: 2px solid rgba(0, 0, 0, 0.6);
+
+  /* Inner shadow to round the edge */
+  box-shadow:
+    inset -40px 0 100px -20px rgba(0, 0, 0, 0.8),
+    /* Deep fold at seam */
+    10px 0 30px rgba(0, 0, 0, 0.8);
+  /* Cast shadow onto right curtain (if overlapping slightly) */
+  z-index: 2;
+  /* Slight overlap priority */
+}
+
+/* Right Panel */
+.right {
+  right: 0;
+  justify-content: flex-start;
+  /* Text to left edge */
+
+  /* The "Seam" */
+  border-left: 2px solid rgba(0, 0, 0, 0.6);
+
+  /* Inner shadow to round the edge */
+  box-shadow: inset 40px 0 100px -20px rgba(0, 0, 0, 0.8);
+  z-index: 1;
+}
+
+/* Container for text */
+.text-container {
+  padding: 0;
+  margin: 0;
+  white-space: nowrap;
+}
+
+h1 {
+  font-size: 8vw;
+  margin: 0;
+  color: #f0f0f0;
+  text-transform: uppercase;
+  letter-spacing: 5px;
+  font-weight: 800;
+  line-height: 1;
+
+  /* Text looks embossed on the fabric */
+  text-shadow:
+    0 2px 5px rgba(0, 0, 0, 0.8),
+    0 0 40px rgba(0, 0, 0, 0.4);
+
+  transition: opacity 0.8s ease-out, transform 1.8s cubic-bezier(0.7, 0, 0.2, 1);
+}
+
+/* Adjust margins for perfect center kiss */
+.left h1 {
+  margin-right: -0.05em;
+  /* Tighter kiss */
+  background: linear-gradient(to right, #fff 50%, #ccc 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.right h1 {
+  margin-left: -0.05em;
+  background: linear-gradient(to left, #fff 50%, #ccc 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+
+/* --- ANIMATION STATES --- */
+
+#loading-container.open {
+  pointer-events: none;
+}
+
+#loading-container.open .left {
+  transform: translateX(-105%);
+  /* Move fully off-screen with buffer */
+}
+
+#loading-container.open .right {
+  transform: translateX(105%);
+}
+
+#loading-container.open h1 {
+  opacity: 0;
+  transform: scale(0.9);
+  /* Text shrinks slightly as it vanishes */
+  transition-delay: 0.1s;
+}
