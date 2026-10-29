@@ -591,7 +591,7 @@ html:not(.js) .qr { display: none; }
 .about { display: grid; grid-template-columns: repeat(12, minmax(0, 1fr)); gap: 48px clamp(24px, 4vw, 64px); align-items: center; }
 .about-photo { grid-column: 1 / span 5; position: relative; padding: 9%; }
 .about-photo picture { position: relative; z-index: 1; }
-.about-photo img { width: 100%; border-radius: 3px; filter: saturate(.82) contrast(1.02); transition: clip-path 1400ms var(--ease-out), transform 1600ms var(--ease-out); clip-path: inset(0 0 0 0); }
+.about-photo img { width: 100%; border-radius: 3px; filter: saturate(.92) contrast(1.02); transition: clip-path 1400ms var(--ease-out), transform 1600ms var(--ease-out); clip-path: inset(0 0 0 0); }
 .js .about-photo:not(.in-view) img { clip-path: inset(100% 0 0 0); transform: scale(1.08); }
 .guilloche-photo { inset: -6% -6% -6% -6%; width: 112%; height: 112%; opacity: .45; rotate: calc(var(--rot, 0) * 1deg); }
 .about-text { grid-column: 7 / -1; }
