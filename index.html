@@ -66,15 +66,19 @@
   </header>
 
   <main id="main">
-    <!-- HERO -->
-    <section class="hero" id="top" aria-labelledby="hero-name">
-      <svg class="guilloche" id="guilloche" aria-hidden="true" viewBox="-500 -500 1000 1000"></svg>
+    <!-- ================= HERO ================= -->
+    <section class="hero" id="top" aria-label="Introduction">
+      <div class="hero-depth" aria-hidden="true">
+        <svg class="guilloche" id="guilloche" viewBox="-500 -500 1000 1000"></svg>
+        <span class="halo"></span>
+      </div>
+
+      <h1 class="name" id="hero-name" aria-label="Muhammad Siraj M M">
+        <span class="name-line" aria-hidden="true"><span class="name-word" data-split>Muhammad</span></span>
+        <span class="name-line" aria-hidden="true"><span class="name-word" data-split>Siraj&nbsp;M&nbsp;M</span></span>
+      </h1>
 
       <div class="hero-copy">
-        <h1 class="name" id="hero-name">
-          <span class="name-line"><span>Muhammad</span></span>
-          <span class="name-line"><span>Siraj&nbsp;M&nbsp;M</span></span>
-        </h1>
         <p class="lede">Fintech apps that ship to Android, iOS, macOS and Windows from one Flutter codebase.</p>
         <p class="sub">Mobile Application Developer at ThoughtBox Online Services in Kochi. Three years of Flutter, most of it on exchange, remittance and payment apps.</p>
         <div class="actions">
@@ -84,13 +88,6 @@
       </div>
 
       <figure class="stage" id="stage">
-        <div class="switch" role="group" aria-label="Preview the same screen on a platform">
-          <button type="button" data-p="android" aria-pressed="true">Android</button>
-          <button type="button" data-p="ios" aria-pressed="false">iOS</button>
-          <button type="button" data-p="macos" aria-pressed="false">macOS</button>
-          <button type="button" data-p="windows" aria-pressed="false">Windows</button>
-        </div>
-
         <div class="stage-frame">
           <div class="device" id="device" data-platform="android">
             <div class="chrome-desk" aria-hidden="true">
@@ -110,24 +107,20 @@
 
               <div class="app-main">
                 <div class="app-head"><span>Send money</span><span class="app-avatar">MS</span></div>
-
                 <div class="quote">
                   <div class="quote-row"><small>You send</small><strong>1,000.00 <em>QAR</em></strong></div>
                   <div class="quote-rate"><span>1 QAR = 22.94 INR</span><span>Fee 15.00 QAR</span></div>
                   <div class="quote-row"><small>They receive</small><strong>22,940.00 <em>INR</em></strong></div>
                 </div>
-
                 <div class="payee">
                   <span class="payee-dot">AK</span>
                   <span class="payee-text"><b>Anil Kumar</b><small>Bank account ending 4821</small></span>
                   <span class="payee-chev"></span>
                 </div>
-
                 <div class="payout">
                   <span><small>Pay out</small>Bank deposit</span>
                   <span><small>Arrives</small>Today</span>
                 </div>
-
                 <span class="app-cta">Review transfer</span>
               </div>
 
@@ -144,22 +137,75 @@
           </div>
         </div>
 
-        <figcaption>One widget tree, four platforms. Illustrative screen with sample data; client apps are under NDA.</figcaption>
+        <div class="stage-foot">
+          <div class="switch" role="group" aria-label="Preview the same screen on a platform">
+            <button type="button" data-p="android" aria-pressed="true">Android</button>
+            <button type="button" data-p="ios" aria-pressed="false">iOS</button>
+            <button type="button" data-p="macos" aria-pressed="false">macOS</button>
+            <button type="button" data-p="windows" aria-pressed="false">Windows</button>
+          </div>
+          <figcaption>One widget tree on four platforms. Illustrative screen with sample data; client apps are under NDA.</figcaption>
+        </div>
       </figure>
     </section>
 
-    <!-- WORK -->
-    <section class="section" id="work" aria-labelledby="work-title">
-      <div class="section-head">
-        <h2 id="work-title">Selected work</h2>
-        <p>Two products from my jobs, described within what an NDA allows, and two personal apps you can read line by line on GitHub.</p>
+    <!-- ================= WORK ================= -->
+    <section class="section work" id="work" aria-labelledby="work-title">
+      <div class="work-head">
+        <h2 id="work-title" class="split-title">Selected work</h2>
+        <ol class="work-index" aria-label="Projects on this page">
+          <li><a href="#case-fintech"><span>Fintech suite for exchange houses</span><small>2024 to now</small></a></li>
+          <li><a href="#case-ride"><span>Cab booking with live tracking</span><small>2023 to 2024</small></a></li>
+          <li><a href="#build-quibix"><span>Quibix, electronics store</span><small>2023</small></a></li>
+          <li><a href="#build-blaze"><span>Blaze Player, offline music</span><small>2023</small></a></li>
+        </ol>
       </div>
 
-      <article class="case case-fintech" aria-labelledby="case-fintech">
-        <div class="case-text">
+      <!-- Case: fintech -->
+      <article class="case case-fintech" id="case-fintech" aria-labelledby="case-fintech-title">
+        <header class="case-head">
           <p class="case-when">ThoughtBox Online Services, 2024 to now</p>
-          <h3 id="case-fintech">A fintech suite for exchange houses</h3>
+          <h3 id="case-fintech-title">A fintech suite for exchange houses</h3>
           <p class="case-intro">Customer apps for currency exchange and remittance, plus a back-office app, built in Flutter for Android, iOS, macOS and Windows.</p>
+        </header>
+
+        <figure class="suite" data-reveal>
+          <div class="suite-win" aria-hidden="true">
+            <div class="sw-bar"><span class="lights"><i></i><i></i><i></i></span><span>Back office</span></div>
+            <div class="sw-body">
+              <nav class="sw-side"><b>Remit</b><span>Dashboard</span><span class="is-on">Transfers</span><span>Customers</span><span>Screening</span><span>Rates</span></nav>
+              <div class="sw-main">
+                <div class="sw-top">
+                  <b>Transfers today</b>
+                  <span class="sw-kpis"><span><small>Corridor</small>QAR to INR</span><span><small>Rate</small>22.94</span></span>
+                </div>
+                <table class="sw-table">
+                  <thead><tr><th>Ref</th><th>Beneficiary</th><th>Amount</th><th>Status</th></tr></thead>
+                  <tbody>
+                    <tr><td>TR-2041</td><td>Anil Kumar</td><td>1,000.00 QAR</td><td><i class="chip ok">Paid</i></td></tr>
+                    <tr><td>TR-2042</td><td>Fathima R.</td><td>350.00 QAR</td><td><i class="chip">Pending</i></td></tr>
+                    <tr><td>TR-2043</td><td>Joseph M.</td><td>2,400.00 QAR</td><td><i class="chip warn">Review</i></td></tr>
+                    <tr><td>TR-2044</td><td>Priya S.</td><td>780.00 QAR</td><td><i class="chip ok">Paid</i></td></tr>
+                    <tr><td>TR-2045</td><td>Rahul N.</td><td>120.00 QAR</td><td><i class="chip ok">Paid</i></td></tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+
+          <div class="suite-phone phone-shell" aria-hidden="true">
+            <div class="qr-screen">
+              <p class="qr-title">AANI payment</p>
+              <p class="qr-amt">245.00 <em>AED</em></p>
+              <svg class="qr" id="qr" viewBox="0 0 29 29" shape-rendering="crispEdges"></svg>
+              <p class="qr-note">Scan with your banking app</p>
+              <span class="qr-status">Waiting for payment</span>
+            </div>
+          </div>
+          <figcaption>Illustrative composition with sample data: a back-office window on desktop and an instant-payment QR on mobile, from the same codebase. Not screenshots of client apps.</figcaption>
+        </figure>
+
+        <div class="case-body">
           <dl class="facts">
             <div><dt>Architecture</dt><dd>Designed the BLoC architecture and design tokens shared across the apps.</dd></div>
             <div><dt>Backend</dt><dd>Integrated the Go backend over gRPC.</dd></div>
@@ -167,39 +213,57 @@
             <div><dt>Security</dt><dd>Led remediation of VAPT findings.</dd></div>
             <div><dt>Release</dt><dd>Managed Play Store staged rollouts and forced updates.</dd></div>
           </dl>
-        </div>
 
-        <figure class="case-visual stack-visual" data-reveal>
-          <ol class="stack" aria-label="Layers shared by every app in the suite, top to bottom">
-            <li class="plate plate-platforms"><span>Android</span><span>iOS</span><span>macOS</span><span>Windows</span></li>
-            <li class="plate"><b>Design tokens and widget library</b><small>One look, themed per app</small></li>
-            <li class="plate"><b>BLoC feature modules</b><small>Predictable state, testable logic</small></li>
-            <li class="plate"><b>gRPC repositories</b><small>Typed calls, generated from protos</small></li>
-            <li class="plate plate-base"><b>Go services</b><small>Rates, transfers, compliance</small></li>
-          </ol>
-          <figcaption>How the suite is layered: everything above the backend is shared Flutter code.</figcaption>
-        </figure>
+          <figure class="stack-visual" data-reveal>
+            <div class="stack-wrap">
+              <ol class="stack" aria-label="Layers shared by every app in the suite, top to bottom">
+                <li class="plate plate-platforms"><span>Android</span><span>iOS</span><span>macOS</span><span>Windows</span></li>
+                <li class="plate"><b>Design tokens and widget library</b><small>One look, themed per app</small></li>
+                <li class="plate"><b>BLoC feature modules</b><small>Predictable state, testable logic</small></li>
+                <li class="plate"><b>gRPC repositories</b><small>Typed calls generated from protos</small></li>
+                <li class="plate plate-base"><b>Go services</b><small>Rates, transfers, compliance</small></li>
+              </ol>
+              <span class="bracket bracket-shared" aria-hidden="true"><i>Shared Flutter code</i></span>
+              <span class="bracket bracket-backend" aria-hidden="true"><i>Backend</i></span>
+            </div>
+            <figcaption>How the suite is layered: everything above the backend is one Flutter codebase.</figcaption>
+          </figure>
+        </div>
       </article>
 
-      <article class="case case-ride" aria-labelledby="case-ride">
-        <figure class="case-visual route-visual" data-reveal>
-          <svg viewBox="0 0 560 420" role="img" aria-labelledby="route-t">
+      <!-- Case: ride -->
+      <article class="case case-ride" id="case-ride" aria-labelledby="case-ride-title">
+        <figure class="ride" data-reveal>
+          <svg class="ride-map" viewBox="0 0 640 460" role="img" aria-labelledby="route-t">
             <title id="route-t">Illustration of a cab route from pickup to drop-off</title>
             <g class="map-grid">
-              <path d="M0 70H560M0 160H560M0 250H560M0 340H560M90 0V420M210 0V420M330 0V420M450 0V420"/>
-              <path class="map-major" d="M0 205C120 190 180 120 300 110S470 150 560 60M140 420C160 330 250 300 270 220S260 60 300 0"/>
+              <path d="M0 80H640M0 180H640M0 280H640M0 380H640M100 0V460M230 0V460M360 0V460M490 0V460"/>
+              <path class="map-major" d="M0 228C130 212 200 132 330 122S540 166 640 70M150 460C172 362 270 330 292 242S284 66 330 0"/>
             </g>
-            <path id="route" class="route" pathLength="1" d="M86 352C140 340 170 300 200 268S262 230 290 214 330 176 352 150 420 112 474 92"/>
-            <circle class="pin pin-a" cx="86" cy="352" r="9"/>
-            <circle class="pin pin-b" cx="474" cy="92" r="9"/>
-            <g class="car"><circle r="12"/><circle class="car-core" r="5"/></g>
+            <path id="route" class="route" pathLength="1" d="M96 392C150 378 186 332 218 296S286 254 316 236 360 194 386 166 462 124 520 102"/>
+            <circle class="pin pin-a" cx="96" cy="392" r="10"/>
+            <circle class="pin pin-b" cx="520" cy="102" r="10"/>
+            <g class="car"><circle r="14"/><circle class="car-core" r="6"/></g>
           </svg>
-          <figcaption>Illustration, not a screenshot. The real app tracked the driver live on Google Maps.</figcaption>
+
+          <div class="ride-phone phone-shell" aria-hidden="true">
+            <div class="ride-screen">
+              <div class="ride-mini"></div>
+              <div class="ride-sheet">
+                <span class="grab"></span>
+                <p class="eta"><b>Driver arriving</b><span>4 min</span></p>
+                <div class="driver"><span class="drv-dot">RK</span><span><b>Ravi K.</b><small>White hatchback</small></span></div>
+                <p class="pay-label">Pay with</p>
+                <div class="pay"><span class="is-on">Razorpay</span><span>Card via Stripe</span></div>
+              </div>
+            </div>
+          </div>
+          <figcaption>Illustration, not a screenshot. The real app tracked the driver live on Google Maps and took payment through Razorpay and Stripe.</figcaption>
         </figure>
 
         <div class="case-text">
           <p class="case-when">Spoider Innovations, 2023 to 2024</p>
-          <h3 id="case-ride">A cab booking app with live tracking</h3>
+          <h3 id="case-ride-title">A cab booking app with live tracking</h3>
           <p class="case-intro">My first production Flutter app: riders book a cab and watch it arrive.</p>
           <dl class="facts">
             <div><dt>Maps</dt><dd>Built live driver tracking with Google Maps.</dd></div>
@@ -209,109 +273,139 @@
         </div>
       </article>
 
+      <!-- Personal builds -->
       <div class="builds">
-        <h3 class="builds-title">Built on my own time</h3>
+        <h3 class="builds-title">Built on my own time, with real screenshots</h3>
 
-        <article class="build">
-          <a class="build-shot" href="https://github.com/SirajMM/Quibix-ecommerce-app" target="_blank" rel="noopener" tabindex="-1" aria-hidden="true">
-            <picture><source srcset="img/quibix.webp" type="image/webp"><img src="img/quibix.jpg" alt="" width="1600" height="900" loading="lazy" decoding="async"></picture>
-          </a>
+        <article class="build build-quibix" id="build-quibix" aria-labelledby="quibix-title">
+          <figure class="fan" data-reveal>
+            <div class="phone-shell fan-1"><picture><source srcset="img/screens/quibix-detail.webp" type="image/webp"><img src="img/screens/quibix-detail.jpg" alt="Quibix product detail screen for headphones with colour options and specifications" width="450" height="969" loading="lazy" decoding="async"></picture></div>
+            <div class="phone-shell fan-2"><picture><source srcset="img/screens/quibix-home.webp" type="image/webp"><img src="img/screens/quibix-home.jpg" alt="Quibix home screen with a sale banner, category filters and a product grid" width="450" height="967" loading="lazy" decoding="async"></picture></div>
+            <div class="phone-shell fan-3"><picture><source srcset="img/screens/quibix-track.webp" type="image/webp"><img src="img/screens/quibix-track.jpg" alt="Quibix order tracking screen with a timeline from order placed to delivered" width="448" height="969" loading="lazy" decoding="async"></picture></div>
+          </figure>
           <div class="build-text">
-            <h4>Quibix, an electronics store</h4>
-            <p>Browse, wishlist, pay and track an order. Firebase Auth with Google sign-in, Firestore and Storage behind it, Razorpay at checkout, and Provider state split into presentation, application and infrastructure layers.</p>
             <p class="build-meta">Flutter, Firebase, Razorpay, 2023</p>
+            <h4 id="quibix-title">Quibix, an electronics store</h4>
+            <p>Browse, wishlist, pay and track an order. Firebase Auth with Google sign-in, Firestore and Storage behind it, Razorpay at checkout, and Provider state split into presentation, application and infrastructure layers.</p>
             <a class="link" href="https://github.com/SirajMM/Quibix-ecommerce-app" target="_blank" rel="noopener">Read the source</a>
           </div>
         </article>
 
-        <article class="build build-flip">
-          <a class="build-shot" href="https://github.com/SirajMM/MusicPlayer" target="_blank" rel="noopener" tabindex="-1" aria-hidden="true">
-            <picture><source srcset="img/blaze.webp" type="image/webp"><img src="img/blaze.jpg" alt="" width="1600" height="900" loading="lazy" decoding="async"></picture>
-          </a>
+        <article class="build build-blaze" id="build-blaze" aria-labelledby="blaze-title">
           <div class="build-text">
-            <h4>Blaze Player, an offline music player</h4>
-            <p>Plays the songs already on your phone. Playlists, favourites, recently and most played are stored in Hive, and playback keeps going in the background with a mini player on every screen.</p>
             <p class="build-meta">Flutter, Hive, Provider, 2023</p>
+            <h4 id="blaze-title">Blaze Player, an offline music player</h4>
+            <p>Plays the songs already on your phone. Playlists, favourites, recently and most played are stored in Hive, and playback keeps going in the background with a mini player on every screen.</p>
             <a class="link" href="https://github.com/SirajMM/MusicPlayer" target="_blank" rel="noopener">Read the source</a>
           </div>
+          <figure class="duo" data-reveal>
+            <div class="phone-shell duo-1"><picture><source srcset="img/screens/blaze-home.webp" type="image/webp"><img src="img/screens/blaze-home.jpg" alt="Blaze Player library with recently and most played, and a song list above the mini player" width="302" height="651" loading="lazy" decoding="async"></picture></div>
+            <div class="phone-shell duo-2"><picture><source srcset="img/screens/blaze-fav.webp" type="image/webp"><img src="img/screens/blaze-fav.jpg" alt="Blaze Player favourite songs screen with shuffle and play buttons" width="302" height="651" loading="lazy" decoding="async"></picture></div>
+          </figure>
         </article>
       </div>
     </section>
 
-    <!-- CAPABILITIES -->
-    <section class="section" id="skills" aria-labelledby="skills-title">
-      <div class="section-head">
-        <h2 id="skills-title">What I build with</h2>
+    <svg class="divider" aria-hidden="true" viewBox="0 0 1200 60" preserveAspectRatio="none" data-band data-reveal></svg>
+
+    <!-- ================= CAPABILITIES ================= -->
+    <section class="section skills" id="skills" aria-labelledby="skills-title">
+      <div class="skills-head">
+        <h2 id="skills-title" class="split-title">What I build with</h2>
         <p>Grouped by the problem each tool solves, from the screen down to the store listing.</p>
       </div>
-      <dl class="caps">
-        <div class="cap">
-          <dt>Cross-platform Flutter</dt>
-          <dd><p>One Dart codebase for Android, iOS, macOS, Windows and the web, with layouts that adapt to each screen instead of stretching.</p><span>Flutter, Dart, Flutter Web</span></dd>
+      <div class="caps" id="caps">
+        <div class="caps-list" role="tablist" aria-label="Capabilities" hidden>
+          <button type="button" role="tab" id="cap-t1" aria-controls="cap-1" aria-selected="true">Cross-platform Flutter</button>
+          <button type="button" role="tab" id="cap-t2" aria-controls="cap-2" aria-selected="false" tabindex="-1">App architecture</button>
+          <button type="button" role="tab" id="cap-t3" aria-controls="cap-3" aria-selected="false" tabindex="-1">Backend and data</button>
+          <button type="button" role="tab" id="cap-t4" aria-controls="cap-4" aria-selected="false" tabindex="-1">Payments and security</button>
+          <button type="button" role="tab" id="cap-t5" aria-controls="cap-5" aria-selected="false" tabindex="-1">Shipping</button>
         </div>
-        <div class="cap">
-          <dt>App architecture</dt>
-          <dd><p>Feature modules with clear state, shared design tokens and a reusable widget library.</p><span>BLoC, GetX, Provider</span></dd>
+        <div class="caps-panels">
+          <section class="cap" id="cap-1" role="tabpanel" aria-labelledby="cap-t1">
+            <h3>Cross-platform Flutter</h3>
+            <p>One Dart codebase for Android, iOS, macOS, Windows and the web, with layouts that adapt to each screen instead of stretching.</p>
+            <p class="cap-tools">Flutter, Dart, Flutter Web</p>
+            <a class="cap-where" href="#top">See it in the hero preview</a>
+          </section>
+          <section class="cap" id="cap-2" role="tabpanel" aria-labelledby="cap-t2">
+            <h3>App architecture</h3>
+            <p>Feature modules with clear state, shared design tokens and a reusable widget library.</p>
+            <p class="cap-tools">BLoC, GetX, Provider</p>
+            <a class="cap-where" href="#case-fintech">See the layered suite</a>
+          </section>
+          <section class="cap" id="cap-3" role="tabpanel" aria-labelledby="cap-t3">
+            <h3>Backend and data</h3>
+            <p>Typed service calls to Go backends, REST APIs, cloud data and on-device storage.</p>
+            <p class="cap-tools">gRPC, Go, REST, Firebase, Hive</p>
+            <a class="cap-where" href="#build-quibix">See Firebase in Quibix</a>
+          </section>
+          <section class="cap" id="cap-4" role="tabpanel" aria-labelledby="cap-t4">
+            <h3>Payments and security</h3>
+            <p>Instant-payment QR, card gateways, and fixing what a penetration test finds.</p>
+            <p class="cap-tools">AANI, Razorpay, Stripe, VAPT remediation</p>
+            <a class="cap-where" href="#case-ride">See the payment flows</a>
+          </section>
+          <section class="cap" id="cap-5" role="tabpanel" aria-labelledby="cap-t5">
+            <h3>Shipping</h3>
+            <p>Staged store rollouts, forced updates, and builds that run on every push.</p>
+            <p class="cap-tools">Play Store, App Store, CI/CD, Git, Figma</p>
+            <a class="cap-where" href="#experience">See where I shipped</a>
+          </section>
         </div>
-        <div class="cap">
-          <dt>Backend and data</dt>
-          <dd><p>Typed service calls to Go backends, REST APIs, cloud data and on-device storage.</p><span>gRPC, Go, REST, Firebase, Hive</span></dd>
-        </div>
-        <div class="cap">
-          <dt>Payments and security</dt>
-          <dd><p>Instant-payment QR, card gateways, and fixing what a penetration test finds.</p><span>AANI, Razorpay, Stripe, VAPT remediation</span></dd>
-        </div>
-        <div class="cap">
-          <dt>Shipping</dt>
-          <dd><p>Staged store rollouts, forced updates, and builds that run on every push.</p><span>Play Store, App Store, CI/CD, Git, Figma</span></dd>
-        </div>
-      </dl>
+      </div>
     </section>
 
-    <!-- EXPERIENCE -->
-    <section class="section" id="experience" aria-labelledby="exp-title">
-      <div class="section-head">
-        <h2 id="exp-title">Experience</h2>
-        <p>From a ride-hailing startup to fintech products used across platforms.</p>
+    <!-- ================= EXPERIENCE ================= -->
+    <section class="section experience" id="experience" aria-labelledby="exp-title">
+      <h2 id="exp-title" class="split-title">Experience</h2>
+
+      <div class="tenure" data-reveal aria-hidden="true">
+        <div class="tenure-scale"><span>2023</span><span>2024</span><span>2025</span><span>2026</span></div>
+        <div class="tenure-track">
+          <span class="bar bar-spoider"><i>Spoider</i></span>
+          <span class="bar bar-thoughtbox"><i>ThoughtBox</i></span>
+        </div>
       </div>
-      <ol class="timeline" data-reveal>
+
+      <ol class="jobs">
         <li class="job">
           <p class="job-when"><time datetime="2024-03">Mar 2024</time> to now</p>
-          <div class="job-body">
-            <h3>Mobile Application Developer</h3>
-            <p class="job-org">ThoughtBox Online Services, Kochi</p>
-            <p>Building exchange, remittance and back-office apps for four platforms on a shared BLoC architecture, a gRPC backend in Go, and design tokens I set up for the team.</p>
-          </div>
+          <h3>Mobile Application Developer</h3>
+          <p class="job-org">ThoughtBox Online Services, Kochi</p>
+          <p class="job-what">Building exchange, remittance and back-office apps for four platforms on a shared BLoC architecture, a gRPC backend in Go, and design tokens I set up for the team.</p>
         </li>
         <li class="job">
           <p class="job-when"><time datetime="2023-08">Aug 2023</time> to <time datetime="2024-02">Feb 2024</time></p>
-          <div class="job-body">
-            <h3>Flutter Developer</h3>
-            <p class="job-org">Spoider Innovations, Coimbatore</p>
-            <p>Built a cab booking app with Google Maps live tracking and Razorpay and Stripe payments, and shipped it to both app stores.</p>
-          </div>
+          <h3>Flutter Developer</h3>
+          <p class="job-org">Spoider Innovations, Coimbatore</p>
+          <p class="job-what">Built a cab booking app with Google Maps live tracking and Razorpay and Stripe payments, and shipped it to both app stores.</p>
         </li>
       </ol>
     </section>
 
-    <!-- ABOUT -->
+    <!-- ================= ABOUT ================= -->
     <section class="section about" id="about" aria-labelledby="about-title">
-      <picture class="about-photo">
-        <source srcset="img/siraj.webp" type="image/webp">
-        <img src="img/siraj.jpg" alt="Siraj standing on a hillside overlook in a red hoodie" width="720" height="900" loading="lazy" decoding="async">
-      </picture>
+      <figure class="about-photo" data-reveal>
+        <svg class="guilloche guilloche-photo" id="guilloche-photo" aria-hidden="true" viewBox="-500 -500 1000 1000"></svg>
+        <picture>
+          <source srcset="img/siraj.webp" type="image/webp">
+          <img src="img/siraj.jpg" alt="Siraj standing on a hillside overlook in a red hoodie" width="720" height="900" loading="lazy" decoding="async">
+        </picture>
+      </figure>
       <div class="about-text">
-        <h2 id="about-title">About</h2>
+        <h2 id="about-title" class="split-title">About</h2>
         <p class="about-lead">I'm Siraj. I write Flutter in Kochi, mostly for products that move money, where a frozen screen or a wrong number is a support call from someone sending their salary home.</p>
         <p>That shapes how I work. State should be predictable, releases should have a way back, and UI should be built from tokens so a redesign is a change rather than a rewrite. I'd rather ship one screen that holds up on four platforms than four screens that each almost work.</p>
         <p class="about-langs">I work in English, Malayalam is my first language, and I get by in Tamil.</p>
       </div>
     </section>
 
-    <!-- GITHUB -->
+    <!-- ================= CODE ================= -->
     <section class="section code" id="code" aria-labelledby="code-title">
-      <div class="section-head">
-        <h2 id="code-title">Read the code</h2>
+      <div class="code-head">
+        <h2 id="code-title" class="split-title">Read the code</h2>
         <p>My public repositories are mostly 2023 learning projects. Client code stays private, so these are the honest sample.</p>
       </div>
       <ul class="repos">
@@ -325,10 +419,11 @@
       <a class="link" href="https://github.com/SirajMM" target="_blank" rel="noopener">All repositories on GitHub</a>
     </section>
 
-    <!-- CONTACT -->
+    <!-- ================= CONTACT ================= -->
     <section class="contact" id="contact" aria-labelledby="contact-title">
       <svg class="guilloche guilloche-contact" id="guilloche-contact" aria-hidden="true" viewBox="-500 -500 1000 1000"></svg>
-      <h2 id="contact-title">Have a Flutter app to build, or one to fix?</h2>
+      <p class="contact-time" id="kochi-time" hidden></p>
+      <h2 id="contact-title" class="split-title">Have a Flutter app to build, or one to fix?</h2>
       <p class="contact-sub">Email is the fastest way to reach me. Tell me what you're building and where it runs.</p>
       <div class="mail-row">
         <a class="mail" href="mailto:sirajmuhammed718@gmail.com">sirajmuhammed718@gmail.com</a>
@@ -345,7 +440,7 @@
   </main>
 
   <footer class="footer">
-    <svg class="footer-band" id="footer-band" aria-hidden="true" viewBox="0 0 1200 60" preserveAspectRatio="none"></svg>
+    <svg class="footer-band" aria-hidden="true" viewBox="0 0 1200 60" preserveAspectRatio="none" data-band></svg>
     <div class="footer-row">
       <p>© <span id="year">2026</span> Muhammad Siraj M M</p>
       <p>Hand-built in HTML, CSS and JavaScript. Set in Archivo.</p>
