@@ -348,7 +348,6 @@
     const intro = $('#intro');
     const done = () => { root.classList.remove('intro-on'); if (intro) intro.remove(); };
     if (!intro || !root.classList.contains('intro-on') || !intro.animate) { done(); goReady(); return; }
-    try { sessionStorage.setItem('intro', '1'); } catch (e) { /* private mode */ }
     const lettersEl = $('#intro-letters'), dot = $('.intro-dot', intro), stem = $('.intro-stem', intro), word = $('.intro-word', intro);
     let skipped = false, ended = false;
     const wakers = [];
