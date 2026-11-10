@@ -16,12 +16,10 @@
   function loader() {
     const el = $('#loader');
     if (!el || !root.classList.contains('loading')) return;
-    const count = $('#count'), word = $('#intro-word'), letters = $('#intro-letters');
+    const word = $('#intro-word'), letters = $('#intro-letters');
     const dot = $('.intro-dot', el), stem = $('.intro-stem', el), bang = $('.intro-bang', el);
-    const cols = $$('.col b', count);
-    cols.forEach(b => { b.textContent = '0\n1\n2\n3\n4\n5\n6\n7\n8\n9\n0'; b.style.lineHeight = '1'; });
-    let done = false, flying = false, t0 = performance.now();
-    const DUR = 1500, wakers = [];
+    let done = false, flying = false;
+    const wakers = [];
     const wait = ms => new Promise(r => { const t = setTimeout(r, ms); wakers.push(() => { clearTimeout(t); r(); }); });
     const unbind = () => ['pointerdown', 'keydown'].forEach(e => removeEventListener(e, skip));
     // skipped: the plain wipe
@@ -79,20 +77,8 @@
       await wait(520 + (spans.length - 1) * 150 + 380); if (done) return;
       land();
     }
-    function tick(now) {
-      if (done) return;
-      const p = clamp((now - t0) / DUR, 0, 1), v = easeInOut(p) * 100;
-      // each column rolls continuously; hundreds only turns at the very end
-      const d = [v / 100, (v / 10) % 10, v % 10];
-      d[0] = v >= 99 ? (v - 99) : 0; if (v >= 100) { d[0] = 1; d[1] = 0; d[2] = 0; }
-      else { d[1] = Math.floor(d[1]) + (d[2] > 9 ? d[2] - 9 : 0); }
-      cols.forEach((b, i) => { b.style.transform = 'translateY(' + (-d[i]) + 'em)'; });
-      cols[0].parentNode.style.display = v < 99 ? 'none' : '';
-      cols[1].parentNode.style.display = v < 10 ? 'none' : '';
-      if (p < 1) return requestAnimationFrame(tick);
-      wait(220).then(() => { if (!done) count.classList.add('is-out'); return wait(420); }).then(intro);
-    }
-    requestAnimationFrame(tick);
+    const fonts = document.fonts && document.fonts.ready ? document.fonts.ready : Promise.resolve();
+    Promise.race([fonts, wait(700)]).then(() => wait(250)).then(intro);
     addEventListener('pointerdown', skip); addEventListener('keydown', skip);
   }
 

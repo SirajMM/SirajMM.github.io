@@ -65,10 +65,6 @@ h2.left::after { left: 0; margin: 0; }
 .loader { position: fixed; inset: 0; z-index: 100; background: #000; display: none; clip-path: inset(0 0 0 0); }
 .loading .loader, .loader.is-leaving, .loader.is-flying { display: block; }
 .loader.is-leaving { clip-path: inset(0 0 100% 0); transition: clip-path .9s cubic-bezier(.76, 0, .24, 1); }
-.count { position: absolute; left: clamp(18px, 4vw, 56px); top: clamp(14px, 3vw, 40px); display: flex; height: 1em; overflow: hidden; font-size: clamp(110px, 22vw, 320px); font-weight: 800; line-height: 1; letter-spacing: -.05em; font-variant-numeric: tabular-nums; transition: transform .7s cubic-bezier(.76, 0, .24, 1), opacity .5s; }
-.count .col { display: block; height: 1em; }
-.count .col b { display: block; font-weight: inherit; white-space: pre; will-change: transform; }
-.count.is-out { transform: translateY(-110%); opacity: 0; }
 .intro-word { position: absolute; left: 50%; top: 50%; translate: -50% -50%; display: flex; align-items: baseline; font-size: clamp(56px, 20vw, 200px); font-weight: 900; line-height: .86; letter-spacing: -.045em; text-transform: uppercase; white-space: nowrap; color: var(--text); visibility: hidden; }
 .intro-word.is-on { visibility: visible; }
 .intro-letters { display: flex; transform-origin: 0 0; will-change: transform; }
