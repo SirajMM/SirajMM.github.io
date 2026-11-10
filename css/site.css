@@ -1059,3 +1059,33 @@ html.lenis { scroll-behavior: auto !important; }
 .stage.is-live-loading .live-btn i { animation-duration: .6s; }
 @keyframes live-pulse { 70% { box-shadow: 0 0 0 9px rgba(217, 180, 91, 0); } 100% { box-shadow: 0 0 0 0 rgba(217, 180, 91, 0); } }
 @media (prefers-reduced-motion: reduce) { .live-btn i { animation: none; } }
+
+
+/* ==========================================================================
+   v6: 3D layer (js/depth.js)
+   ========================================================================== */
+/* Globe in the contact section */
+.globe { position: absolute; right: -3%; top: 50%; translate: 0 -50%; width: min(640px, 47vw); aspect-ratio: 1; z-index: 0; touch-action: pan-y; cursor: grab; display: none; }
+.globe.is-grabbing { cursor: grabbing; }
+.has-globe .globe { display: block; }
+.has-globe .guilloche-contact { opacity: .16; }
+.contact > :not(.globe):not(.guilloche) { position: relative; z-index: 1; }
+@media (max-width: 1100px) { .globe { width: min(520px, 62vw); right: -12%; opacity: .7; } }
+@media (max-width: 760px) { .globe { position: relative; right: auto; top: auto; translate: none; width: min(360px, 92%); margin: 0 auto -8px; opacity: 1; } .has-globe .contact { padding-top: 72px; } }
+
+/* Hero phone: a body with thickness, turning as the page scrolls away */
+.device.is-3d { transform-style: preserve-3d; transform: scale(var(--s, 1)) translate3d(calc(var(--px) * 12px), calc(var(--py) * 8px + var(--sy) * -60px), 0) rotateX(calc(var(--rx, 0deg) + min(12deg, var(--sy) * 26deg))) rotateY(calc(var(--ry, 0deg) + max(-38deg, var(--sy) * -84deg))); }
+.device-edge { position: absolute; inset: 0; border-radius: inherit; background: #1D4447; box-shadow: inset 0 0 0 1px rgba(236, 230, 214, .2); transform: translateZ(calc(var(--z) * -2px)); pointer-events: none; }
+.device-edge:first-child { background: #0B1B1D; }
+
+/* Screenshots arrive through depth */
+.fan.is-depth, .duo.is-depth { perspective: 1100px; }
+.is-depth .phone-shell { rotate: y calc((1 - var(--fd, 1)) * var(--ang, 0deg)); scale: calc(.72 + var(--fd, 1) * .28); }
+.is-depth .fan-1 { --ang: 68deg; } .is-depth .fan-3 { --ang: -68deg; }
+.is-depth .duo-1 { --ang: 56deg; } .is-depth .duo-2 { --ang: -56deg; }
+
+/* Footer terrain behind the wordmark */
+.footer { position: relative; overflow: hidden; }
+.terrain { position: absolute; left: 0; right: 0; top: 60px; width: 100%; height: clamp(180px, 30vw, 460px); pointer-events: none; display: none; opacity: .8; -webkit-mask-image: linear-gradient(180deg, transparent, #000 30%); mask-image: linear-gradient(180deg, transparent, #000 30%); }
+.has-terrain .terrain { display: block; }
+.finale, .footer-row { position: relative; z-index: 1; }
