@@ -294,7 +294,70 @@
     if (stage) setTimeout(startAuto, 1800);
   }
   const fontsReady = document.fonts && document.fonts.ready ? document.fonts.ready : Promise.resolve();
-  Promise.race([fontsReady, new Promise((r) => setTimeout(r, 700))]).then(() => requestAnimationFrame(goReady));
+  const fontsSoon = Promise.race([fontsReady, new Promise((r) => setTimeout(r, 700))]);
+
+  /* ---------- Intro: a dot drops, becomes "!", the name tumbles in and turns into the craft ---------- */
+  function playIntro() {
+    const intro = $('#intro');
+    const done = () => { root.classList.remove('intro-on'); if (intro) intro.remove(); };
+    if (!intro || !root.classList.contains('intro-on') || !intro.animate) { done(); goReady(); return; }
+    try { sessionStorage.setItem('intro', '1'); } catch (e) { /* private mode */ }
+    const lettersEl = $('#intro-letters'), dot = $('.intro-dot', intro), stem = $('.intro-stem', intro), word = $('.intro-word', intro);
+    let skipped = false, ended = false;
+    const wakers = [];
+    const wait = (ms) => new Promise((r) => { const t = setTimeout(r, ms); wakers.push(() => { clearTimeout(t); r(); }); });
+    const end = (fast) => {
+      if (ended) return; ended = true;
+      window.removeEventListener('keydown', skip); window.removeEventListener('wheel', skip); window.removeEventListener('touchmove', skip);
+      goReady();
+      const a = fast
+        ? intro.animate({ opacity: [1, 0] }, { duration: 260, fill: 'forwards' })
+        : intro.animate({ clipPath: ['inset(0 0 0 0)', 'inset(0 0 100% 0)'] }, { duration: 850, easing: 'cubic-bezier(.65,0,.35,1)', fill: 'forwards' });
+      if (!fast) word.animate({ transform: ['none', 'translateY(-14vh)'] }, { duration: 850, easing: 'cubic-bezier(.65,0,.35,1)', fill: 'forwards' });
+      a.finished.then(done, done);
+    };
+    function skip() { if (skipped) return; skipped = true; wakers.forEach((w) => w()); end(true); }
+    intro.addEventListener('click', skip);
+    window.addEventListener('keydown', skip); window.addEventListener('wheel', skip, { passive: true }); window.addEventListener('touchmove', skip, { passive: true });
+
+    (async () => {
+      const NAME = 'Siraj', CRAFT = 'Flutter';
+      // 1. The dot falls and bounces.
+      dot.animate([
+        { transform: 'translateY(-62vh)', easing: 'cubic-bezier(.5,0,1,.6)' },
+        { transform: 'translateY(0) scale(1.25,.72)', offset: .46, easing: 'cubic-bezier(0,.5,.4,1)' },
+        { transform: 'translateY(-9vh)', offset: .66, easing: 'cubic-bezier(.5,0,1,.6)' },
+        { transform: 'translateY(0) scale(1.12,.86)', offset: .84, easing: 'cubic-bezier(0,.5,.4,1)' },
+        { transform: 'translateY(-2.2vh)', offset: .93, easing: 'ease-in' },
+        { transform: 'none' },
+      ], { duration: 1000, fill: 'backwards' });
+      await wait(1000); if (skipped) return;
+      // 2. A stem grows out of it: "!"
+      stem.animate({ transform: ['scaleY(0)', 'scaleY(1)'] }, { duration: 380, easing: 'cubic-bezier(.3,1.6,.5,1)', fill: 'forwards' });
+      await wait(520); if (skipped) return;
+      // 3. The letters tumble in and shove the "!" along.
+      const spans = [...NAME].map((c) => { const s = document.createElement('span'); s.className = 'intro-l'; s.textContent = c; lettersEl.appendChild(s); return s; });
+      const widths = spans.map((s) => s.getBoundingClientRect().width);
+      spans.forEach((s, i) => {
+        s.style.width = '0px'; s.style.opacity = '0';
+        const dir = i % 2 ? 1 : -1;
+        s.animate([
+          { width: '0px', opacity: 0, transform: `translate(${0.5 * dir}em,-1.15em) rotate(${150 * dir}deg)` },
+          { width: widths[i] + 'px', opacity: 1, transform: `translate(0,.06em) rotate(${-10 * dir}deg)`, offset: .7 },
+          { width: widths[i] + 'px', opacity: 1, transform: 'none' },
+        ], { duration: 520, delay: i * 150, easing: 'cubic-bezier(.3,.9,.4,1)', fill: 'forwards' });
+      });
+      await wait(520 + (spans.length - 1) * 150 + 420); if (skipped) return;
+      // 4. The name scrambles into the craft; the "!" settles into a full stop.
+      const one = document.createElement('span'); one.className = 'intro-l'; one.textContent = NAME;
+      lettersEl.textContent = ''; lettersEl.appendChild(one);
+      scramble(one, CRAFT, 760);
+      stem.animate({ transform: ['scaleY(1)', 'scaleY(0)'] }, { duration: 420, easing: 'cubic-bezier(.65,0,.35,1)', fill: 'forwards' });
+      await wait(760 + 520); if (skipped) return;
+      end(false);
+    })();
+  }
+  fontsSoon.then(() => requestAnimationFrame(playIntro));
 
   /* ---------- Depth: pointer parallax and scroll ---------- */
   const target = { x: 0, y: 0 };
@@ -735,4 +798,118 @@
       });
     }
   }
+  /* ---------- Particle portrait: the About photo assembles from dust and scatters under the pointer ---------- */
+  (() => {
+    const fig = $('.about-photo');
+    const img = fig && $('img', fig);
+    if (!fig || !img || reduceMotion.matches || !('IntersectionObserver' in window)) return;
+    const cv = document.createElement('canvas');
+    cv.className = 'dust'; cv.setAttribute('aria-hidden', 'true');
+    const ctx = cv.getContext('2d');
+    if (!ctx) return;
+    fig.classList.add('has-dust'); // hide the photo until the dust has formed it
+    let P = null, n = 0, cell = 4, raf = 0, t0 = 0, formed = false, hover = false, started = false;
+    let mx = -9999, my = -9999, W = 0, H = 0, dpr = 1;
+    const COLS = window.innerWidth < 700 ? 56 : 84;
+
+    function build(src) {
+      const rows = Math.round(COLS * src.naturalHeight / src.naturalWidth);
+      const off = document.createElement('canvas'); off.width = COLS; off.height = rows;
+      const o = off.getContext('2d'); o.drawImage(src, 0, 0, COLS, rows);
+      let data;
+      try { data = o.getImageData(0, 0, COLS, rows).data; } catch (e) { return false; }
+      n = COLS * rows;
+      // x, y, homeX, homeY, vx, vy, delay per particle; colours kept apart.
+      P = { f: new Float32Array(n * 7), c: new Array(n), rows };
+      for (let i = 0; i < n; i++) {
+        const k = i * 4;
+        P.c[i] = `rgb(${data[k]},${data[k + 1]},${data[k + 2]})`;
+      }
+      return true;
+    }
+    function layout(scatter) {
+      dpr = Math.min(2, window.devicePixelRatio || 1);
+      W = fig.clientWidth; H = fig.clientHeight;
+      cv.width = Math.round(W * dpr); cv.height = Math.round(H * dpr);
+      const ix = img.offsetLeft, iy = img.offsetTop, iw = img.offsetWidth, ih = img.offsetHeight;
+      cell = iw / COLS;
+      const f = P.f;
+      for (let i = 0; i < n; i++) {
+        const b = i * 7, cx = i % COLS, cy = (i / COLS) | 0;
+        f[b + 2] = ix + cx * cell; f[b + 3] = iy + cy * (ih / P.rows);
+        if (scatter) {
+          const a = Math.random() * Math.PI * 2, r = (0.35 + Math.random() * 0.75) * Math.max(W, H);
+          f[b] = W / 2 + Math.cos(a) * r; f[b + 1] = H * 0.35 + Math.sin(a) * r;
+          f[b + 4] = 0; f[b + 5] = 0;
+          f[b + 6] = (cy / P.rows) * 700 + Math.random() * 900; // head first, then down
+        } else { f[b] = f[b + 2]; f[b + 1] = f[b + 3]; }
+      }
+    }
+    function frame(now) {
+      raf = 0;
+      const f = P.f, el = now - t0, R = 70, R2 = R * R;
+      let moving = 0;
+      ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+      ctx.clearRect(0, 0, W, H);
+      const s = cell + 0.6;
+      for (let i = 0; i < n; i++) {
+        const b = i * 7;
+        let x = f[b], y = f[b + 1];
+        if (el >= f[b + 6]) {
+          let vx = f[b + 4], vy = f[b + 5];
+          vx += (f[b + 2] - x) * 0.022; vy += (f[b + 3] - y) * 0.022;
+          if (hover) {
+            const dx = x - mx, dy = y - my, d2 = dx * dx + dy * dy;
+            if (d2 < R2) { const d = Math.sqrt(d2) || 1, k = (1 - d / R) * 5; vx += (dx / d) * k; vy += (dy / d) * k; }
+          }
+          vx *= 0.8; vy *= 0.8;
+          x += vx; y += vy;
+          f[b] = x; f[b + 1] = y; f[b + 4] = vx; f[b + 5] = vy;
+          if (Math.abs(vx) + Math.abs(vy) > 0.05 || Math.abs(f[b + 2] - x) > 0.4) moving++;
+        } else moving++;
+        ctx.fillStyle = P.c[i];
+        ctx.fillRect(x, y, s, s);
+      }
+      if (moving === 0 && !hover) {
+        if (!formed) { formed = true; fig.classList.add('is-formed'); }
+        return; // settled: stop the loop until the pointer comes back
+      }
+      raf = requestAnimationFrame(frame);
+    }
+    const kick = () => { if (!raf && P) raf = requestAnimationFrame(frame); };
+
+    function start() {
+      if (started) return; started = true;
+      const src = new Image();
+      src.onload = () => {
+        if (!build(src)) { fig.classList.remove('has-dust'); return; }
+        fig.appendChild(cv);
+        layout(true);
+        t0 = performance.now();
+        kick();
+      };
+      src.onerror = () => fig.classList.remove('has-dust');
+      src.src = img.currentSrc || img.src;
+    }
+    new IntersectionObserver((ens, io) => {
+      if (ens[0].isIntersecting) { io.disconnect(); start(); }
+    }, { threshold: 0.3 }).observe(fig);
+
+    if (finePointer.matches) {
+      fig.addEventListener('pointermove', (e) => {
+        if (!P || !formed) return;
+        const r = fig.getBoundingClientRect();
+        mx = e.clientX - r.left; my = e.clientY - r.top;
+        if (!hover) { hover = true; fig.classList.remove('is-formed'); }
+        kick();
+      });
+      fig.addEventListener('pointerleave', () => { hover = false; formed = false; kick(); });
+    }
+    let rt = 0;
+    window.addEventListener('resize', () => {
+      if (!P || !cv.isConnected) return;
+      clearTimeout(rt);
+      rt = setTimeout(() => { layout(false); t0 = 0; kick(); }, 150);
+    }, { passive: true });
+  })();
 })();

@@ -979,3 +979,22 @@ html:not(.js) .qr { display: none; }
 .sr { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
 .device.no-tx .app, .device.no-tx .app * { transition: none !important; }
 .ride.is-scrub .route { transition: none; }
+
+/* ==================== v4: intro sequence ==================== */
+.intro { position: fixed; inset: 0; z-index: 1000; display: none; place-items: center; background: var(--ink-deep); cursor: pointer; overflow: hidden; }
+.js.intro-on .intro { display: grid; }
+.js.intro-on, .js.intro-on body { overflow: hidden; }
+.intro::before { content: ""; position: absolute; left: 50%; top: 50%; width: min(90vw, 900px); aspect-ratio: 1; translate: -50% -50%; background: radial-gradient(closest-side, rgba(236, 230, 214, .13), transparent 70%); pointer-events: none; }
+.intro-word { position: relative; display: flex; align-items: baseline; font-weight: 800; font-stretch: 72%; font-size: clamp(3.4rem, 15vw, 12rem); line-height: 1; text-transform: uppercase; white-space: nowrap; }
+.intro-letters { display: flex; align-items: baseline; }
+.intro-l { display: inline-block; background: linear-gradient(180deg, #fff 18%, var(--mute) 96%); -webkit-background-clip: text; background-clip: text; color: transparent; will-change: transform; }
+.intro-bang { position: relative; display: inline-block; width: .17em; height: .72em; margin-left: .05em; flex: none; }
+.intro-dot { position: absolute; left: 0; bottom: 0; width: .17em; height: .17em; border-radius: 50%; background: var(--foil); }
+.intro-stem { position: absolute; left: 0; right: 0; top: 0; bottom: .26em; background: linear-gradient(180deg, #fff, var(--mute)); clip-path: polygon(0 0, 100% 0, 78% 100%, 22% 100%); transform: scaleY(0); transform-origin: 50% 100%; }
+.intro-skip { position: absolute; bottom: 28px; left: 0; right: 0; text-align: center; font-size: .75rem; letter-spacing: .14em; text-transform: uppercase; color: var(--mute); opacity: .55; }
+
+/* ==================== v4: particle portrait ==================== */
+.dust { position: absolute; inset: 0; width: 100%; height: 100%; z-index: 2; pointer-events: none; opacity: 1; transition: opacity 700ms var(--ease); }
+.js .about-photo.has-dust img, .js .about-photo.has-dust:not(.in-view) img { clip-path: none; transform: none; opacity: 0; transition: opacity 800ms var(--ease); }
+.js .about-photo.has-dust.is-formed img { opacity: 1; }
+.about-photo.has-dust.is-formed .dust { opacity: 0; }
