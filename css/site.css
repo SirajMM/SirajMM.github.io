@@ -998,3 +998,64 @@ html:not(.js) .qr { display: none; }
 .js .about-photo.has-dust img, .js .about-photo.has-dust:not(.in-view) img { clip-path: none; transform: none; opacity: 0; transition: opacity 800ms var(--ease); }
 .js .about-photo.has-dust.is-formed img { opacity: 1; }
 .about-photo.has-dust.is-formed .dust { opacity: 0; }
+
+/* ==================== v5: smooth scroll (Lenis, desktop only) ==================== */
+html.lenis, html.lenis body { height: auto; }
+html.lenis { scroll-behavior: auto !important; }
+.lenis.lenis-stopped { overflow: clip; }
+
+/* ==================== v5: word-by-word reveal ==================== */
+.js [data-words].is-words .wd { opacity: .16; transition: opacity 420ms var(--ease); }
+.js [data-words].is-words .wd.on { opacity: 1; }
+
+/* ==================== v5: pinned payment chapters ==================== */
+.chapters { display: none; list-style: none; margin: 0; padding: 0; }
+.pin.is-pinned { height: calc(100vh + 170vh); margin-bottom: clamp(64px, 8vw, 104px); }
+.pin.is-pinned .pin-sticky { position: sticky; top: 0; height: 100vh; display: flex; flex-direction: column; justify-content: center; padding-top: 64px; }
+.pin.is-pinned .suite { margin-bottom: 0; padding-top: 0; }
+.pin.is-pinned .suite figcaption { display: none; }
+.pin.is-pinned .replay { display: none; }
+.pin.is-pinned .chapters { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 0 clamp(20px, 3vw, 48px); margin-top: clamp(28px, 4vh, 48px); counter-reset: ch; }
+.chapters li { position: relative; padding-top: 16px; opacity: .38; transition: opacity 500ms var(--ease); counter-increment: ch; }
+.chapters li::before { content: ""; position: absolute; left: 0; top: 0; width: 100%; height: 2px; background: var(--line-strong); }
+.chapters li::after { content: ""; position: absolute; left: 0; top: 0; width: 100%; height: 2px; background: var(--foil); transform: scaleX(var(--f, 0)); transform-origin: 0 50%; }
+.chapters li.on { opacity: 1; }
+.chapters b { display: block; font-size: var(--step-1); font-weight: 650; font-stretch: 86%; margin-bottom: 6px; }
+.chapters b::before { content: "0" counter(ch) "  "; color: var(--foil); font-variant-numeric: tabular-nums; white-space: pre; }
+.chapters span { color: var(--mute); font-size: var(--step--1); line-height: 1.45; display: block; max-width: 34ch; }
+
+/* ==================== v5: pinned ride ==================== */
+.case-ride.is-pinned { min-height: 230vh; align-items: start; }
+.case-ride.is-pinned > .ride, .case-ride.is-pinned > .case-text { position: sticky; top: calc(50vh - var(--h, 400px) / 2 + 32px); }
+
+/* ==================== v5: stacking build cards ==================== */
+.builds.is-stack .build { position: sticky; top: var(--top, 96px); margin-bottom: 14vh; padding: clamp(28px, 3.4vw, 52px); border-radius: 18px; background: linear-gradient(180deg, var(--plate), #12302F); box-shadow: 0 0 0 1px var(--line), 0 -30px 60px -30px rgba(0, 0, 0, .55); transform-origin: 50% 0; }
+.builds.is-stack .build-quibix { transform: scale(calc(1 - var(--stk, 0) * .06)); filter: brightness(calc(1 - var(--stk, 0) * .45)); }
+.builds.is-stack .build-blaze { --top: 124px; margin-bottom: clamp(88px, 11vw, 150px); }
+
+/* ==================== v5: WebGL lens on screenshots ==================== */
+.lens { position: absolute; inset: 0; width: 100%; height: 100%; pointer-events: none; z-index: 2; }
+.phone-shell > picture { position: relative; }
+
+/* ==================== v5: footer finale ==================== */
+.finale { display: flex; align-items: baseline; justify-content: center; overflow: hidden; padding: clamp(28px, 5vw, 72px) var(--gutter) 0; font-weight: 800; font-stretch: 68%; font-size: clamp(5rem, 27vw, 26rem); line-height: .8; text-transform: uppercase; letter-spacing: -.02em; user-select: none; }
+.finale .ch { display: inline-block; background: linear-gradient(180deg, var(--paper) 10%, rgba(157, 176, 170, .25) 95%); -webkit-background-clip: text; background-clip: text; color: transparent; transform: translateY(calc((1 - clamp(0, var(--fp, 1) * 1.7 - var(--i) * .14, 1)) * 105%)); will-change: transform; }
+.finale-dot { width: .16em; height: .16em; border-radius: 50%; background: var(--foil); margin-left: .04em; flex: none; transform: scale(clamp(0, var(--fp, 1) * 4 - 3, 1)); }
+
+@media (prefers-reduced-motion: reduce) {
+  .finale .ch, .finale-dot { transform: none; }
+}
+
+/* ==================== v5: live Flutter demo in the hero device ==================== */
+.app { position: relative; }
+.live-frame { position: absolute; inset: 0; width: 100%; height: 100%; border: 0; z-index: 5; opacity: 0; transition: opacity 600ms var(--ease); background: var(--ui-bg); }
+.stage.is-live .live-frame { opacity: 1; }
+.stage.is-live .glare { display: none; }
+.live-btn { display: inline-flex; align-items: center; gap: 10px; margin: 4px auto 0; padding: 11px 20px; border-radius: 99px; border: 1px solid var(--foil); background: rgba(217, 180, 91, .1); color: var(--paper); font: inherit; font-size: .92rem; font-weight: 600; cursor: pointer; translate: var(--gx, 0) var(--gy, 0); transition: background var(--t-fast), color var(--t-fast); }
+.live-btn:hover { background: var(--foil); color: var(--ink); }
+.live-btn i { width: 9px; height: 9px; border-radius: 50%; background: var(--foil); box-shadow: 0 0 0 0 rgba(217, 180, 91, .7); animation: live-pulse 1.8s infinite; }
+.live-btn:hover i { background: var(--ink); }
+.stage.is-live .live-btn i { background: #58D68D; animation: none; }
+.stage.is-live-loading .live-btn i { animation-duration: .6s; }
+@keyframes live-pulse { 70% { box-shadow: 0 0 0 9px rgba(217, 180, 91, 0); } 100% { box-shadow: 0 0 0 0 rgba(217, 180, 91, 0); } }
+@media (prefers-reduced-motion: reduce) { .live-btn i { animation: none; } }

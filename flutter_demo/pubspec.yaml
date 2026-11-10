@@ -1,0 +1,18 @@
+name: remit_demo
+description: "Live Flutter demo embedded in the portfolio hero."
+publish_to: 'none'
+version: 1.0.0+1
+environment:
+  sdk: ^3.13.7
+dependencies:
+  flutter:
+    sdk: flutter
+  web: ^1.1.0
+dev_dependencies:
+  flutter_lints: ^6.0.0
+flutter:
+  uses-material-design: true
+  fonts:
+    - family: Archivo
+      fonts:
+        - asset: fonts/Archivo.ttf

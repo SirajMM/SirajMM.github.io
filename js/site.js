@@ -266,7 +266,46 @@
     const vt = document.startViewTransition(apply);
     vt.finished.finally(() => { device.style.viewTransitionName = ''; device.classList.remove('no-tx'); });
   }
-  skinBtns.forEach((b) => b.addEventListener('click', (e) => { takeOver(); setSkin(b.dataset.skin, b, e); }));
+  skinBtns.forEach((b) => b.addEventListener('click', (e) => { takeOver(); setSkin(b.dataset.skin, b, e); postSkin(b.dataset.skin); }));
+
+  /* ---------- Live demo: a real Flutter Web build mounts inside the device on request ---------- */
+  const liveBtn = $('#live-btn');
+  const stageCap = $('#stage-cap');
+  const capText = stageCap ? stageCap.textContent : '';
+  let liveFrame = null;
+  function postSkin(name) {
+    if (liveFrame && liveFrame.contentWindow) liveFrame.contentWindow.postMessage('skin:' + name, '*');
+  }
+  function setLive(on) {
+    const label = $('span', liveBtn);
+    if (!on) {
+      if (liveFrame) { liveFrame.remove(); liveFrame = null; }
+      stage.classList.remove('is-live', 'is-live-loading');
+      liveBtn.setAttribute('aria-pressed', 'false');
+      label.textContent = 'Run the real Flutter app';
+      stageCap.textContent = capText;
+      return;
+    }
+    takeOver();
+    stage.classList.add('is-live-loading');
+    liveBtn.setAttribute('aria-pressed', 'true');
+    label.textContent = 'Starting Flutter…';
+    liveFrame = document.createElement('iframe');
+    liveFrame.className = 'live-frame';
+    liveFrame.title = 'Remit demo, a live Flutter Web app';
+    liveFrame.setAttribute('data-lenis-prevent', '');
+    liveFrame.src = 'demo/index.html?skin=' + (device.dataset.skin || 'petrol');
+    app.appendChild(liveFrame);
+  }
+  if (liveBtn && app) {
+    liveBtn.addEventListener('click', () => setLive(!liveFrame));
+    window.addEventListener('message', (e) => {
+      if (!liveFrame || e.source !== liveFrame.contentWindow || e.data !== 'remit-ready') return;
+      stage.classList.remove('is-live-loading'); stage.classList.add('is-live');
+      $('span', liveBtn).textContent = 'Running live. Back to the illustration';
+      stageCap.textContent = 'This is a real Flutter Web build running in the page: tap around, send a transfer, switch platform or tokens. Sample data only.';
+    });
+  }
 
   /* ---------- Rolling numbers in the hero app ---------- */
   const money = new Intl.NumberFormat('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
@@ -285,11 +324,19 @@
     });
   }
 
+  /* ---------- Smooth scrolling: desktop pointers only, native everywhere else ---------- */
+  let lenis = null;
+  function startLenis() {
+    if (lenis || !window.Lenis || !finePointer.matches || reduceMotion.matches) return;
+    try { lenis = new window.Lenis({ autoRaf: true, anchors: true, lerp: 0.11 }); } catch (e) { lenis = null; }
+  }
+
   /* ---------- Entrance ---------- */
   function goReady() {
     if (ready) return;
     ready = true;
     root.classList.add('is-ready');
+    startLenis();
     setTimeout(rollNumbers, 900);
     if (stage) setTimeout(startAuto, 1800);
   }
@@ -549,6 +596,54 @@
     if (stackVis) stackVis.classList.add('is-scrub');
     if (rideFig) rideFig.classList.add('is-scrub');
   }
+  // Word-by-word reveals
+  const wordEls = reduceMotion.matches ? [] : $$('[data-words]').map((el) => {
+    const words = el.textContent.trim().split(/\s+/);
+    el.textContent = '';
+    const spans = words.map((w, i) => {
+      const s = document.createElement('span'); s.className = 'wd'; s.textContent = w;
+      el.appendChild(s); if (i < words.length - 1) el.appendChild(document.createTextNode(' '));
+      return s;
+    });
+    el.classList.add('is-words');
+    return { el, spans, shown: 0 };
+  });
+  // Pinned chapters, pinned ride and stacking cards only switch on when the scene fits the viewport.
+  const pinPay = $('#pin-pay');
+  const chapterEls = $$('#pay-chapters li');
+  const rideCase = $('.case-ride');
+  const rideText = rideCase && $('.case-text', rideCase);
+  const builds = $('#builds');
+  const buildQ = $('.build-quibix'), buildB = $('.build-blaze');
+  const finale = $('#finale');
+  const wide = window.matchMedia('(min-width: 1101px)');
+  let payStage = null; // set by the payment module below
+  function setupPins() {
+    const ok = wide.matches && !reduceMotion.matches;
+    const vh = window.innerHeight;
+    if (pinPay) {
+      pinPay.classList.toggle('is-pinned', ok);
+      if (ok) {
+        const need = $('.suite', pinPay).offsetHeight + $('#pay-chapters').offsetHeight + 150;
+        if (need > vh) pinPay.classList.remove('is-pinned');
+      }
+    }
+    if (rideCase && rideFig && rideText) {
+      rideCase.classList.remove('is-pinned');
+      const h1 = rideFig.offsetHeight, h2 = rideText.offsetHeight;
+      if (ok && Math.max(h1, h2) + 150 < vh) {
+        rideFig.style.setProperty('--h', h1 + 'px'); rideText.style.setProperty('--h', h2 + 'px');
+        rideCase.classList.add('is-pinned');
+      }
+    }
+    if (builds && buildQ && buildB) {
+      builds.classList.toggle('is-stack', ok);
+      if (ok && Math.max(buildQ.offsetHeight, buildB.offsetHeight) + 150 > vh) builds.classList.remove('is-stack');
+    }
+  }
+  setupPins();
+  let pinT = 0;
+  window.addEventListener('resize', () => { clearTimeout(pinT); pinT = setTimeout(() => { setupPins(); scrubs(); }, 160); }, { passive: true });
   let lastEta = '';
   function scrubs() {
     if (reduceMotion.matches) return;
@@ -561,9 +656,39 @@
       const r = stackVis.getBoundingClientRect();
       stackVis.style.setProperty('--sp', clamp01((vh * 0.98 - r.top) / (vh * 0.55)).toFixed(3));
     }
+    wordEls.forEach((w) => {
+      const r = w.el.getBoundingClientRect();
+      if (r.bottom < -200 || r.top > vh + 200) return;
+      const n = Math.round(clamp01((vh * 0.9 - r.top) / (vh * 0.42 + r.height)) * w.spans.length);
+      if (n === w.shown) return;
+      w.spans.forEach((s, i) => s.classList.toggle('on', i < n));
+      w.shown = n;
+    });
+    if (pinPay && payStage && pinPay.classList.contains('is-pinned')) {
+      const r = pinPay.getBoundingClientRect();
+      const p = clamp01(-r.top / Math.max(1, r.height - vh));
+      payStage(p < 0.2 ? 0 : p < 0.5 ? 1 : p < 0.66 ? 2 : 3);
+      const cuts = [0, 0.2, 0.6, 0.96];
+      chapterEls.forEach((li, i) => {
+        li.classList.toggle('on', p >= cuts[i] && (i === 2 || p < cuts[i + 1]));
+        li.style.setProperty('--f', clamp01((p - cuts[i]) / (cuts[i + 1] - cuts[i])).toFixed(3));
+      });
+    }
+    if (builds && builds.classList.contains('is-stack')) {
+      const q = buildQ.getBoundingClientRect(), b = buildB.getBoundingClientRect();
+      buildQ.style.setProperty('--stk', clamp01((q.bottom - b.top) / q.height).toFixed(3));
+    }
+    if (finale) {
+      const r = finale.getBoundingClientRect();
+      if (r.top < vh + 50) finale.style.setProperty('--fp', clamp01((vh - r.top) / (r.height * 0.85)).toFixed(3));
+    }
     if (rideFig && route) {
       const r = rideFig.getBoundingClientRect();
-      const t = clamp01((vh * 0.95 - r.top) / (vh * 0.85));
+      let t = clamp01((vh * 0.95 - r.top) / (vh * 0.85));
+      if (rideCase && rideCase.classList.contains('is-pinned')) {
+        const c = rideCase.getBoundingClientRect();
+        t = clamp01((-c.top + vh * 0.25) / Math.max(1, (c.height - vh) * 0.95));
+      }
       const e = t < 0.5 ? 2 * t * t : 1 - Math.pow(-2 * t + 2, 2) / 2;
       route.style.strokeDashoffset = (1 - e).toFixed(4);
       placeCar(e);
@@ -611,12 +736,31 @@
       later(delay + 4400, () => { replay.hidden = false; });
     }
     replay.addEventListener('click', () => runPayment());
+    // When the scene is pinned, scroll position drives the same story instead of timers.
+    let stage = -1;
+    payStage = (s) => {
+      if (s === stage) return;
+      stage = s;
+      timers.forEach(clearTimeout); timers = [];
+      replay.hidden = true;
+      suite.classList.toggle('is-scanning', s === 1);
+      suite.classList.toggle('is-paid', s >= 2);
+      qrStatus.textContent = s >= 2 ? 'Payment received' : 'Waiting for payment';
+      const landed = s >= 3;
+      if (landed === newRow.hidden) {
+        newRow.hidden = !landed; lastRow.hidden = landed;
+        count.textContent = landed ? '6' : '5';
+        if (landed) { count.classList.remove('is-bump'); void count.offsetWidth; count.classList.add('is-bump'); }
+      }
+    };
+    const pinnedNow = () => pinPay && pinPay.classList.contains('is-pinned');
     if ('IntersectionObserver' in window) {
       const pio = new IntersectionObserver(([en]) => {
-        if (en.isIntersecting) { runPayment(1200); pio.disconnect(); }
+        if (en.isIntersecting && !pinnedNow()) { stage = -1; runPayment(1200); pio.disconnect(); }
       }, { threshold: 0.45 });
       pio.observe(suite);
-    } else runPayment();
+    } else if (!pinnedNow()) runPayment();
+    scrubs();
   }
 
   /* ---------- Odometer stats ---------- */
@@ -911,5 +1055,90 @@
       clearTimeout(rt);
       rt = setTimeout(() => { layout(false); t0 = 0; kick(); }, 150);
     }, { passive: true });
+  })();
+  /* ---------- WebGL lens: screenshots bulge and split into RGB under the pointer ---------- */
+  (() => {
+    if (!finePointer.matches || reduceMotion.matches) return;
+    const shells = $$('[data-lens] .phone-shell');
+    if (!shells.length) return;
+    const cv = document.createElement('canvas');
+    cv.className = 'lens'; cv.setAttribute('aria-hidden', 'true');
+    const gl = cv.getContext('webgl', { antialias: true, alpha: false });
+    if (!gl) return;
+    const sh = (type, src) => { const s = gl.createShader(type); gl.shaderSource(s, src); gl.compileShader(s); return s; };
+    const prog = gl.createProgram();
+    gl.attachShader(prog, sh(gl.VERTEX_SHADER, 'attribute vec2 a;varying vec2 v;void main(){v=vec2((a.x+1.)*.5,(1.-a.y)*.5);gl_Position=vec4(a,0.,1.);}'));
+    gl.attachShader(prog, sh(gl.FRAGMENT_SHADER, `precision mediump float;
+      uniform sampler2D t; uniform vec2 m; uniform vec2 fr; uniform float k; uniform float hw; uniform float time; varying vec2 v;
+      vec2 fit(vec2 p){ return vec2(.5 + (p.x - .5) * fr.x, p.y * fr.y); }
+      void main(){
+        vec2 d = v - m;
+        float r = length(vec2(d.x, d.y * hw));
+        float f = smoothstep(.46, 0., r) * k;
+        vec2 uv = v - d * f * .34 + normalize(d + 1e-5) * sin(r * 46. - time * 5.) * .0035 * f;
+        vec2 s = d * f * .05;
+        gl_FragColor = vec4(texture2D(t, fit(uv + s)).r, texture2D(t, fit(uv)).g, texture2D(t, fit(uv - s)).b, 1.);
+      }`));
+    gl.linkProgram(prog);
+    if (!gl.getProgramParameter(prog, gl.LINK_STATUS)) return;
+    gl.useProgram(prog);
+    gl.bindBuffer(gl.ARRAY_BUFFER, gl.createBuffer());
+    gl.bufferData(gl.ARRAY_BUFFER, new Float32Array([-1, -1, 1, -1, -1, 1, 1, 1]), gl.STATIC_DRAW);
+    const loc = gl.getAttribLocation(prog, 'a');
+    gl.enableVertexAttribArray(loc); gl.vertexAttribPointer(loc, 2, gl.FLOAT, false, 0, 0);
+    const U = {}; ['m', 'fr', 'k', 'hw', 'time'].forEach((n) => { U[n] = gl.getUniformLocation(prog, n); });
+    const texs = new Map();
+    function texFor(img) {
+      if (texs.has(img)) return texs.get(img);
+      const t = gl.createTexture();
+      gl.bindTexture(gl.TEXTURE_2D, t);
+      gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE);
+      gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
+      gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR);
+      gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.LINEAR);
+      try { gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGB, gl.RGB, gl.UNSIGNED_BYTE, img); } catch (e) { return null; }
+      texs.set(img, t);
+      return t;
+    }
+    let host = null, k = 0, kTo = 0, raf = 0, mx = 0.5, my = 0.5, tx = 0.5, ty = 0.5;
+    function frame(now) {
+      raf = 0;
+      k += (kTo - k) * 0.12; mx += (tx - mx) * 0.2; my += (ty - my) * 0.2;
+      gl.uniform2f(U.m, mx, my); gl.uniform1f(U.k, k); gl.uniform1f(U.time, now / 1000);
+      gl.drawArrays(gl.TRIANGLE_STRIP, 0, 4);
+      if (kTo === 0 && k < 0.01) { cv.remove(); host = null; k = 0; return; }
+      raf = requestAnimationFrame(frame);
+    }
+    function enter(shell, e) {
+      const pic = $('picture', shell), img = $('img', shell);
+      if (!pic || !img || !img.complete || !img.naturalWidth) return;
+      const t = texFor(img);
+      if (!t) return;
+      if (host !== pic) {
+        host = pic; pic.appendChild(cv);
+        const bw = pic.clientWidth, bh = pic.clientHeight, dpr = Math.min(2, window.devicePixelRatio || 1);
+        cv.width = Math.round(bw * dpr); cv.height = Math.round(bh * dpr);
+        gl.viewport(0, 0, cv.width, cv.height);
+        const sc = Math.max(bw / img.naturalWidth, bh / img.naturalHeight);
+        gl.uniform2f(U.fr, bw / (img.naturalWidth * sc), bh / (img.naturalHeight * sc));
+        gl.uniform1f(U.hw, bh / bw);
+        gl.bindTexture(gl.TEXTURE_2D, t);
+        k = 0;
+        move(e); mx = tx; my = ty;
+      }
+      kTo = 1;
+      if (!raf) raf = requestAnimationFrame(frame);
+    }
+    function move(e) {
+      const el = e.target.closest ? e.target.closest('picture') : null;
+      if (!el || el !== host) return;
+      const r = e.target.tagName === 'IMG' ? e.target : el;
+      tx = e.offsetX / r.clientWidth; ty = e.offsetY / r.clientHeight;
+    }
+    shells.forEach((shell) => {
+      shell.addEventListener('pointerenter', (e) => enter(shell, e));
+      shell.addEventListener('pointermove', move);
+      shell.addEventListener('pointerleave', () => { kTo = 0; });
+    });
   })();
 })();

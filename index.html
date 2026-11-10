@@ -27,6 +27,7 @@
   <link rel="preload" href="fonts/archivo-var.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="stylesheet" href="css/site.css">
   <script>(function(d){d.classList.add('js');try{if(matchMedia('(prefers-reduced-motion: reduce)').matches||(sessionStorage.getItem('intro')&&!/[?&]intro\b/.test(location.search)))d.classList.add('no-intro');else d.classList.add('intro-on')}catch(e){d.classList.add('intro-on')}})(document.documentElement)</script>
+  <script src="js/vendor/lenis.min.js" defer></script>
   <script src="js/site.js" defer></script>
 
   <script type="application/ld+json">
@@ -155,7 +156,8 @@
             <button type="button" data-skin="plum" aria-pressed="false"><i></i>Plum</button>
             <button type="button" data-skin="ember" aria-pressed="false"><i></i>Ember</button>
           </div>
-          <figcaption>One widget tree on four platforms, re-skinned by swapping design tokens. Illustrative screen with sample data; client apps are under NDA.</figcaption>
+          <button class="live-btn" id="live-btn" type="button" aria-pressed="false" data-magnetic data-cursor="Run"><i aria-hidden="true"></i><span>Run the real Flutter app</span></button>
+          <figcaption id="stage-cap">One widget tree on four platforms, re-skinned by swapping design tokens. Illustrative screen with sample data; client apps are under NDA.</figcaption>
         </div>
       </figure>
     </section>
@@ -178,7 +180,7 @@
       <div class="work-head">
         <div class="work-intro">
           <h2 id="work-title" class="split-title">Selected work</h2>
-          <p>Two client products under NDA, shown as faithful illustrations with sample data, and two personal builds with real screenshots.</p>
+          <p data-words>Two client products under NDA, shown as faithful illustrations with sample data, and two personal builds with real screenshots.</p>
         </div>
         <ol class="work-index" aria-label="Projects on this page">
           <li><a href="#case-fintech" data-preview="fintech" data-cursor="Jump"><span>Fintech suite for exchange houses</span><small>2024 to now</small></a></li>
@@ -196,6 +198,7 @@
           <p class="case-intro">Customer apps for currency exchange and remittance, plus a back-office app, built in Flutter for Android, iOS, macOS and Windows.</p>
         </header>
 
+        <div class="pin" id="pin-pay"><div class="pin-sticky">
         <figure class="suite" data-reveal>
           <div class="suite-win" aria-hidden="true">
             <div class="sw-bar"><span class="lights"><i></i><i></i><i></i></span><span>Back office</span></div>
@@ -233,6 +236,12 @@
           <button class="replay" type="button" id="replay" hidden data-cursor="Replay">Replay the payment</button>
           <figcaption>Illustrative composition with sample data: a QR payment on mobile lands in the back-office window on desktop, both from the same codebase. Not screenshots of client apps.</figcaption>
         </figure>
+        <ol class="chapters" id="pay-chapters" aria-hidden="true">
+          <li><b>The cashier shows a QR</b><span>The mobile app raises an AANI payment request for 245.00 AED.</span></li>
+          <li><b>The customer scans it</b><span>They approve it in their own banking app. No card, no cash.</span></li>
+          <li><b>The back office sees it</b><span>The transfer lands in the desktop app, built from the same codebase.</span></li>
+        </ol>
+        </div></div>
 
         <div class="case-body">
           <dl class="facts">
@@ -303,11 +312,11 @@
       </article>
 
       <!-- Personal builds -->
-      <div class="builds">
+      <div class="builds" id="builds">
         <h3 class="builds-title">Built on my own time, with real screenshots</h3>
 
         <article class="build build-quibix" id="build-quibix" aria-labelledby="quibix-title">
-          <figure class="fan" data-reveal data-tilt data-cursor="Fan out">
+          <figure class="fan" data-reveal data-tilt data-lens data-cursor="Fan out">
             <div class="phone-shell fan-1"><picture><source srcset="img/screens/quibix-detail.webp" type="image/webp"><img src="img/screens/quibix-detail.jpg" alt="Quibix product detail screen for headphones with colour options and specifications" width="450" height="969" loading="lazy" decoding="async"></picture></div>
             <div class="phone-shell fan-2"><picture><source srcset="img/screens/quibix-home.webp" type="image/webp"><img src="img/screens/quibix-home.jpg" alt="Quibix home screen with a sale banner, category filters and a product grid" width="450" height="967" loading="lazy" decoding="async"></picture></div>
             <div class="phone-shell fan-3"><picture><source srcset="img/screens/quibix-track.webp" type="image/webp"><img src="img/screens/quibix-track.jpg" alt="Quibix order tracking screen with a timeline from order placed to delivered" width="448" height="969" loading="lazy" decoding="async"></picture></div>
@@ -327,7 +336,7 @@
             <p>Plays the songs already on your phone. Playlists, favourites, recently and most played are stored in Hive, and playback keeps going in the background with a mini player on every screen.</p>
             <a class="link" href="https://github.com/SirajMM/MusicPlayer" target="_blank" rel="noopener">Read the source</a>
           </div>
-          <figure class="duo" data-reveal data-tilt>
+          <figure class="duo" data-reveal data-tilt data-lens>
             <div class="phone-shell duo-1"><picture><source srcset="img/screens/blaze-home.webp" type="image/webp"><img src="img/screens/blaze-home.jpg" alt="Blaze Player library with recently and most played, and a song list above the mini player" width="302" height="651" loading="lazy" decoding="async"></picture></div>
             <div class="phone-shell duo-2"><picture><source srcset="img/screens/blaze-fav.webp" type="image/webp"><img src="img/screens/blaze-fav.jpg" alt="Blaze Player favourite songs screen with shuffle and play buttons" width="302" height="651" loading="lazy" decoding="async"></picture></div>
           </figure>
@@ -425,7 +434,7 @@
       </figure>
       <div class="about-text">
         <h2 id="about-title" class="split-title">About</h2>
-        <p class="about-lead">I'm Siraj. I write Flutter in Kochi, mostly for products that move money, where a frozen screen or a wrong number is a support call from someone sending their salary home.</p>
+        <p class="about-lead" data-words>I'm Siraj. I write Flutter in Kochi, mostly for products that move money, where a frozen screen or a wrong number is a support call from someone sending their salary home.</p>
         <p>That shapes how I work. State should be predictable, releases should have a way back, and UI should be built from tokens so a redesign is a change rather than a rewrite. I'd rather ship one screen that holds up on four platforms than four screens that each almost work.</p>
         <p class="about-langs">I work in English, Malayalam is my first language, and I get by in Tamil.</p>
       </div>
@@ -474,6 +483,7 @@
 
   <footer class="footer">
     <svg class="footer-band" aria-hidden="true" viewBox="0 0 1200 60" preserveAspectRatio="none" data-band></svg>
+    <div class="finale" id="finale" aria-hidden="true"><span data-split>Siraj</span><i class="finale-dot"></i></div>
     <div class="footer-row">
       <p>© <span id="year">2026</span> Muhammad Siraj M M</p>
       <p>Hand-built in HTML, CSS and JavaScript. Set in Archivo.</p>
