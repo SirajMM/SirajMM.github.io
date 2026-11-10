@@ -7,7 +7,7 @@ Plain HTML, CSS and JavaScript with no build step. GitHub Pages serves the `mast
 ```
 index.html      all content and SEO metadata
 css/site.css    design tokens, layout, motion
-js/site.js      platform switcher, guilloche linework, reveals
+js/site.js      platform switcher, token re-skin, scroll scenes, cursor, marquees
 fonts/          Archivo variable (SIL Open Font License)
 img/            optimized WebP/JPEG screenshots, social image
 ```

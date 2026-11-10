@@ -148,50 +148,42 @@
     ['work', 'experience', 'about', 'contact'].forEach((id) => { const el = document.getElementById(id); if (el) spy.observe(el); });
   }
 
+  /* ---------- Scramble text ---------- */
+  const GLYPHS = 'ABCDEFGHJKLMNPQRSTUVWXYZabcdefghkmnpqrstuvwxyz0123456789';
+  function scramble(el, to, dur = 560) {
+    if (!el) return;
+    cancelAnimationFrame(el._scr);
+    if (reduceMotion.matches) { el.textContent = to; return; }
+    const from = el.textContent;
+    const len = Math.max(from.length, to.length);
+    const start = performance.now();
+    const step = (now) => {
+      const t = Math.min(1, (now - start) / dur);
+      let out = '';
+      for (let i = 0; i < len; i++) {
+        const settle = 0.35 + (i / len) * 0.65; // later letters settle later
+        if (t >= settle) out += to[i] || '';
+        else if (t > settle - 0.45) out += (to[i] || from[i]) === ' ' ? ' ' : GLYPHS[(Math.random() * GLYPHS.length) | 0];
+        else out += from[i] || '';
+      }
+      el.textContent = out;
+      if (t < 1) el._scr = requestAnimationFrame(step); else el.textContent = to;
+    };
+    el._scr = requestAnimationFrame(step);
+  }
+
   /* ---------- Hero stage ---------- */
   const hero = $('.hero');
   const stage = $('#stage');
   const device = $('#device');
   const frame = stage && $('.stage-frame', stage);
   const buttons = stage ? $$('.switch button', stage) : [];
-  const nameEl = $('.name');
+  const platEl = $('#hl-plat');
   const ORDER = ['android', 'ios', 'macos', 'windows'];
+  const LABEL = { android: 'Android', ios: 'iOS', macos: 'macOS', windows: 'Windows' };
   const SIZE = { android: [300, 620], ios: [300, 620], macos: [660, 430], windows: [660, 430] };
   let current = 'android';
   let ready = false;
-
-  // The name widens with the device, but never past what the hero can hold.
-  let maxWd = 125;
-  function measureName() {
-    if (!nameEl) return;
-    const prev = nameEl.style.getPropertyValue('--wd');
-    nameEl.style.transition = 'none';
-    nameEl.style.setProperty('--wd', '100%');
-    const widest = Math.max(...$$('.name-word', nameEl).map((s) => s.offsetWidth));
-    widest100 = $$('.name-word', nameEl)[0].offsetWidth;
-    maxWd = widest ? Math.max(62, Math.min(125, ((100 * nameEl.clientWidth) / widest) * 0.97)) : 100;
-    if (prev) nameEl.style.setProperty('--wd', prev); else nameEl.style.removeProperty('--wd');
-    void nameEl.offsetWidth;
-    nameEl.style.transition = '';
-  }
-  // Where the device overlaps the name (side-by-side layout), the first line may
-  // run right up to the bezel, so the type and the device read as one composition.
-  let widest100 = 0;
-  const overlapping = window.matchMedia('(min-width: 1101px)');
-  function deviceCap(p) {
-    if (!overlapping.matches || !frame || !widest100) return 125;
-    const [dw, dh] = SIZE[p];
-    const s = Math.min(1, (frame.clientWidth - 4) / dw, (frame.clientHeight - 8) / dh);
-    const fr = frame.getBoundingClientRect();
-    const deviceLeft = fr.left + fr.width / 2 - (dw * s) / 2;
-    const fontPx = parseFloat(getComputedStyle(nameEl).fontSize);
-    // phones: tuck part of the last letter under the bezel; desktop windows have a
-    // light title bar the same tone as the type, so keep a clear gap instead.
-    const tuck = p === 'macos' || p === 'windows' ? -0.12 : -0.03;
-    const allowed = deviceLeft - nameEl.getBoundingClientRect().left + fontPx * tuck;
-    return Math.max(62, (100 * allowed) / widest100);
-  }
-  const nameStretch = (p) => Math.min(p === 'macos' || p === 'windows' ? 116 : 110, maxWd, deviceCap(p)).toFixed(1) + '%';
 
   function fit() {
     if (!frame) return;
@@ -204,53 +196,102 @@
     current = p;
     device.dataset.platform = p;
     buttons.forEach((b) => b.setAttribute('aria-pressed', String(b.dataset.p === p)));
-    if (ready && nameEl) nameEl.style.setProperty('--wd', nameStretch(p));
+    if (changed && platEl) scramble(platEl, LABEL[p]);
     if (changed && animate && !reduceMotion.matches) {
       device.classList.remove('is-swapping'); void device.offsetWidth; device.classList.add('is-swapping');
     }
     fit();
   }
 
+  // The device cycles through the platforms on its own until someone takes over.
   let autoTimer = null;
+  let userTook = false;
+  let heroVisible = true;
   const AUTO_MS = 2800;
-  function stopAuto() { clearTimeout(autoTimer); autoTimer = null; stage.classList.remove('is-auto'); }
+  function markAuto(on) {
+    [stage, hero].forEach((el) => {
+      el.classList.remove('is-auto');
+      if (on) { void el.offsetWidth; el.classList.add('is-auto'); }
+    });
+  }
+  function stopAuto() { clearTimeout(autoTimer); autoTimer = null; markAuto(false); }
   function startAuto() {
-    if (reduceMotion.matches) return;
-    let step = 0;
+    if (reduceMotion.matches || userTook || autoTimer || !heroVisible) return;
+    hero.style.setProperty('--auto', AUTO_MS + 'ms');
     stage.style.setProperty('--auto', AUTO_MS + 'ms');
     const next = () => {
-      step += 1;
-      if (step >= ORDER.length) { stopAuto(); setPlatform('android', true); return; }
-      stage.classList.remove('is-auto'); void stage.offsetWidth; stage.classList.add('is-auto');
-      setPlatform(ORDER[step], true);
+      setPlatform(ORDER[(ORDER.indexOf(current) + 1) % ORDER.length], true);
+      markAuto(true);
       autoTimer = setTimeout(next, AUTO_MS);
     };
-    stage.classList.add('is-auto');
+    markAuto(true);
     autoTimer = setTimeout(next, AUTO_MS);
   }
+  function takeOver() { userTook = true; stopAuto(); }
 
   if (stage && device) {
-    buttons.forEach((b) => b.addEventListener('click', () => { stopAuto(); setPlatform(b.dataset.p, true); }));
-    stage.addEventListener('pointerenter', () => { if (autoTimer) stopAuto(); });
-    document.addEventListener('visibilitychange', () => { if (document.hidden) stopAuto(); });
-    measureName();
+    buttons.forEach((b) => b.addEventListener('click', () => { takeOver(); setPlatform(b.dataset.p, true); }));
+    stage.addEventListener('pointerenter', (e) => { if (e.pointerType === 'mouse') stopAuto(); });
+    stage.addEventListener('pointerleave', (e) => { if (e.pointerType === 'mouse' && ready) startAuto(); });
+    stage.addEventListener('focusin', takeOver);
+    document.addEventListener('visibilitychange', () => { if (document.hidden) stopAuto(); else if (ready) startAuto(); });
+    if ('IntersectionObserver' in window) {
+      new IntersectionObserver(([en]) => {
+        heroVisible = en.isIntersecting;
+        if (!heroVisible) stopAuto(); else if (ready) startAuto();
+      }, { threshold: 0.25 }).observe(hero);
+    }
     setPlatform('android');
-    let rz = 0;
-    window.addEventListener('resize', () => {
-      cancelAnimationFrame(rz);
-      rz = requestAnimationFrame(() => { measureName(); setPlatform(current); });
-    }, { passive: true });
+    window.addEventListener('resize', () => requestAnimationFrame(fit), { passive: true });
     if ('ResizeObserver' in window) new ResizeObserver(fit).observe(frame);
+  }
+
+  /* ---------- Design-token skins, revealed with a circular view transition ---------- */
+  const app = device && $('.app', device);
+  const skinBtns = stage ? $$('.skin button', stage) : [];
+  function setSkin(name, btn, ev) {
+    const apply = () => {
+      device.dataset.skin = name;
+      skinBtns.forEach((b) => b.setAttribute('aria-pressed', String(b.dataset.skin === name)));
+    };
+    if (!document.startViewTransition || reduceMotion.matches || !app) { apply(); return; }
+    const r = device.getBoundingClientRect();
+    const br = btn.getBoundingClientRect();
+    const ox = ev && ev.clientX ? ev.clientX : br.left + br.width / 2;
+    const oy = ev && ev.clientY ? ev.clientY : br.top + br.height / 2;
+    root.style.setProperty('--vx', (((ox - r.left) / r.width) * 100).toFixed(1) + '%');
+    root.style.setProperty('--vy', (((oy - r.top) / r.height) * 100).toFixed(1) + '%');
+    device.style.viewTransitionName = 'device-app';
+    device.classList.add('no-tx');
+    const vt = document.startViewTransition(apply);
+    vt.finished.finally(() => { device.style.viewTransitionName = ''; device.classList.remove('no-tx'); });
+  }
+  skinBtns.forEach((b) => b.addEventListener('click', (e) => { takeOver(); setSkin(b.dataset.skin, b, e); }));
+
+  /* ---------- Rolling numbers in the hero app ---------- */
+  const money = new Intl.NumberFormat('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+  function rollNumbers() {
+    if (reduceMotion.matches) return;
+    $$('[data-roll]').forEach((el, k) => {
+      const to = parseFloat(el.dataset.roll);
+      const dur = 1500, start = performance.now() + k * 180;
+      const step = (now) => {
+        const t = Math.max(0, Math.min(1, (now - start) / dur));
+        el.textContent = money.format(to * (1 - Math.pow(1 - t, 4)));
+        if (t < 1) requestAnimationFrame(step);
+      };
+      el.textContent = money.format(0);
+      requestAnimationFrame(step);
+    });
   }
 
   /* ---------- Entrance ---------- */
   function goReady() {
     if (ready) return;
     ready = true;
-    measureName();
     root.classList.add('is-ready');
-    if (nameEl) nameEl.style.setProperty('--wd', nameStretch(current));
-    if (stage) setTimeout(startAuto, 1600);
+    setTimeout(rollNumbers, 900);
+    if (stage) setTimeout(startAuto, 1800);
   }
   const fontsReady = document.fonts && document.fonts.ready ? document.fonts.ready : Promise.resolve();
   Promise.race([fontsReady, new Promise((r) => setTimeout(r, 700))]).then(() => requestAnimationFrame(goReady));
@@ -266,6 +307,8 @@
     hero.style.setProperty('--py', curr.y.toFixed(3));
     device.style.setProperty('--ry', (curr.x * 7).toFixed(2) + 'deg');
     device.style.setProperty('--rx', (-curr.y * 5).toFixed(2) + 'deg');
+    device.style.setProperty('--lx', (50 + curr.x * 110).toFixed(1) + '%');
+    device.style.setProperty('--ly', (35 + curr.y * 90).toFixed(1) + '%');
     if (Math.abs(target.x - curr.x) > 0.001 || Math.abs(target.y - curr.y) > 0.001) parallaxRaf = requestAnimationFrame(parallaxLoop);
     else parallaxRaf = 0;
   }
@@ -274,10 +317,12 @@
       const r = hero.getBoundingClientRect();
       target.x = (e.clientX - r.left) / r.width - 0.5;
       target.y = (e.clientY - r.top) / r.height - 0.5;
+      device.style.setProperty('--lo', '1');
       if (!parallaxRaf) parallaxRaf = requestAnimationFrame(parallaxLoop);
     });
     hero.addEventListener('pointerleave', () => {
       target.x = 0; target.y = 0;
+      device.style.setProperty('--lo', '0');
       if (!parallaxRaf) parallaxRaf = requestAnimationFrame(parallaxLoop);
     });
   }
@@ -307,11 +352,11 @@
           photoRose.style.setProperty('--rot', ((window.innerHeight - r.top) / 30).toFixed(1));
         }
       }
+      scrubs();
       ticking = false;
     });
   }
   window.addEventListener('scroll', onScroll, { passive: true });
-  onScroll();
 
   /* ---------- Reveals ---------- */
   const car = $('.ride .car');
@@ -322,14 +367,6 @@
     car.setAttribute('transform', `translate(${pt.x.toFixed(1)} ${pt.y.toFixed(1)})`);
   }
   placeCar(reduceMotion.matches || !('IntersectionObserver' in window) ? 1 : 0);
-  function driveCar() {
-    if (reduceMotion.matches) { placeCar(1); return; }
-    const dur = 2400, start = performance.now();
-    const ease = (t) => (t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2);
-    const step = (now) => { const t = Math.min(1, (now - start) / dur); placeCar(ease(t)); if (t < 1) requestAnimationFrame(step); };
-    requestAnimationFrame(step);
-  }
-
   // Bracket split for the architecture stack
   const stackWrap = $('.stack-wrap');
   function placeBrackets() {
@@ -356,7 +393,6 @@
       entries.forEach((en) => {
         if (!en.isIntersecting) return;
         en.target.classList.add('in-view');
-        if (en.target.classList.contains('ride')) driveCar();
         io.unobserve(en.target);
       });
     }, { threshold: 0.12, rootMargin: '0px 0px -4% 0px' });
@@ -438,5 +474,265 @@
       clearTimeout(copyBtn._t);
       copyBtn._t = setTimeout(() => { status.textContent = ''; }, 2400);
     });
+  }
+  /* ---------- Scroll-scrubbed scenes ---------- */
+  const clamp01 = (v) => Math.max(0, Math.min(1, v));
+  const paper = $('.surface-paper');
+  const stackVis = $('.stack-visual');
+  const rideFig = $('.ride');
+  const etaEl = $('#eta');
+  const etaLabel = $('#eta-label');
+  if (!reduceMotion.matches) {
+    if (stackVis) stackVis.classList.add('is-scrub');
+    if (rideFig) rideFig.classList.add('is-scrub');
+  }
+  let lastEta = '';
+  function scrubs() {
+    if (reduceMotion.matches) return;
+    const vh = window.innerHeight;
+    if (paper) {
+      const r = paper.getBoundingClientRect();
+      paper.style.setProperty('--cp', clamp01((vh - r.top) / (vh * 0.7)).toFixed(3));
+    }
+    if (stackVis) {
+      const r = stackVis.getBoundingClientRect();
+      stackVis.style.setProperty('--sp', clamp01((vh * 0.98 - r.top) / (vh * 0.55)).toFixed(3));
+    }
+    if (rideFig && route) {
+      const r = rideFig.getBoundingClientRect();
+      const t = clamp01((vh * 0.95 - r.top) / (vh * 0.85));
+      const e = t < 0.5 ? 2 * t * t : 1 - Math.pow(-2 * t + 2, 2) / 2;
+      route.style.strokeDashoffset = (1 - e).toFixed(4);
+      placeCar(e);
+      const eta = e > 0.985 ? 'Now' : Math.max(1, Math.ceil(4 * (1 - e))) + ' min';
+      if (eta !== lastEta && etaEl) {
+        lastEta = eta;
+        etaEl.textContent = eta;
+        if (etaLabel) etaLabel.textContent = eta === 'Now' ? 'Driver is here' : 'Driver arriving';
+      }
+    }
+  }
+  window.addEventListener('resize', scrubs, { passive: true });
+  onScroll();
+
+  /* ---------- Live payment: QR scanned on mobile, lands in the back office ---------- */
+  const suite = $('.suite');
+  if (suite) {
+    const qrStatus = $('#qr-status');
+    const newRow = $('.sw-new', suite);
+    const rows = $$('#sw-rows tr', suite);
+    const lastRow = rows[rows.length - 1];
+    const count = $('#sw-count');
+    const replay = $('#replay');
+    let timers = [];
+    const later = (ms, fn) => timers.push(setTimeout(fn, reduceMotion.matches ? 0 : ms));
+    function resetPayment() {
+      timers.forEach(clearTimeout); timers = [];
+      suite.classList.remove('is-paid', 'is-scanning');
+      newRow.hidden = true; lastRow.hidden = false;
+      count.textContent = '5'; qrStatus.textContent = 'Waiting for payment';
+      replay.hidden = true;
+    }
+    function runPayment(delay = 0) {
+      resetPayment();
+      later(delay + 300, () => suite.classList.add('is-scanning'));
+      later(delay + 2500, () => {
+        suite.classList.remove('is-scanning'); suite.classList.add('is-paid');
+        qrStatus.textContent = 'Payment received';
+      });
+      later(delay + 3200, () => {
+        lastRow.hidden = true; newRow.hidden = false;
+        count.textContent = '6';
+        count.classList.remove('is-bump'); void count.offsetWidth; count.classList.add('is-bump');
+      });
+      later(delay + 4400, () => { replay.hidden = false; });
+    }
+    replay.addEventListener('click', () => runPayment());
+    if ('IntersectionObserver' in window) {
+      const pio = new IntersectionObserver(([en]) => {
+        if (en.isIntersecting) { runPayment(1200); pio.disconnect(); }
+      }, { threshold: 0.45 });
+      pio.observe(suite);
+    } else runPayment();
+  }
+
+  /* ---------- Odometer stats ---------- */
+  const odos = $$('.odo');
+  odos.forEach((el, k) => {
+    const n = el.dataset.odo;
+    el.textContent = '';
+    const sr = document.createElement('span'); sr.className = 'sr'; sr.textContent = n; el.appendChild(sr);
+    [...n].forEach((d, j) => {
+      const col = document.createElement('span');
+      col.className = 'odo-col'; col.setAttribute('aria-hidden', 'true');
+      col.style.setProperty('--d', k + j);
+      for (let i = 0; i < 20; i++) { const g = document.createElement('i'); g.textContent = i % 10; col.appendChild(g); }
+      col.dataset.to = 10 + Number(d);
+      el.appendChild(col);
+    });
+  });
+  function spinOdos() { $$('.odo-col').forEach((c) => { c.style.transform = `translateY(${-c.dataset.to * 0.84}em)`; }); }
+  if (reduceMotion.matches || !('IntersectionObserver' in window)) spinOdos();
+  else if (odos.length) {
+    const oio = new IntersectionObserver(([en]) => { if (en.isIntersecting) { spinOdos(); oio.disconnect(); } }, { threshold: 0.4 });
+    oio.observe($('.stats'));
+  }
+
+  /* ---------- Marquees that answer scroll speed ---------- */
+  const marquees = $$('[data-marquee]').map((el) => {
+    const track = $('.marquee-track', el);
+    track.innerHTML += track.innerHTML;
+    return { el, track, x: 0, w: track.scrollWidth / 2, speed: parseFloat(el.dataset.speed || '1'), on: false };
+  });
+  if (marquees.length && !reduceMotion.matches && 'IntersectionObserver' in window) {
+    let vel = 0, dir = -1, prevY = window.scrollY, prevT = performance.now(), mRaf = 0;
+    const measure = () => marquees.forEach((m) => { m.w = m.track.scrollWidth / 2; });
+    window.addEventListener('resize', measure, { passive: true });
+    if (document.fonts) document.fonts.ready.then(measure);
+    const loop = (now) => {
+      const dt = Math.min(64, now - prevT); prevT = now;
+      const y = window.scrollY, dy = y - prevY; prevY = y;
+      if (dy) dir = dy > 0 ? -1 : 1;
+      vel += (dy - vel) * 0.12;
+      const boost = Math.min(14, Math.abs(vel) * 0.5);
+      const skew = Math.max(-9, Math.min(9, -vel * 0.35));
+      marquees.forEach((m) => {
+        if (!m.on || !m.w) return;
+        m.x += dir * (0.05 + boost * 0.05) * dt * m.speed;
+        if (m.x <= -m.w) m.x += m.w; else if (m.x > 0) m.x -= m.w;
+        m.track.style.setProperty('--mq', m.x.toFixed(1) + 'px');
+        m.track.style.setProperty('--skew', skew.toFixed(2) + 'deg');
+      });
+      mRaf = marquees.some((m) => m.on) ? requestAnimationFrame(loop) : 0;
+    };
+    const mio = new IntersectionObserver((entries) => {
+      entries.forEach((en) => { const m = marquees.find((q) => q.el === en.target); if (m) m.on = en.isIntersecting; });
+      if (!mRaf && marquees.some((m) => m.on)) { prevT = performance.now(); prevY = window.scrollY; mRaf = requestAnimationFrame(loop); }
+    });
+    marquees.forEach((m) => mio.observe(m.el));
+  }
+
+  /* ---------- Pointer niceties (mouse and trackpad only) ---------- */
+  if (finePointer.matches && !reduceMotion.matches) {
+    // Tilt with a spotlight
+    $$('[data-tilt]').forEach((el) => {
+      el.addEventListener('pointermove', (e) => {
+        const r = el.getBoundingClientRect();
+        const x = (e.clientX - r.left) / r.width, y = (e.clientY - r.top) / r.height;
+        el.classList.add('is-tilting');
+        el.style.setProperty('--ty', ((x - 0.5) * 8).toFixed(2) + 'deg');
+        el.style.setProperty('--tx', ((0.5 - y) * 6).toFixed(2) + 'deg');
+        el.style.setProperty('--sx', (x * 100).toFixed(1) + '%');
+        el.style.setProperty('--sy2', (y * 100).toFixed(1) + '%');
+      });
+      el.addEventListener('pointerleave', () => {
+        el.classList.remove('is-tilting');
+        el.style.setProperty('--tx', '0deg'); el.style.setProperty('--ty', '0deg');
+      });
+    });
+    // Spotlight that follows the pointer across cards
+    $$('.caps-panels, .repos a').forEach((el) => {
+      el.addEventListener('pointermove', (e) => {
+        const r = el.getBoundingClientRect();
+        el.style.setProperty('--sx', (e.clientX - r.left).toFixed(0) + 'px');
+        el.style.setProperty('--sy2', (e.clientY - r.top).toFixed(0) + 'px');
+      });
+    });
+    // Magnetic controls
+    $$('[data-magnetic]').forEach((el) => {
+      el.addEventListener('pointermove', (e) => {
+        const r = el.getBoundingClientRect();
+        el.classList.add('is-pulled');
+        el.style.setProperty('--gx', ((e.clientX - (r.left + r.width / 2)) * 0.3).toFixed(1) + 'px');
+        el.style.setProperty('--gy', ((e.clientY - (r.top + r.height / 2)) * 0.4).toFixed(1) + 'px');
+      });
+      el.addEventListener('pointerleave', () => {
+        el.classList.remove('is-pulled');
+        el.style.setProperty('--gx', '0px'); el.style.setProperty('--gy', '0px');
+      });
+    });
+    // Scramble nav labels on hover
+    const narrow = window.matchMedia('(max-width: 760px)');
+    $$('[data-scramble]').forEach((a) => {
+      const txt = a.textContent;
+      a.addEventListener('pointerenter', () => {
+        if (narrow.matches) return;
+        a.style.minWidth = a.offsetWidth + 'px';
+        scramble(a, txt, 420);
+      });
+    });
+
+    // Cursor follower with contextual labels
+    const cur = $('.cursor');
+    const curLabel = cur && $('.cursor-label', cur);
+    if (cur) {
+      let mx = -100, my = -100, cx = -100, cy = -100, cRaf = 0;
+      const cLoop = () => {
+        cx += (mx - cx) * 0.22; cy += (my - cy) * 0.22;
+        cur.style.setProperty('--cx', cx.toFixed(1) + 'px');
+        cur.style.setProperty('--cy', cy.toFixed(1) + 'px');
+        cRaf = Math.abs(mx - cx) + Math.abs(my - cy) > 0.2 ? requestAnimationFrame(cLoop) : 0;
+      };
+      window.addEventListener('pointermove', (e) => {
+        if (e.pointerType !== 'mouse') return;
+        mx = e.clientX; my = e.clientY;
+        if (!root.classList.contains('has-cursor')) { cx = mx; cy = my; root.classList.add('has-cursor'); }
+        if (!cRaf) cRaf = requestAnimationFrame(cLoop);
+      }, { passive: true });
+      document.addEventListener('mouseout', (e) => { if (!e.relatedTarget) root.classList.remove('has-cursor'); });
+      document.addEventListener('pointerover', (e) => {
+        const t = e.target.closest('[data-cursor], a, button, [role="tab"]');
+        const label = t && t.dataset.cursor;
+        cur.classList.toggle('is-label', !!label);
+        cur.classList.toggle('is-link', !!t && !label);
+        if (label) curLabel.textContent = label;
+      });
+      window.addEventListener('pointerdown', () => cur.classList.add('is-down'));
+      window.addEventListener('pointerup', () => cur.classList.remove('is-down'));
+    }
+
+    // Floating preview on the work index
+    const peek = $('.peek');
+    const peekInner = peek && $('.peek-inner', peek);
+    if (peek) {
+      const cache = {};
+      const contentFor = (key) => {
+        if (cache[key]) return cache[key];
+        let node;
+        if (key === 'fintech' || key === 'ride') {
+          node = document.createElement('div');
+          node.className = 'peek-clone';
+          const c = (key === 'fintech' ? $('.suite-win') : $('.ride-map')).cloneNode(true);
+          c.removeAttribute('id');
+          $$('[id]', c).forEach((n) => n.removeAttribute('id'));
+          $$('[style]', c).forEach((n) => n.removeAttribute('style'));
+          if (key === 'ride') { const g = $('.car', c); if (g) g.remove(); }
+          node.appendChild(c);
+        } else {
+          node = new Image(); node.src = key; node.alt = ''; node.decoding = 'async';
+        }
+        return (cache[key] = node);
+      };
+      let px = 0, py = 0, tx = 0, ty = 0, pRaf = 0;
+      const pLoop = () => {
+        const dx = tx - px;
+        px += dx * 0.16; py += (ty - py) * 0.16;
+        peek.style.setProperty('--px2', px.toFixed(1) + 'px');
+        peek.style.setProperty('--py2', py.toFixed(1) + 'px');
+        peek.style.setProperty('--pr', Math.max(-10, Math.min(10, dx * 0.08)).toFixed(2) + 'deg');
+        pRaf = Math.abs(dx) + Math.abs(ty - py) > 0.2 ? requestAnimationFrame(pLoop) : 0;
+      };
+      $$('.work-index a[data-preview]').forEach((a) => {
+        a.addEventListener('pointerenter', (e) => {
+          peekInner.replaceChildren(contentFor(a.dataset.preview));
+          if (!peek.classList.contains('is-on')) { px = e.clientX; py = e.clientY; }
+          tx = e.clientX; ty = e.clientY;
+          peek.classList.add('is-on');
+          if (!pRaf) pRaf = requestAnimationFrame(pLoop);
+        });
+        a.addEventListener('pointermove', (e) => { tx = e.clientX; ty = e.clientY; if (!pRaf) pRaf = requestAnimationFrame(pLoop); });
+        a.addEventListener('pointerleave', () => peek.classList.remove('is-on'));
+      });
+    }
   }
 })();

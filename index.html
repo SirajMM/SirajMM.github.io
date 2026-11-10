@@ -56,11 +56,11 @@
     <a class="wordmark" href="#top" aria-label="Muhammad Siraj M M, back to top">Siraj&nbsp;M&nbsp;M</a>
     <button class="nav-toggle" type="button" aria-expanded="false" aria-controls="nav-links">Menu</button>
     <nav class="nav-links" id="nav-links" aria-label="Sections">
-      <a href="#work">Work</a>
-      <a href="#experience">Experience</a>
-      <a href="#about">About</a>
-      <a href="#contact">Contact</a>
-      <a class="nav-resume" href="/Muhammad_Siraj_Resume.pdf" target="_blank" rel="noopener">Résumé</a>
+      <a href="#work" data-scramble>Work</a>
+      <a href="#experience" data-scramble>Experience</a>
+      <a href="#about" data-scramble>About</a>
+      <a href="#contact" data-scramble>Contact</a>
+      <a class="nav-resume" href="/Muhammad_Siraj_Resume.pdf" target="_blank" rel="noopener" data-magnetic data-cursor="PDF">Résumé</a>
     </nav>
     <span class="progress" aria-hidden="true"></span>
   </header>
@@ -73,17 +73,17 @@
         <span class="halo"></span>
       </div>
 
-      <h1 class="name" id="hero-name" aria-label="Muhammad Siraj M M">
-        <span class="name-line" aria-hidden="true"><span class="name-word" data-split>Muhammad</span></span>
-        <span class="name-line" aria-hidden="true"><span class="name-word" data-split>Siraj&nbsp;M&nbsp;M</span></span>
-      </h1>
-
       <div class="hero-copy">
-        <p class="lede">Fintech apps that ship to Android, iOS, macOS and Windows from one Flutter codebase.</p>
-        <p class="sub">Mobile Application Developer at ThoughtBox Online Services in Kochi. Three years of Flutter, most of it on exchange, remittance and payment apps.</p>
+        <p class="eyebrow"><span class="eyebrow-dot" aria-hidden="true"></span>Muhammad Siraj M M · Flutter developer, Kochi</p>
+        <h1 class="headline" aria-label="One Flutter codebase, shipped to Android, iOS, macOS and Windows">
+          <span class="hl-line" aria-hidden="true"><span class="hl-word" data-split>One Flutter</span></span>
+          <span class="hl-line" aria-hidden="true"><span class="hl-word" data-split>codebase.</span></span>
+          <span class="hl-line hl-ships" aria-hidden="true"><span class="hl-word hl-to" data-split>Ships to</span> <span class="hl-plat" id="hl-plat">Android</span></span>
+        </h1>
+        <p class="sub">Exchange, remittance and payment apps for Android, iOS, macOS and Windows, built at ThoughtBox Online Services. Three years of Flutter, BLoC and gRPC with Go.</p>
         <div class="actions">
-          <a class="btn btn-primary" href="#work">See the work</a>
-          <a class="btn" href="mailto:sirajmuhammed718@gmail.com">Email me</a>
+          <a class="btn btn-primary" href="#work" data-magnetic data-cursor="Scroll">See the work</a>
+          <a class="btn" href="mailto:sirajmuhammed718@gmail.com" data-magnetic data-cursor="Write">Email me</a>
         </div>
       </div>
 
@@ -108,9 +108,9 @@
               <div class="app-main">
                 <div class="app-head"><span>Send money</span><span class="app-avatar">MS</span></div>
                 <div class="quote">
-                  <div class="quote-row"><small>You send</small><strong>1,000.00 <em>QAR</em></strong></div>
+                  <div class="quote-row"><small>You send</small><strong><span data-roll="1000">1,000.00</span> <em>QAR</em></strong></div>
                   <div class="quote-rate"><span>1 QAR = 22.94 INR</span><span>Fee 15.00 QAR</span></div>
-                  <div class="quote-row"><small>They receive</small><strong>22,940.00 <em>INR</em></strong></div>
+                  <div class="quote-row"><small>They receive</small><strong><span data-roll="22940">22,940.00</span> <em>INR</em></strong></div>
                 </div>
                 <div class="payee">
                   <span class="payee-dot">AK</span>
@@ -134,6 +134,7 @@
               <nav class="app-tabs" aria-hidden="true"><i class="is-on"></i><i></i><i></i><i></i></nav>
             </div>
             <span class="home-bar" aria-hidden="true"></span>
+            <span class="glare" aria-hidden="true"></span>
           </div>
         </div>
 
@@ -144,25 +145,47 @@
             <button type="button" data-p="macos" aria-pressed="false">macOS</button>
             <button type="button" data-p="windows" aria-pressed="false">Windows</button>
           </div>
-          <figcaption>One widget tree on four platforms. Illustrative screen with sample data; client apps are under NDA.</figcaption>
+          <div class="skin" role="group" aria-label="Re-skin the app with another set of design tokens">
+            <span class="skin-label">Tokens</span>
+            <button type="button" data-skin="petrol" aria-pressed="true"><i></i>Petrol</button>
+            <button type="button" data-skin="plum" aria-pressed="false"><i></i>Plum</button>
+            <button type="button" data-skin="ember" aria-pressed="false"><i></i>Ember</button>
+          </div>
+          <figcaption>One widget tree on four platforms, re-skinned by swapping design tokens. Illustrative screen with sample data; client apps are under NDA.</figcaption>
         </div>
       </figure>
+    </section>
+
+    <!-- ================= PROOF ================= -->
+    <section class="proof" aria-label="At a glance">
+      <ul class="stats">
+        <li><b class="odo" data-odo="3">3</b><sup>+</sup><span>years shipping Flutter to production</span></li>
+        <li><b class="odo" data-odo="4">4</b><span>platforms from a single codebase</span></li>
+        <li><b class="odo" data-odo="2">2</b><span>app stores released to, with staged rollouts</span></li>
+        <li><b class="odo" data-odo="1">1</b><span>design-token system shared by every app</span></li>
+      </ul>
+      <div class="marquee" aria-hidden="true" data-marquee>
+        <div class="marquee-track"><span>Flutter</span><span>Dart</span><span>BLoC</span><span>gRPC</span><span>Go</span><span>Firebase</span><span>Hive</span><span>Razorpay</span><span>Stripe</span><span>UAE AANI</span><span>Google Maps</span><span>CI/CD</span></div>
+      </div>
     </section>
 
     <!-- ================= WORK ================= -->
     <section class="section work" id="work" aria-labelledby="work-title">
       <div class="work-head">
-        <h2 id="work-title" class="split-title">Selected work</h2>
+        <div class="work-intro">
+          <h2 id="work-title" class="split-title">Selected work</h2>
+          <p>Two client products under NDA, shown as faithful illustrations with sample data, and two personal builds with real screenshots.</p>
+        </div>
         <ol class="work-index" aria-label="Projects on this page">
-          <li><a href="#case-fintech"><span>Fintech suite for exchange houses</span><small>2024 to now</small></a></li>
-          <li><a href="#case-ride"><span>Cab booking with live tracking</span><small>2023 to 2024</small></a></li>
-          <li><a href="#build-quibix"><span>Quibix, electronics store</span><small>2023</small></a></li>
-          <li><a href="#build-blaze"><span>Blaze Player, offline music</span><small>2023</small></a></li>
+          <li><a href="#case-fintech" data-preview="fintech" data-cursor="Jump"><span>Fintech suite for exchange houses</span><small>2024 to now</small></a></li>
+          <li><a href="#case-ride" data-preview="ride" data-cursor="Jump"><span>Cab booking with live tracking</span><small>2023 to 2024</small></a></li>
+          <li><a href="#build-quibix" data-preview="img/screens/quibix-home.webp" data-cursor="Jump"><span>Quibix, electronics store</span><small>2023</small></a></li>
+          <li><a href="#build-blaze" data-preview="img/screens/blaze-home.webp" data-cursor="Jump"><span>Blaze Player, offline music</span><small>2023</small></a></li>
         </ol>
       </div>
 
       <!-- Case: fintech -->
-      <article class="case case-fintech" id="case-fintech" aria-labelledby="case-fintech-title">
+      <article class="case case-fintech surface-paper" id="case-fintech" aria-labelledby="case-fintech-title">
         <header class="case-head">
           <p class="case-when">ThoughtBox Online Services, 2024 to now</p>
           <h3 id="case-fintech-title">A fintech suite for exchange houses</h3>
@@ -176,12 +199,13 @@
               <nav class="sw-side"><b>Remit</b><span>Dashboard</span><span class="is-on">Transfers</span><span>Customers</span><span>Screening</span><span>Rates</span></nav>
               <div class="sw-main">
                 <div class="sw-top">
-                  <b>Transfers today</b>
+                  <b>Transfers today <span class="sw-count" id="sw-count">5</span></b>
                   <span class="sw-kpis"><span><small>Corridor</small>QAR to INR</span><span><small>Rate</small>22.94</span></span>
                 </div>
                 <table class="sw-table">
                   <thead><tr><th>Ref</th><th>Beneficiary</th><th>Amount</th><th>Status</th></tr></thead>
-                  <tbody>
+                  <tbody id="sw-rows">
+                    <tr class="sw-new" hidden><td>QR-0912</td><td>Walk-in, AANI</td><td>245.00 AED</td><td><i class="chip ok">Paid</i></td></tr>
                     <tr><td>TR-2041</td><td>Anil Kumar</td><td>1,000.00 QAR</td><td><i class="chip ok">Paid</i></td></tr>
                     <tr><td>TR-2042</td><td>Fathima R.</td><td>350.00 QAR</td><td><i class="chip">Pending</i></td></tr>
                     <tr><td>TR-2043</td><td>Joseph M.</td><td>2,400.00 QAR</td><td><i class="chip warn">Review</i></td></tr>
@@ -197,12 +221,13 @@
             <div class="qr-screen">
               <p class="qr-title">AANI payment</p>
               <p class="qr-amt">245.00 <em>AED</em></p>
-              <svg class="qr" id="qr" viewBox="0 0 29 29" shape-rendering="crispEdges"></svg>
+              <div class="qr-wrap"><svg class="qr" id="qr" viewBox="0 0 29 29" shape-rendering="crispEdges"></svg><span class="qr-scan"></span><span class="qr-ok"><svg viewBox="0 0 24 24"><path d="M5 12.5l4.5 4.5L19 7.5" pathLength="1"/></svg></span></div>
               <p class="qr-note">Scan with your banking app</p>
-              <span class="qr-status">Waiting for payment</span>
+              <span class="qr-status" id="qr-status">Waiting for payment</span>
             </div>
           </div>
-          <figcaption>Illustrative composition with sample data: a back-office window on desktop and an instant-payment QR on mobile, from the same codebase. Not screenshots of client apps.</figcaption>
+          <button class="replay" type="button" id="replay" hidden data-cursor="Replay">Replay the payment</button>
+          <figcaption>Illustrative composition with sample data: a QR payment on mobile lands in the back-office window on desktop, both from the same codebase. Not screenshots of client apps.</figcaption>
         </figure>
 
         <div class="case-body">
@@ -251,7 +276,7 @@
               <div class="ride-mini"></div>
               <div class="ride-sheet">
                 <span class="grab"></span>
-                <p class="eta"><b>Driver arriving</b><span>4 min</span></p>
+                <p class="eta"><b id="eta-label">Driver arriving</b><span id="eta">4 min</span></p>
                 <div class="driver"><span class="drv-dot">RK</span><span><b>Ravi K.</b><small>White hatchback</small></span></div>
                 <p class="pay-label">Pay with</p>
                 <div class="pay"><span class="is-on">Razorpay</span><span>Card via Stripe</span></div>
@@ -278,7 +303,7 @@
         <h3 class="builds-title">Built on my own time, with real screenshots</h3>
 
         <article class="build build-quibix" id="build-quibix" aria-labelledby="quibix-title">
-          <figure class="fan" data-reveal>
+          <figure class="fan" data-reveal data-tilt data-cursor="Fan out">
             <div class="phone-shell fan-1"><picture><source srcset="img/screens/quibix-detail.webp" type="image/webp"><img src="img/screens/quibix-detail.jpg" alt="Quibix product detail screen for headphones with colour options and specifications" width="450" height="969" loading="lazy" decoding="async"></picture></div>
             <div class="phone-shell fan-2"><picture><source srcset="img/screens/quibix-home.webp" type="image/webp"><img src="img/screens/quibix-home.jpg" alt="Quibix home screen with a sale banner, category filters and a product grid" width="450" height="967" loading="lazy" decoding="async"></picture></div>
             <div class="phone-shell fan-3"><picture><source srcset="img/screens/quibix-track.webp" type="image/webp"><img src="img/screens/quibix-track.jpg" alt="Quibix order tracking screen with a timeline from order placed to delivered" width="448" height="969" loading="lazy" decoding="async"></picture></div>
@@ -298,7 +323,7 @@
             <p>Plays the songs already on your phone. Playlists, favourites, recently and most played are stored in Hive, and playback keeps going in the background with a mini player on every screen.</p>
             <a class="link" href="https://github.com/SirajMM/MusicPlayer" target="_blank" rel="noopener">Read the source</a>
           </div>
-          <figure class="duo" data-reveal>
+          <figure class="duo" data-reveal data-tilt>
             <div class="phone-shell duo-1"><picture><source srcset="img/screens/blaze-home.webp" type="image/webp"><img src="img/screens/blaze-home.jpg" alt="Blaze Player library with recently and most played, and a song list above the mini player" width="302" height="651" loading="lazy" decoding="async"></picture></div>
             <div class="phone-shell duo-2"><picture><source srcset="img/screens/blaze-fav.webp" type="image/webp"><img src="img/screens/blaze-fav.jpg" alt="Blaze Player favourite songs screen with shuffle and play buttons" width="302" height="651" loading="lazy" decoding="async"></picture></div>
           </figure>
@@ -420,14 +445,18 @@
     </section>
 
     <!-- ================= CONTACT ================= -->
+    <div class="big-marquee" aria-hidden="true" data-marquee data-speed="0.6">
+      <div class="marquee-track"><span>Let's build it</span><span>Let's ship it</span><span>Let's build it</span><span>Let's ship it</span></div>
+    </div>
+
     <section class="contact" id="contact" aria-labelledby="contact-title">
       <svg class="guilloche guilloche-contact" id="guilloche-contact" aria-hidden="true" viewBox="-500 -500 1000 1000"></svg>
       <p class="contact-time" id="kochi-time" hidden></p>
       <h2 id="contact-title" class="split-title">Have a Flutter app to build, or one to fix?</h2>
       <p class="contact-sub">Email is the fastest way to reach me. Tell me what you're building and where it runs.</p>
       <div class="mail-row">
-        <a class="mail" href="mailto:sirajmuhammed718@gmail.com">sirajmuhammed718@gmail.com</a>
-        <button class="copy" type="button" data-copy="sirajmuhammed718@gmail.com">Copy</button>
+        <a class="mail" href="mailto:sirajmuhammed718@gmail.com" data-cursor="Write">sirajmuhammed718@gmail.com</a>
+        <button class="copy" type="button" data-copy="sirajmuhammed718@gmail.com" data-magnetic data-cursor="Copy">Copy</button>
         <span class="copy-status" role="status" aria-live="polite"></span>
       </div>
       <ul class="elsewhere">
@@ -447,5 +476,7 @@
       <a href="#top">Back to top</a>
     </div>
   </footer>
+  <div class="cursor" aria-hidden="true"><span class="cursor-label"></span></div>
+  <div class="peek" aria-hidden="true"><div class="peek-inner"></div></div>
 </body>
 </html>
