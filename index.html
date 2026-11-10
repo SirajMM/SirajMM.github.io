@@ -6,7 +6,7 @@
   <title>Muhammad Siraj M M · Flutter developer for fintech and cross-platform apps</title>
   <meta name="description" content="Flutter developer in Kochi building exchange, remittance and payment apps for Android, iOS, macOS and Windows from one codebase. BLoC, gRPC with Go, Firebase.">
   <link rel="canonical" href="https://sirajmm.github.io/">
-  <meta name="theme-color" content="#0F2527">
+  <meta name="theme-color" content="#08080C">
   <meta name="color-scheme" content="dark">
 
   <meta property="og:type" content="website">
@@ -25,11 +25,9 @@
   <link rel="icon" href="favicon-32.png" sizes="32x32" type="image/png">
   <link rel="apple-touch-icon" href="apple-touch-icon.png">
   <link rel="preload" href="fonts/archivo-var.woff2" as="font" type="font/woff2" crossorigin>
-  <link rel="stylesheet" href="css/site.css">
-  <script>(function(d){d.classList.add('js');try{if(matchMedia('(prefers-reduced-motion: reduce)').matches)d.classList.add('no-intro');else d.classList.add('intro-on')}catch(e){d.classList.add('intro-on')}})(document.documentElement)</script>
-  <script src="js/vendor/lenis.min.js" defer></script>
-  <script src="js/site.js" defer></script>
-  <script src="js/depth.js" defer></script>
+  <link rel="stylesheet" href="css/glass.css">
+  <script>(function(d){d.classList.add('js');try{if(!matchMedia('(prefers-reduced-motion: reduce)').matches)d.classList.add('loading')}catch(e){}})(document.documentElement)</script>
+  <script src="js/glass.js" defer></script>
 
   <script type="application/ld+json">
   {
@@ -52,448 +50,176 @@
   </script>
 </head>
 <body>
-  <div class="intro" id="intro" aria-hidden="true">
-    <div class="intro-word"><span class="intro-letters" id="intro-letters"></span><span class="intro-bang"><i class="intro-stem"></i><i class="intro-dot"></i></span></div>
-    <span class="intro-skip">Skip</span>
+  <div class="loader" id="loader" aria-hidden="true">
+    <div class="count" id="count"><span class="col"><b></b></span><span class="col"><b></b></span><span class="col"><b></b></span></div>
+    <p class="loader-line" id="loader-line">The Flutter developer<br>your app needs</p>
   </div>
+  <canvas class="bokeh" id="bokeh" aria-hidden="true"></canvas>
+  <canvas class="sparks" id="sparks" aria-hidden="true"></canvas>
   <a class="skip" href="#main">Skip to content</a>
 
-  <header class="nav" id="nav">
-    <a class="wordmark" href="#top" aria-label="Muhammad Siraj M M, back to top">Siraj&nbsp;M&nbsp;M</a>
-    <button class="nav-toggle" type="button" aria-expanded="false" aria-controls="nav-links">Menu</button>
-    <nav class="nav-links" id="nav-links" aria-label="Sections">
-      <a href="#work" data-scramble>Work</a>
-      <a href="#experience" data-scramble>Experience</a>
-      <a href="#about" data-scramble>About</a>
-      <a href="#contact" data-scramble>Contact</a>
-      <a class="nav-resume" href="/Muhammad_Siraj_Resume.pdf" target="_blank" rel="noopener" data-magnetic data-cursor="PDF">Résumé</a>
-    </nav>
-    <span class="progress" aria-hidden="true"></span>
+  <header class="nav glass" id="nav">
+    <a class="logo" href="#top" aria-label="Siraj, back to top"><em>S</em>IRAJ.</a>
+    <nav aria-label="Sections"><a href="#projects">Projects</a><a href="#about">About</a><a href="#services">Services</a><a href="#skills">Skills</a><a href="#contact">Contact</a></nav>
+    <a class="pill pill-acc" href="#contact">Let's talk</a>
   </header>
 
   <main id="main">
-    <!-- ================= HERO ================= -->
-    <section class="hero" id="top" aria-label="Introduction">
-      <div class="hero-depth" aria-hidden="true">
-        <svg class="guilloche" id="guilloche" viewBox="-500 -500 1000 1000"></svg>
-        <span class="halo"></span>
-      </div>
-
-      <div class="hero-copy">
-        <p class="eyebrow"><span class="eyebrow-dot" aria-hidden="true"></span>Muhammad Siraj M M · Flutter developer, Kochi</p>
-        <h1 class="headline" aria-label="One Flutter codebase, shipped to Android, iOS, macOS and Windows">
-          <span class="hl-line" aria-hidden="true"><span class="hl-word" data-split>One Flutter</span></span>
-          <span class="hl-line" aria-hidden="true"><span class="hl-word" data-split>codebase.</span></span>
-          <span class="hl-line hl-ships" aria-hidden="true"><span class="hl-word hl-to" data-split>Ships to</span> <span class="hl-plat" id="hl-plat">Android</span></span>
-        </h1>
-        <p class="sub">Exchange, remittance and payment apps for Android, iOS, macOS and Windows, built at ThoughtBox Online Services. Three years of Flutter, BLoC and gRPC with Go.</p>
-        <div class="actions">
-          <a class="btn btn-primary" href="#work" data-magnetic data-cursor="Scroll">See the work</a>
-          <a class="btn" href="mailto:sirajmuhammed718@gmail.com" data-magnetic data-cursor="Write">Email me</a>
+    <section class="hero" id="top">
+      <div class="frame" id="frame">
+        <i class="shard shard-1"></i><i class="shard shard-2"></i><i class="shard shard-3"></i>
+        <i class="hero-glow"></i>
+        <img class="hero-me" src="img/siraj-cut.webp" alt="Muhammad Siraj with a laptop" width="660" height="555" fetchpriority="high">
+        <div class="hero-copy">
+          <p class="eyebrow">Flutter developer • Kochi, India</p>
+          <h1 class="name" aria-label="Siraj"><span>S</span><span>I</span><span>R</span><span>A</span><span>J</span></h1>
+          <p class="role">Mobile apps <i>/</i> Cross-platform</p>
+          <p class="sub">One Flutter codebase, shipped to Android, iOS, macOS and Windows.</p>
+          <p class="actions"><a class="pill pill-solid" href="#projects">Explore my work</a><a class="pill" href="#contact">Get in touch</a></p>
         </div>
       </div>
-
-      <figure class="stage" id="stage">
-        <div class="stage-frame">
-          <div class="device" id="device" data-platform="android">
-            <div class="chrome-desk" aria-hidden="true">
-              <span class="lights"><i></i><i></i><i></i></span>
-              <span class="win-title">Remit</span>
-              <span class="win-ctrl"><i></i><i></i><i></i></span>
-            </div>
-            <div class="chrome-phone" aria-hidden="true">
-              <span class="clock">9:41</span><span class="cam"></span><span class="sig"><i></i><i></i><i></i></span>
-            </div>
-
-            <div class="app" aria-label="Illustrative money transfer screen">
-              <aside class="app-side">
-                <b class="app-brand">Remit</b>
-                <span class="is-on">Send</span><span>Beneficiaries</span><span>Rates</span><span>History</span>
-              </aside>
-
-              <div class="app-main">
-                <div class="app-head"><span>Send money</span><span class="app-avatar">MS</span></div>
-                <div class="quote">
-                  <div class="quote-row"><small>You send</small><strong><span data-roll="1000">1,000.00</span> <em>QAR</em></strong></div>
-                  <div class="quote-rate"><span>1 QAR = 22.94 INR</span><span>Fee 15.00 QAR</span></div>
-                  <div class="quote-row"><small>They receive</small><strong><span data-roll="22940">22,940.00</span> <em>INR</em></strong></div>
-                </div>
-                <div class="payee">
-                  <span class="payee-dot">AK</span>
-                  <span class="payee-text"><b>Anil Kumar</b><small>Bank account ending 4821</small></span>
-                  <span class="payee-chev"></span>
-                </div>
-                <div class="payout">
-                  <span><small>Pay out</small>Bank deposit</span>
-                  <span><small>Arrives</small>Today</span>
-                </div>
-                <span class="app-cta">Review transfer</span>
-              </div>
-
-              <aside class="app-aside">
-                <small>Recent</small>
-                <span class="mini"><i>AK</i>Anil Kumar</span>
-                <span class="mini"><i>FR</i>Fathima R.</span>
-                <span class="mini"><i>JM</i>Joseph M.</span>
-              </aside>
-
-              <nav class="app-tabs" aria-hidden="true"><i class="is-on"></i><i></i><i></i><i></i></nav>
-            </div>
-            <span class="home-bar" aria-hidden="true"></span>
-            <span class="glare" aria-hidden="true"></span>
-          </div>
-        </div>
-
-        <div class="stage-foot">
-          <div class="switch" role="group" aria-label="Preview the same screen on a platform">
-            <button type="button" data-p="android" aria-pressed="true">Android</button>
-            <button type="button" data-p="ios" aria-pressed="false">iOS</button>
-            <button type="button" data-p="macos" aria-pressed="false">macOS</button>
-            <button type="button" data-p="windows" aria-pressed="false">Windows</button>
-          </div>
-          <div class="skin" role="group" aria-label="Re-skin the app with another set of design tokens">
-            <span class="skin-label">Tokens</span>
-            <button type="button" data-skin="petrol" aria-pressed="true"><i></i>Petrol</button>
-            <button type="button" data-skin="plum" aria-pressed="false"><i></i>Plum</button>
-            <button type="button" data-skin="ember" aria-pressed="false"><i></i>Ember</button>
-          </div>
-          <button class="live-btn" id="live-btn" type="button" aria-pressed="false" data-magnetic data-cursor="Run"><i aria-hidden="true"></i><span>Run the real Flutter app</span></button>
-          <figcaption id="stage-cap">One widget tree on four platforms, re-skinned by swapping design tokens. Illustrative screen with sample data; client apps are under NDA.</figcaption>
-        </div>
-      </figure>
     </section>
 
-    <!-- ================= PROOF ================= -->
-    <section class="proof" aria-label="At a glance">
-      <ul class="stats">
-        <li><b class="odo" data-odo="3">3</b><sup>+</sup><span>years shipping Flutter to production</span></li>
-        <li><b class="odo" data-odo="4">4</b><span>platforms from a single codebase</span></li>
-        <li><b class="odo" data-odo="8">8</b><span>apps published to the Play Store and App Store</span></li>
-        <li><b class="odo" data-odo="1">1</b><span>design-token system shared by every app</span></li>
+    <section class="stats" aria-label="In numbers">
+      <ul>
+        <li class="rv"><b data-count="8">8</b><span>Apps published</span><small>Play Store and App Store</small></li>
+        <li class="rv"><b data-count="3" data-suffix="+">3+</b><span>Years of Flutter</span><small>In production since 2023</small></li>
+        <li class="rv"><b data-count="4">4</b><span>Platforms</span><small>Android, iOS, macOS, Windows</small></li>
       </ul>
-      <div class="marquee" aria-hidden="true" data-marquee>
-        <div class="marquee-track"><span>Flutter</span><span>Dart</span><span>BLoC</span><span>gRPC</span><span>Go</span><span>Firebase</span><span>Hive</span><span>Razorpay</span><span>Stripe</span><span>UAE AANI</span><span>Google Maps</span><span>CI/CD</span></div>
-      </div>
     </section>
 
-    <!-- ================= WORK ================= -->
-    <section class="section work" id="work" aria-labelledby="work-title">
-      <div class="work-head">
-        <div class="work-intro">
-          <h2 id="work-title" class="split-title">Selected work</h2>
-          <p data-words>Two client products under NDA, shown as faithful illustrations with sample data, and two personal builds with real screenshots.</p>
-        </div>
-        <ol class="work-index" aria-label="Projects on this page">
-          <li><a href="#case-fintech" data-preview="fintech" data-cursor="Jump"><span>Fintech suite for exchange houses</span><small>2024 to now</small></a></li>
-          <li><a href="#case-ride" data-preview="ride" data-cursor="Jump"><span>Cab booking with live tracking</span><small>2023 to 2024</small></a></li>
-          <li><a href="#build-quibix" data-preview="img/screens/quibix-home.webp" data-cursor="Jump"><span>Quibix, electronics store</span><small>2023</small></a></li>
-          <li><a href="#build-blaze" data-preview="img/screens/blaze-home.webp" data-cursor="Jump"><span>Blaze Player, offline music</span><small>2023</small></a></li>
-        </ol>
-      </div>
-
-      <!-- Case: fintech -->
-      <article class="case case-fintech surface-paper" id="case-fintech" aria-labelledby="case-fintech-title">
-        <header class="case-head">
-          <p class="case-when">ThoughtBox Online Services, 2024 to now</p>
-          <h3 id="case-fintech-title">A fintech suite for exchange houses</h3>
-          <p class="case-intro">Customer apps for currency exchange and remittance, plus a back-office app, built in Flutter for Android, iOS, macOS and Windows.</p>
-        </header>
-
-        <div class="pin" id="pin-pay"><div class="pin-sticky">
-        <figure class="suite" data-reveal>
-          <div class="suite-win" aria-hidden="true">
-            <div class="sw-bar"><span class="lights"><i></i><i></i><i></i></span><span>Back office</span></div>
-            <div class="sw-body">
-              <nav class="sw-side"><b>Remit</b><span>Dashboard</span><span class="is-on">Transfers</span><span>Customers</span><span>Screening</span><span>Rates</span></nav>
-              <div class="sw-main">
-                <div class="sw-top">
-                  <b>Transfers today <span class="sw-count" id="sw-count">5</span></b>
-                  <span class="sw-kpis"><span><small>Corridor</small>QAR to INR</span><span><small>Rate</small>22.94</span></span>
-                </div>
-                <table class="sw-table">
-                  <thead><tr><th>Ref</th><th>Beneficiary</th><th>Amount</th><th>Status</th></tr></thead>
-                  <tbody id="sw-rows">
-                    <tr class="sw-new" hidden><td>QR-0912</td><td>Walk-in, AANI</td><td>245.00 AED</td><td><i class="chip ok">Paid</i></td></tr>
-                    <tr><td>TR-2041</td><td>Anil Kumar</td><td>1,000.00 QAR</td><td><i class="chip ok">Paid</i></td></tr>
-                    <tr><td>TR-2042</td><td>Fathima R.</td><td>350.00 QAR</td><td><i class="chip">Pending</i></td></tr>
-                    <tr><td>TR-2043</td><td>Joseph M.</td><td>2,400.00 QAR</td><td><i class="chip warn">Review</i></td></tr>
-                    <tr><td>TR-2044</td><td>Priya S.</td><td>780.00 QAR</td><td><i class="chip ok">Paid</i></td></tr>
-                    <tr><td>TR-2045</td><td>Rahul N.</td><td>120.00 QAR</td><td><i class="chip ok">Paid</i></td></tr>
-                  </tbody>
-                </table>
-              </div>
-            </div>
-          </div>
-
-          <div class="suite-phone phone-shell" aria-hidden="true">
-            <div class="qr-screen">
-              <p class="qr-title">AANI payment</p>
-              <p class="qr-amt">245.00 <em>AED</em></p>
-              <div class="qr-wrap"><svg class="qr" id="qr" viewBox="0 0 29 29" shape-rendering="crispEdges"></svg><span class="qr-scan"></span><span class="qr-ok"><svg viewBox="0 0 24 24"><path d="M5 12.5l4.5 4.5L19 7.5" pathLength="1"/></svg></span></div>
-              <p class="qr-note">Scan with your banking app</p>
-              <span class="qr-status" id="qr-status">Waiting for payment</span>
-            </div>
-          </div>
-          <button class="replay" type="button" id="replay" hidden data-cursor="Replay">Replay the payment</button>
-          <figcaption>Illustrative composition with sample data: a QR payment on mobile lands in the back-office window on desktop, both from the same codebase. Not screenshots of client apps.</figcaption>
-        </figure>
-        <ol class="chapters" id="pay-chapters" aria-hidden="true">
-          <li><b>The cashier shows a QR</b><span>The mobile app raises an AANI payment request for 245.00 AED.</span></li>
-          <li><b>The customer scans it</b><span>They approve it in their own banking app. No card, no cash.</span></li>
-          <li><b>The back office sees it</b><span>The transfer lands in the desktop app, built from the same codebase.</span></li>
-        </ol>
-        </div></div>
-
-        <div class="case-body">
-          <dl class="facts">
-            <div><dt>Architecture</dt><dd>Designed the BLoC architecture and design tokens shared across the apps.</dd></div>
-            <div><dt>Backend</dt><dd>Integrated the Go backend over gRPC.</dd></div>
-            <div><dt>Payments</dt><dd>Implemented UAE AANI instant-payment QR flows.</dd></div>
-            <div><dt>Security</dt><dd>Led remediation of VAPT findings.</dd></div>
-            <div><dt>Release</dt><dd>Managed Play Store staged rollouts and forced updates.</dd></div>
-          </dl>
-
-          <figure class="stack-visual" data-reveal>
-            <div class="stack-wrap">
-              <ol class="stack" aria-label="Layers shared by every app in the suite, top to bottom">
-                <li class="plate plate-platforms"><span>Android</span><span>iOS</span><span>macOS</span><span>Windows</span></li>
-                <li class="plate"><b>Design tokens and widget library</b><small>One look, themed per app</small></li>
-                <li class="plate"><b>BLoC feature modules</b><small>Predictable state, testable logic</small></li>
-                <li class="plate"><b>gRPC repositories</b><small>Typed calls generated from protos</small></li>
-                <li class="plate plate-base"><b>Go services</b><small>Rates, transfers, compliance</small></li>
-              </ol>
-              <span class="bracket bracket-shared" aria-hidden="true"><i>Shared Flutter code</i></span>
-              <span class="bracket bracket-backend" aria-hidden="true"><i>Backend</i></span>
-            </div>
-            <figcaption>How the suite is layered: everything above the backend is one Flutter codebase.</figcaption>
-          </figure>
-        </div>
-      </article>
-
-      <!-- Case: ride -->
-      <article class="case case-ride" id="case-ride" aria-labelledby="case-ride-title">
-        <figure class="ride" data-reveal>
-          <svg class="ride-map" viewBox="0 0 640 460" role="img" aria-labelledby="route-t">
-            <title id="route-t">Illustration of a cab route from pickup to drop-off</title>
-            <g class="map-grid">
-              <path d="M0 80H640M0 180H640M0 280H640M0 380H640M100 0V460M230 0V460M360 0V460M490 0V460"/>
-              <path class="map-major" d="M0 228C130 212 200 132 330 122S540 166 640 70M150 460C172 362 270 330 292 242S284 66 330 0"/>
-            </g>
-            <path id="route" class="route" pathLength="1" d="M96 392C150 378 186 332 218 296S286 254 316 236 360 194 386 166 462 124 520 102"/>
-            <circle class="pin pin-a" cx="96" cy="392" r="10"/>
-            <circle class="pin pin-b" cx="520" cy="102" r="10"/>
-            <g class="car"><circle r="14"/><circle class="car-core" r="6"/></g>
-          </svg>
-
-          <div class="ride-phone phone-shell" aria-hidden="true">
-            <div class="ride-screen">
-              <div class="ride-mini"></div>
-              <div class="ride-sheet">
-                <span class="grab"></span>
-                <p class="eta"><b id="eta-label">Driver arriving</b><span id="eta">4 min</span></p>
-                <div class="driver"><span class="drv-dot">RK</span><span><b>Ravi K.</b><small>White hatchback</small></span></div>
-                <p class="pay-label">Pay with</p>
-                <div class="pay"><span class="is-on">Razorpay</span><span>Card via Stripe</span></div>
-              </div>
-            </div>
-          </div>
-          <figcaption>Illustration, not a screenshot. The real app tracked the driver live on Google Maps and took payment through Razorpay and Stripe.</figcaption>
-        </figure>
-
-        <div class="case-text">
-          <p class="case-when">Spoider Innovations, 2023 to 2024</p>
-          <h3 id="case-ride-title">A cab booking app with live tracking</h3>
-          <p class="case-intro">My first production Flutter app: riders book a cab and watch it arrive.</p>
-          <dl class="facts">
-            <div><dt>Maps</dt><dd>Built live driver tracking with Google Maps.</dd></div>
-            <div><dt>Payments</dt><dd>Integrated Razorpay and Stripe.</dd></div>
-            <div><dt>Release</dt><dd>Shipped releases to the Play Store and App Store.</dd></div>
-          </dl>
-        </div>
-      </article>
-
-      <!-- Personal builds -->
-      <div class="builds" id="builds">
-        <h3 class="builds-title">Built on my own time, with real screenshots</h3>
-
-        <article class="build build-quibix" id="build-quibix" aria-labelledby="quibix-title">
-          <figure class="fan" data-reveal data-tilt data-lens data-cursor="Fan out">
-            <div class="phone-shell fan-1"><picture><source srcset="img/screens/quibix-detail.webp" type="image/webp"><img src="img/screens/quibix-detail.jpg" alt="Quibix product detail screen for headphones with colour options and specifications" width="450" height="969" loading="lazy" decoding="async"></picture></div>
-            <div class="phone-shell fan-2"><picture><source srcset="img/screens/quibix-home.webp" type="image/webp"><img src="img/screens/quibix-home.jpg" alt="Quibix home screen with a sale banner, category filters and a product grid" width="450" height="967" loading="lazy" decoding="async"></picture></div>
-            <div class="phone-shell fan-3"><picture><source srcset="img/screens/quibix-track.webp" type="image/webp"><img src="img/screens/quibix-track.jpg" alt="Quibix order tracking screen with a timeline from order placed to delivered" width="448" height="969" loading="lazy" decoding="async"></picture></div>
-          </figure>
-          <div class="build-text">
-            <p class="build-meta">Flutter, Firebase, Razorpay, 2023</p>
-            <h4 id="quibix-title">Quibix, an electronics store</h4>
-            <p>Browse, wishlist, pay and track an order. Firebase Auth with Google sign-in, Firestore and Storage behind it, Razorpay at checkout, and Provider state split into presentation, application and infrastructure layers.</p>
-            <a class="link" href="https://github.com/SirajMM/Quibix-ecommerce-app" target="_blank" rel="noopener">Read the source</a>
-          </div>
-        </article>
-
-        <article class="build build-blaze" id="build-blaze" aria-labelledby="blaze-title">
-          <div class="build-text">
-            <p class="build-meta">Flutter, Hive, Provider, 2023</p>
-            <h4 id="blaze-title">Blaze Player, an offline music player</h4>
-            <p>Plays the songs already on your phone. Playlists, favourites, recently and most played are stored in Hive, and playback keeps going in the background with a mini player on every screen.</p>
-            <a class="link" href="https://github.com/SirajMM/MusicPlayer" target="_blank" rel="noopener">Read the source</a>
-          </div>
-          <figure class="duo" data-reveal data-tilt data-lens>
-            <div class="phone-shell duo-1"><picture><source srcset="img/screens/blaze-home.webp" type="image/webp"><img src="img/screens/blaze-home.jpg" alt="Blaze Player library with recently and most played, and a song list above the mini player" width="302" height="651" loading="lazy" decoding="async"></picture></div>
-            <div class="phone-shell duo-2"><picture><source srcset="img/screens/blaze-fav.webp" type="image/webp"><img src="img/screens/blaze-fav.jpg" alt="Blaze Player favourite songs screen with shuffle and play buttons" width="302" height="651" loading="lazy" decoding="async"></picture></div>
-          </figure>
-        </article>
-      </div>
-    </section>
-
-    <svg class="divider" aria-hidden="true" viewBox="0 0 1200 60" preserveAspectRatio="none" data-band data-reveal></svg>
-
-    <!-- ================= CAPABILITIES ================= -->
-    <section class="section skills" id="skills" aria-labelledby="skills-title">
-      <div class="skills-head">
-        <h2 id="skills-title" class="split-title">What I build with</h2>
-        <p>Grouped by the problem each tool solves, from the screen down to the store listing.</p>
-      </div>
-      <div class="caps" id="caps">
-        <div class="caps-list" role="tablist" aria-label="Capabilities" hidden>
-          <button type="button" role="tab" id="cap-t1" aria-controls="cap-1" aria-selected="true">Cross-platform Flutter</button>
-          <button type="button" role="tab" id="cap-t2" aria-controls="cap-2" aria-selected="false" tabindex="-1">App architecture</button>
-          <button type="button" role="tab" id="cap-t3" aria-controls="cap-3" aria-selected="false" tabindex="-1">Backend and data</button>
-          <button type="button" role="tab" id="cap-t4" aria-controls="cap-4" aria-selected="false" tabindex="-1">Payments and security</button>
-          <button type="button" role="tab" id="cap-t5" aria-controls="cap-5" aria-selected="false" tabindex="-1">Shipping</button>
-        </div>
-        <div class="caps-panels">
-          <section class="cap" id="cap-1" role="tabpanel" aria-labelledby="cap-t1">
-            <h3>Cross-platform Flutter</h3>
-            <p>One Dart codebase for Android, iOS, macOS, Windows and the web, with layouts that adapt to each screen instead of stretching.</p>
-            <p class="cap-tools">Flutter, Dart, Flutter Web</p>
-            <a class="cap-where" href="#top">See it in the hero preview</a>
-          </section>
-          <section class="cap" id="cap-2" role="tabpanel" aria-labelledby="cap-t2">
-            <h3>App architecture</h3>
-            <p>Feature modules with clear state, shared design tokens and a reusable widget library.</p>
-            <p class="cap-tools">BLoC, GetX, Provider</p>
-            <a class="cap-where" href="#case-fintech">See the layered suite</a>
-          </section>
-          <section class="cap" id="cap-3" role="tabpanel" aria-labelledby="cap-t3">
-            <h3>Backend and data</h3>
-            <p>Typed service calls to Go backends, REST APIs, cloud data and on-device storage.</p>
-            <p class="cap-tools">gRPC, Go, REST, Firebase, Hive</p>
-            <a class="cap-where" href="#build-quibix">See Firebase in Quibix</a>
-          </section>
-          <section class="cap" id="cap-4" role="tabpanel" aria-labelledby="cap-t4">
-            <h3>Payments and security</h3>
-            <p>Instant-payment QR, card gateways, and fixing what a penetration test finds.</p>
-            <p class="cap-tools">AANI, Razorpay, Stripe, VAPT remediation</p>
-            <a class="cap-where" href="#case-ride">See the payment flows</a>
-          </section>
-          <section class="cap" id="cap-5" role="tabpanel" aria-labelledby="cap-t5">
-            <h3>Shipping</h3>
-            <p>Staged store rollouts, forced updates, and builds that run on every push.</p>
-            <p class="cap-tools">Play Store, App Store, CI/CD, Git, Figma</p>
-            <a class="cap-where" href="#experience">See where I shipped</a>
-          </section>
+    <section class="projects" id="projects">
+      <div class="fly" id="fly">
+        <div class="fly-pin">
+          <header class="head">
+            <p class="eyebrow">Featured works</p>
+            <h2>Projects<em>.</em></h2>
+            <a class="pill pill-sm" href="https://github.com/SirajMM" target="_blank" rel="noopener"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 .297c-6.63 0-12 5.373-12 12 0 5.303 3.438 9.8 8.205 11.385.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61C4.422 18.07 3.633 17.7 3.633 17.7c-1.087-.744.084-.729.084-.729 1.205.084 1.838 1.236 1.838 1.236 1.07 1.835 2.809 1.305 3.495.998.108-.776.417-1.305.76-1.605-2.665-.3-5.466-1.332-5.466-5.93 0-1.31.465-2.38 1.235-3.22-.135-.303-.54-1.523.105-3.176 0 0 1.005-.322 3.3 1.23.96-.267 1.98-.399 3-.405 1.02.006 2.04.138 3 .405 2.28-1.552 3.285-1.23 3.285-1.23.645 1.653.24 2.873.12 3.176.765.84 1.23 1.91 1.23 3.22 0 4.61-2.805 5.625-5.475 5.92.42.36.81 1.096.81 2.22 0 1.606-.015 2.896-.015 3.286 0 .315.21.69.825.57C20.565 22.092 24 17.592 24 12.297c0-6.627-5.373-12-12-12"/></svg>All repositories on GitHub <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 17 17 7M9 7h8v8" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></a>
+          </header>
+          <ul class="grid" id="grid">
+          <li class="tile" style="--i:0"><button class="tile-btn" type="button" data-project="suite" aria-haspopup="dialog">
+            <span class="tile-art"><span class="art art-suite"><svg class="qr" viewBox="-1 -1 23 23" aria-hidden="true"><rect x="0" y="0" width="1" height="1"/><rect x="1" y="0" width="1" height="1"/><rect x="2" y="0" width="1" height="1"/><rect x="3" y="0" width="1" height="1"/><rect x="4" y="0" width="1" height="1"/><rect x="5" y="0" width="1" height="1"/><rect x="6" y="0" width="1" height="1"/><rect x="7" y="0" width="1" height="1"/><rect x="8" y="0" width="1" height="1"/><rect x="10" y="0" width="1" height="1"/><rect x="12" y="0" width="1" height="1"/><rect x="13" y="0" width="1" height="1"/><rect x="14" y="0" width="1" height="1"/><rect x="15" y="0" width="1" height="1"/><rect x="16" y="0" width="1" height="1"/><rect x="17" y="0" width="1" height="1"/><rect x="18" y="0" width="1" height="1"/><rect x="19" y="0" width="1" height="1"/><rect x="20" y="0" width="1" height="1"/><rect x="0" y="1" width="1" height="1"/><rect x="6" y="1" width="1" height="1"/><rect x="8" y="1" width="1" height="1"/><rect x="9" y="1" width="1" height="1"/><rect x="10" y="1" width="1" height="1"/><rect x="11" y="1" width="1" height="1"/><rect x="12" y="1" width="1" height="1"/><rect x="14" y="1" width="1" height="1"/><rect x="20" y="1" width="1" height="1"/><rect x="0" y="2" width="1" height="1"/><rect x="2" y="2" width="1" height="1"/><rect x="3" y="2" width="1" height="1"/><rect x="4" y="2" width="1" height="1"/><rect x="6" y="2" width="1" height="1"/><rect x="7" y="2" width="1" height="1"/><rect x="8" y="2" width="1" height="1"/><rect x="12" y="2" width="1" height="1"/><rect x="14" y="2" width="1" height="1"/><rect x="16" y="2" width="1" height="1"/><rect x="17" y="2" width="1" height="1"/><rect x="18" y="2" width="1" height="1"/><rect x="20" y="2" width="1" height="1"/><rect x="0" y="3" width="1" height="1"/><rect x="2" y="3" width="1" height="1"/><rect x="3" y="3" width="1" height="1"/><rect x="4" y="3" width="1" height="1"/><rect x="6" y="3" width="1" height="1"/><rect x="7" y="3" width="1" height="1"/><rect x="9" y="3" width="1" height="1"/><rect x="10" y="3" width="1" height="1"/><rect x="11" y="3" width="1" height="1"/><rect x="12" y="3" width="1" height="1"/><rect x="14" y="3" width="1" height="1"/><rect x="16" y="3" width="1" height="1"/><rect x="17" y="3" width="1" height="1"/><rect x="18" y="3" width="1" height="1"/><rect x="20" y="3" width="1" height="1"/><rect x="0" y="4" width="1" height="1"/><rect x="2" y="4" width="1" height="1"/><rect x="3" y="4" width="1" height="1"/><rect x="4" y="4" width="1" height="1"/><rect x="6" y="4" width="1" height="1"/><rect x="7" y="4" width="1" height="1"/><rect x="10" y="4" width="1" height="1"/><rect x="12" y="4" width="1" height="1"/><rect x="13" y="4" width="1" height="1"/><rect x="14" y="4" width="1" height="1"/><rect x="16" y="4" width="1" height="1"/><rect x="17" y="4" width="1" height="1"/><rect x="18" y="4" width="1" height="1"/><rect x="20" y="4" width="1" height="1"/><rect x="0" y="5" width="1" height="1"/><rect x="6" y="5" width="1" height="1"/><rect x="7" y="5" width="1" height="1"/><rect x="9" y="5" width="1" height="1"/><rect x="10" y="5" width="1" height="1"/><rect x="12" y="5" width="1" height="1"/><rect x="13" y="5" width="1" height="1"/><rect x="14" y="5" width="1" height="1"/><rect x="20" y="5" width="1" height="1"/><rect x="0" y="6" width="1" height="1"/><rect x="1" y="6" width="1" height="1"/><rect x="2" y="6" width="1" height="1"/><rect x="3" y="6" width="1" height="1"/><rect x="4" y="6" width="1" height="1"/><rect x="5" y="6" width="1" height="1"/><rect x="6" y="6" width="1" height="1"/><rect x="9" y="6" width="1" height="1"/><rect x="14" y="6" width="1" height="1"/><rect x="15" y="6" width="1" height="1"/><rect x="16" y="6" width="1" height="1"/><rect x="17" y="6" width="1" height="1"/><rect x="18" y="6" width="1" height="1"/><rect x="19" y="6" width="1" height="1"/><rect x="20" y="6" width="1" height="1"/><rect x="0" y="7" width="1" height="1"/><rect x="2" y="7" width="1" height="1"/><rect x="3" y="7" width="1" height="1"/><rect x="5" y="7" width="1" height="1"/><rect x="7" y="7" width="1" height="1"/><rect x="12" y="7" width="1" height="1"/><rect x="16" y="7" width="1" height="1"/><rect x="19" y="7" width="1" height="1"/><rect x="0" y="8" width="1" height="1"/><rect x="5" y="8" width="1" height="1"/><rect x="6" y="8" width="1" height="1"/><rect x="8" y="8" width="1" height="1"/><rect x="9" y="8" width="1" height="1"/><rect x="10" y="8" width="1" height="1"/><rect x="11" y="8" width="1" height="1"/><rect x="12" y="8" width="1" height="1"/><rect x="14" y="8" width="1" height="1"/><rect x="15" y="8" width="1" height="1"/><rect x="16" y="8" width="1" height="1"/><rect x="18" y="8" width="1" height="1"/><rect x="19" y="8" width="1" height="1"/><rect x="3" y="9" width="1" height="1"/><rect x="4" y="9" width="1" height="1"/><rect x="5" y="9" width="1" height="1"/><rect x="8" y="9" width="1" height="1"/><rect x="9" y="9" width="1" height="1"/><rect x="10" y="9" width="1" height="1"/><rect x="11" y="9" width="1" height="1"/><rect x="14" y="9" width="1" height="1"/><rect x="15" y="9" width="1" height="1"/><rect x="16" y="9" width="1" height="1"/><rect x="17" y="9" width="1" height="1"/><rect x="3" y="10" width="1" height="1"/><rect x="8" y="10" width="1" height="1"/><rect x="9" y="10" width="1" height="1"/><rect x="10" y="10" width="1" height="1"/><rect x="12" y="10" width="1" height="1"/><rect x="13" y="10" width="1" height="1"/><rect x="14" y="10" width="1" height="1"/><rect x="15" y="10" width="1" height="1"/><rect x="16" y="10" width="1" height="1"/><rect x="17" y="10" width="1" height="1"/><rect x="18" y="10" width="1" height="1"/><rect x="19" y="10" width="1" height="1"/><rect x="20" y="10" width="1" height="1"/><rect x="0" y="11" width="1" height="1"/><rect x="1" y="11" width="1" height="1"/><rect x="4" y="11" width="1" height="1"/><rect x="5" y="11" width="1" height="1"/><rect x="6" y="11" width="1" height="1"/><rect x="7" y="11" width="1" height="1"/><rect x="8" y="11" width="1" height="1"/><rect x="11" y="11" width="1" height="1"/><rect x="13" y="11" width="1" height="1"/><rect x="14" y="11" width="1" height="1"/><rect x="15" y="11" width="1" height="1"/><rect x="16" y="11" width="1" height="1"/><rect x="18" y="11" width="1" height="1"/><rect x="19" y="11" width="1" height="1"/><rect x="1" y="12" width="1" height="1"/><rect x="3" y="12" width="1" height="1"/><rect x="8" y="12" width="1" height="1"/><rect x="9" y="12" width="1" height="1"/><rect x="10" y="12" width="1" height="1"/><rect x="14" y="12" width="1" height="1"/><rect x="15" y="12" width="1" height="1"/><rect x="1" y="13" width="1" height="1"/><rect x="3" y="13" width="1" height="1"/><rect x="4" y="13" width="1" height="1"/><rect x="5" y="13" width="1" height="1"/><rect x="6" y="13" width="1" height="1"/><rect x="7" y="13" width="1" height="1"/><rect x="10" y="13" width="1" height="1"/><rect x="14" y="13" width="1" height="1"/><rect x="15" y="13" width="1" height="1"/><rect x="16" y="13" width="1" height="1"/><rect x="17" y="13" width="1" height="1"/><rect x="18" y="13" width="1" height="1"/><rect x="0" y="14" width="1" height="1"/><rect x="1" y="14" width="1" height="1"/><rect x="2" y="14" width="1" height="1"/><rect x="3" y="14" width="1" height="1"/><rect x="4" y="14" width="1" height="1"/><rect x="5" y="14" width="1" height="1"/><rect x="6" y="14" width="1" height="1"/><rect x="8" y="14" width="1" height="1"/><rect x="11" y="14" width="1" height="1"/><rect x="16" y="14" width="1" height="1"/><rect x="17" y="14" width="1" height="1"/><rect x="19" y="14" width="1" height="1"/><rect x="0" y="15" width="1" height="1"/><rect x="6" y="15" width="1" height="1"/><rect x="8" y="15" width="1" height="1"/><rect x="9" y="15" width="1" height="1"/><rect x="12" y="15" width="1" height="1"/><rect x="13" y="15" width="1" height="1"/><rect x="14" y="15" width="1" height="1"/><rect x="17" y="15" width="1" height="1"/><rect x="0" y="16" width="1" height="1"/><rect x="2" y="16" width="1" height="1"/><rect x="3" y="16" width="1" height="1"/><rect x="4" y="16" width="1" height="1"/><rect x="6" y="16" width="1" height="1"/><rect x="7" y="16" width="1" height="1"/><rect x="9" y="16" width="1" height="1"/><rect x="10" y="16" width="1" height="1"/><rect x="15" y="16" width="1" height="1"/><rect x="18" y="16" width="1" height="1"/><rect x="19" y="16" width="1" height="1"/><rect x="20" y="16" width="1" height="1"/><rect x="0" y="17" width="1" height="1"/><rect x="2" y="17" width="1" height="1"/><rect x="3" y="17" width="1" height="1"/><rect x="4" y="17" width="1" height="1"/><rect x="6" y="17" width="1" height="1"/><rect x="7" y="17" width="1" height="1"/><rect x="9" y="17" width="1" height="1"/><rect x="10" y="17" width="1" height="1"/><rect x="11" y="17" width="1" height="1"/><rect x="13" y="17" width="1" height="1"/><rect x="14" y="17" width="1" height="1"/><rect x="17" y="17" width="1" height="1"/><rect x="0" y="18" width="1" height="1"/><rect x="2" y="18" width="1" height="1"/><rect x="3" y="18" width="1" height="1"/><rect x="4" y="18" width="1" height="1"/><rect x="6" y="18" width="1" height="1"/><rect x="8" y="18" width="1" height="1"/><rect x="9" y="18" width="1" height="1"/><rect x="10" y="18" width="1" height="1"/><rect x="11" y="18" width="1" height="1"/><rect x="13" y="18" width="1" height="1"/><rect x="14" y="18" width="1" height="1"/><rect x="17" y="18" width="1" height="1"/><rect x="0" y="19" width="1" height="1"/><rect x="6" y="19" width="1" height="1"/><rect x="7" y="19" width="1" height="1"/><rect x="9" y="19" width="1" height="1"/><rect x="10" y="19" width="1" height="1"/><rect x="16" y="19" width="1" height="1"/><rect x="0" y="20" width="1" height="1"/><rect x="1" y="20" width="1" height="1"/><rect x="2" y="20" width="1" height="1"/><rect x="3" y="20" width="1" height="1"/><rect x="4" y="20" width="1" height="1"/><rect x="5" y="20" width="1" height="1"/><rect x="6" y="20" width="1" height="1"/><rect x="7" y="20" width="1" height="1"/><rect x="9" y="20" width="1" height="1"/><rect x="14" y="20" width="1" height="1"/><rect x="18" y="20" width="1" height="1"/><rect x="19" y="20" width="1" height="1"/><rect x="20" y="20" width="1" height="1"/></svg><span class="art-amt"><small>Request</small>245.00 <em>AED</em></span><span class="art-chips"><i>Android</i><i>iOS</i><i>macOS</i><i>Windows</i></span></span></span>
+            <span class="tile-cap"><b>Exchange &amp; remittance suite</b><i>Fintech · 4 platforms</i></span>
+          </button>
+          <template id="p-suite"><p class="eyebrow">ThoughtBox Online Services · 2024 to now</p><h3>Exchange and remittance suite</h3>
+  <p>Customer, cashier and back-office apps for a UAE exchange house, built from one Flutter codebase and shipped to Android, iOS, macOS and Windows.</p>
+  <ul class="d-list"><li><b>Architecture</b>Designed the BLoC architecture and design tokens shared across the apps.</li><li><b>Backend</b>Integrated the Go backend over gRPC.</li><li><b>Payments</b>Implemented UAE AANI instant-payment QR flows.</li><li><b>Security</b>Led remediation of VAPT findings.</li><li><b>Release</b>Managed Play Store staged rollouts and forced updates.</li></ul>
+  <p class="d-note">Client code is private, so the tile is an illustration, not a screenshot.</p></template></li><li class="tile" style="--i:1"><button class="tile-btn" type="button" data-project="quibix" aria-haspopup="dialog">
+            <span class="tile-art"><img src="img/quibix.webp" alt="" loading="lazy" width="1600" height="900"></span>
+            <span class="tile-cap"><b>Quibix</b><i>E-commerce · Firebase</i></span>
+          </button>
+          <template id="p-quibix"><p class="eyebrow">Flutter · Firebase · Razorpay · 2023</p><h3>Quibix, an electronics store</h3>
+  <p>Browse, wishlist, pay and track an order. Firebase Auth with Google sign-in, Firestore and Storage behind it, Razorpay at checkout, and Provider state split into presentation, application and infrastructure layers.</p>
+  <div class="d-shots"><img src="img/screens/quibix-home.webp" alt="Quibix home screen" loading="lazy"><img src="img/screens/quibix-detail.webp" alt="Quibix product detail" loading="lazy"><img src="img/screens/quibix-track.webp" alt="Quibix order tracking" loading="lazy"></div>
+  <a class="pill pill-solid" href="https://github.com/SirajMM/Quibix-ecommerce-app" target="_blank" rel="noopener">Read the source</a></template></li><li class="tile" style="--i:2"><button class="tile-btn" type="button" data-project="cab" aria-haspopup="dialog">
+            <span class="tile-art"><span class="art art-cab"><svg viewBox="0 0 320 200" preserveAspectRatio="xMidYMid slice" aria-hidden="true"><g class="streets"><path d="M-10 40H330M-10 105H330M-10 165H330M50 -10V210M130 -10V210M215 -10V210M285 -10V210"/><path d="M-10 190 120 -10M180 210 330 60"/></g><path class="route" d="M50 165H130V105H215V40H285"/><circle class="car" r="6" cx="50" cy="165"/><g class="pin" transform="translate(285 40)"><circle r="14"/><circle r="5"/></g></svg><span class="art-eta"><small>Driver arriving</small>4 min</span></span></span>
+            <span class="tile-cap"><b>Cab booking app</b><i>Live tracking · Payments</i></span>
+          </button>
+          <template id="p-cab"><p class="eyebrow">Spoider Innovations · 2023 to 2024</p><h3>A cab booking app with live tracking</h3>
+  <p>My first production Flutter app: riders book a cab and watch it arrive.</p>
+  <ul class="d-list"><li><b>Maps</b>Built live driver tracking with Google Maps.</li><li><b>Payments</b>Integrated Razorpay and Stripe.</li><li><b>Release</b>Shipped releases to the Play Store and App Store.</li></ul>
+  <p class="d-note">The tile is an illustration, not a screenshot of the real app.</p></template></li><li class="tile" style="--i:3"><button class="tile-btn" type="button" data-project="blaze" aria-haspopup="dialog">
+            <span class="tile-art"><img src="img/blaze.webp" alt="" loading="lazy" width="1600" height="900"></span>
+            <span class="tile-cap"><b>Blaze Player</b><i>Offline music · Hive</i></span>
+          </button>
+          <template id="p-blaze"><p class="eyebrow">Flutter · Hive · Provider · 2023</p><h3>Blaze Player, an offline music player</h3>
+  <p>Plays the songs already on your phone. Playlists, favourites, recently and most played are stored in Hive, and playback keeps going in the background with a mini player on every screen.</p>
+  <div class="d-shots"><img src="img/screens/blaze-home.webp" alt="Blaze Player home screen" loading="lazy"><img src="img/screens/blaze-fav.webp" alt="Blaze Player favourites" loading="lazy"></div>
+  <a class="pill pill-solid" href="https://github.com/SirajMM/MusicPlayer" target="_blank" rel="noopener">Read the source</a></template></li><li class="tile" style="--i:4"><button class="tile-btn" type="button" data-project="live" aria-haspopup="dialog">
+            <span class="tile-art"><span class="art art-live"><svg class="art-logo" viewBox="0 0 24 24" aria-hidden="true"><path d="M14.314 0L2.3 12 6 15.7 21.684.013h-7.357zm.014 11.072L7.857 17.53l6.47 6.47H21.7l-6.46-6.468 6.46-6.46h-7.37z"/></svg><span class="art-play"><i></i>Run it live</span></span></span>
+            <span class="tile-cap"><b>Live Flutter demo</b><i>Runs in your browser</i></span>
+          </button>
+          <template id="p-live"><p class="eyebrow">Flutter Web · compiled from Dart</p><h3>A real Flutter app, running here</h3>
+  <p>This is not a video. It is a Flutter build compiled for the web and loaded into this window, so you can tap through it.</p>
+  <div class="d-live"><iframe data-src="demo/index.html" title="Live Flutter demo" loading="lazy"></iframe></div></template></li><li class="tile" style="--i:5"><button class="tile-btn" type="button" data-project="code" aria-haspopup="dialog">
+            <span class="tile-art"><span class="art art-code"><svg class="art-logo" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 .297c-6.63 0-12 5.373-12 12 0 5.303 3.438 9.8 8.205 11.385.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61C4.422 18.07 3.633 17.7 3.633 17.7c-1.087-.744.084-.729.084-.729 1.205.084 1.838 1.236 1.838 1.236 1.07 1.835 2.809 1.305 3.495.998.108-.776.417-1.305.76-1.605-2.665-.3-5.466-1.332-5.466-5.93 0-1.31.465-2.38 1.235-3.22-.135-.303-.54-1.523.105-3.176 0 0 1.005-.322 3.3 1.23.96-.267 1.98-.399 3-.405 1.02.006 2.04.138 3 .405 2.28-1.552 3.285-1.23 3.285-1.23.645 1.653.24 2.873.12 3.176.765.84 1.23 1.91 1.23 3.22 0 4.61-2.805 5.625-5.475 5.92.42.36.81 1.096.81 2.22 0 1.606-.015 2.896-.015 3.286 0 .315.21.69.825.57C20.565 22.092 24 17.592 24 12.297c0-6.627-5.373-12-12-12"/></svg><span class="art-lines"><i style="--w:62%"></i><i style="--w:84%"></i><i style="--w:45%"></i><i style="--w:72%"></i><i style="--w:38%"></i></span></span></span>
+            <span class="tile-cap"><b>Open source</b><i>6 public repositories</i></span>
+          </button>
+          <template id="p-code"><p class="eyebrow">GitHub · SirajMM</p><h3>Read the code</h3>
+  <p>My public repositories are mostly 2023 learning projects. Client code stays private, so these are the honest sample.</p>
+  <ul class="d-repos"><li><a href="https://github.com/SirajMM/Quibix-ecommerce-app" target="_blank" rel="noopener"><b>Quibix-ecommerce-app</b>Store with Firebase and Razorpay</a></li><li><a href="https://github.com/SirajMM/MusicPlayer" target="_blank" rel="noopener"><b>MusicPlayer</b>Offline player with Hive</a></li><li><a href="https://github.com/SirajMM/weather_app" target="_blank" rel="noopener"><b>weather_app</b>Forecast for your current location</a></li><li><a href="https://github.com/SirajMM/Netflix_clone" target="_blank" rel="noopener"><b>Netflix_clone</b>Streaming UI rebuilt in Flutter</a></li><li><a href="https://github.com/SirajMM/Student-Managment-App" target="_blank" rel="noopener"><b>Student-Managment-App</b>Records and attendance</a></li><li><a href="https://github.com/SirajMM/sirajmm.github.io" target="_blank" rel="noopener"><b>sirajmm.github.io</b>This site, in plain HTML, CSS and JS</a></li></ul></template></li>
+          </ul>
         </div>
       </div>
     </section>
 
-    <!-- ================= EXPERIENCE ================= -->
-    <section class="section experience" id="experience" aria-labelledby="exp-title">
-      <h2 id="exp-title" class="split-title">Experience</h2>
-
-      <div class="tenure" data-reveal aria-hidden="true">
-        <div class="tenure-scale"><span>2023</span><span>2024</span><span>2025</span><span>2026</span></div>
-        <div class="tenure-track">
-          <span class="bar bar-spoider"><i>Spoider</i></span>
-          <span class="bar bar-thoughtbox"><i>ThoughtBox</i></span>
+    <section class="about" id="about">
+      <div class="about-copy">
+        <p class="eyebrow rv">The story behind the code</p>
+        <h2 class="rv left">About<br>Siraj<em>.</em></h2>
+        <div class="glass card rv">
+          <p>I'm Siraj. I write Flutter in Kochi, mostly for products that move money, where a frozen screen or a wrong number is a support call from someone sending their salary home.</p>
+          <p>That shapes how I work. State should be predictable, releases should have a way back, and UI should be built from tokens so a redesign is a change rather than a rewrite. I'd rather ship one screen that holds up on four platforms than four screens that each almost work.</p>
+          <p>I work in English, Malayalam is my first language, and I get by in Tamil.</p>
+        </div>
+        <div class="glass card kit rv">
+          <p class="kit-h">Core toolkit</p>
+          <ul class="chips"><li>Flutter</li><li>Dart</li><li>BLoC</li><li>gRPC</li><li>Go</li><li>Firebase</li><li>Design tokens</li><li>Razorpay</li><li>Stripe</li><li>Google Maps</li><li>CI/CD</li><li>Figma</li></ul>
         </div>
       </div>
+      <div class="hang-wrap">
+        <div class="hang" id="hang">
+          <svg class="strings" viewBox="0 0 100 40" preserveAspectRatio="none" aria-hidden="true"><path d="M50 1 6 40M50 1 94 40"/></svg>
+          <i class="nail"></i>
+          <figure class="frame-photo">
+            <img src="img/siraj-frame.webp" alt="Siraj working on a laptop" width="600" height="750" loading="lazy">
+            <figcaption><b>Siraj</b><span>Flutter developer</span></figcaption>
+          </figure>
+        </div>
+      </div>
+    </section>
 
-      <ol class="jobs">
-        <li class="job">
-          <p class="job-when"><time datetime="2024-03">Mar 2024</time> to now</p>
-          <h3>Mobile Application Developer</h3>
-          <p class="job-org">ThoughtBox Online Services, Kochi</p>
-          <p class="job-what">Building exchange, remittance and back-office apps for four platforms on a shared BLoC architecture, a gRPC backend in Go, and design tokens I set up for the team.</p>
-        </li>
-        <li class="job">
-          <p class="job-when"><time datetime="2023-08">Aug 2023</time> to <time datetime="2024-02">Feb 2024</time></p>
-          <h3>Flutter Developer</h3>
-          <p class="job-org">Spoider Innovations, Coimbatore</p>
-          <p class="job-what">Built a cab booking app with Google Maps live tracking and Razorpay and Stripe payments, and shipped it to both app stores.</p>
-        </li>
+    <section class="services" id="services">
+      <header class="head"><p class="eyebrow rv">What you can hire me for</p><h2 class="rv">Services<em>.</em></h2></header>
+      <ol class="rows"><li class="row glass rv"><span class="row-n">01</span><span class="row-t"><b>Cross-platform Flutter apps</b><small>One Dart codebase for Android, iOS, macOS, Windows and the web.</small></span><span class="row-pill">Flutter · Dart</span><a class="row-go" href="mailto:sirajmuhammed718@gmail.com?subject=Cross-platform%20Flutter%20apps" aria-label="Email me about cross-platform flutter apps"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 17 17 7M9 7h8v8" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></a></li><li class="row glass rv"><span class="row-n">02</span><span class="row-t"><b>App architecture</b><small>Feature modules with clear state, shared design tokens and a reusable widget library.</small></span><span class="row-pill">BLoC · Provider</span><a class="row-go" href="mailto:sirajmuhammed718@gmail.com?subject=App%20architecture" aria-label="Email me about app architecture"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 17 17 7M9 7h8v8" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></a></li><li class="row glass rv"><span class="row-n">03</span><span class="row-t"><b>Backend and data</b><small>Typed service calls to Go backends, REST APIs, cloud data and on-device storage.</small></span><span class="row-pill">gRPC · Go · Firebase</span><a class="row-go" href="mailto:sirajmuhammed718@gmail.com?subject=Backend%20and%20data" aria-label="Email me about backend and data"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 17 17 7M9 7h8v8" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></a></li><li class="row glass rv"><span class="row-n">04</span><span class="row-t"><b>Payments and security</b><small>Instant-payment QR, card gateways, and fixing what a penetration test finds.</small></span><span class="row-pill">AANI · Razorpay · Stripe</span><a class="row-go" href="mailto:sirajmuhammed718@gmail.com?subject=Payments%20and%20security" aria-label="Email me about payments and security"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 17 17 7M9 7h8v8" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></a></li><li class="row glass rv"><span class="row-n">05</span><span class="row-t"><b>Store releases</b><small>Staged rollouts, forced updates, and builds that run on every push.</small></span><span class="row-pill">Play Store · App Store</span><a class="row-go" href="mailto:sirajmuhammed718@gmail.com?subject=Store%20releases" aria-label="Email me about store releases"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 17 17 7M9 7h8v8" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></a></li></ol>
+      <header class="head head-2"><p class="eyebrow rv">Where I've worked</p><h2 class="rv">Experience<em>.</em></h2></header>
+      <ol class="rows">
+        <li class="row row-xp glass rv"><span class="row-n">01</span><span class="row-t"><b>Mobile Application Developer</b><small>ThoughtBox Online Services, Kochi. Exchange, remittance and back-office apps for four platforms on a shared BLoC architecture, a gRPC backend in Go, and design tokens I set up for the team.</small></span><span class="row-pill">Mar 2024 to now</span></li>
+        <li class="row row-xp glass rv"><span class="row-n">02</span><span class="row-t"><b>Flutter Developer</b><small>Spoider Innovations, Coimbatore. A cab booking app with Google Maps live tracking and Razorpay and Stripe payments, shipped to both app stores.</small></span><span class="row-pill">Aug 2023 to Feb 2024</span></li>
       </ol>
     </section>
 
-    <!-- ================= ABOUT ================= -->
-    <section class="section about" id="about" aria-labelledby="about-title">
-      <figure class="about-photo" data-reveal>
-        <svg class="guilloche guilloche-photo" id="guilloche-photo" aria-hidden="true" viewBox="-500 -500 1000 1000"></svg>
-        <picture>
-          <source srcset="img/siraj.webp" type="image/webp">
-          <img src="img/siraj.jpg" alt="Siraj sitting back on a brown bean bag with a laptop, wearing an orange patterned shirt" width="760" height="950" loading="lazy" decoding="async">
-        </picture>
-      </figure>
-      <div class="about-text">
-        <h2 id="about-title" class="split-title">About</h2>
-        <p class="about-lead" data-words>I'm Siraj. I write Flutter in Kochi, mostly for products that move money, where a frozen screen or a wrong number is a support call from someone sending their salary home.</p>
-        <p>That shapes how I work. State should be predictable, releases should have a way back, and UI should be built from tokens so a redesign is a change rather than a rewrite. I'd rather ship one screen that holds up on four platforms than four screens that each almost work.</p>
-        <p class="about-langs">I work in English, Malayalam is my first language, and I get by in Tamil.</p>
-      </div>
+    <section class="skills" id="skills">
+      <header class="head"><p class="eyebrow rv">Arsenal and expertise</p><h2 class="rv">Technical skills<em>.</em></h2></header>
+      <ul class="skill-grid"><li class="skill glass rv"><span><b>Flutter and Dart</b><small>Cross-platform</small></span><i class="badge badge-p">Production</i></li><li class="skill glass rv"><span><b>BLoC architecture</b><small>State</small></span><i class="badge badge-p">Production</i></li><li class="skill glass rv"><span><b>gRPC with Go backends</b><small>Backend</small></span><i class="badge badge-p">Production</i></li><li class="skill glass rv"><span><b>AANI instant-payment QR</b><small>Payments</small></span><i class="badge badge-p">Production</i></li><li class="skill glass rv"><span><b>VAPT remediation</b><small>Security</small></span><i class="badge badge-p">Production</i></li><li class="skill glass rv"><span><b>Staged store rollouts</b><small>Release</small></span><i class="badge badge-p">Production</i></li><li class="skill glass rv"><span><b>Razorpay and Stripe</b><small>Payments</small></span><i class="badge badge-s">Shipped</i></li><li class="skill glass rv"><span><b>Google Maps live tracking</b><small>Maps</small></span><i class="badge badge-s">Shipped</i></li><li class="skill glass rv"><span><b>Firebase Auth, Firestore, Storage</b><small>Cloud</small></span><i class="badge badge-o">Own builds</i></li><li class="skill glass rv"><span><b>Hive and Provider</b><small>Storage and state</small></span><i class="badge badge-o">Own builds</i></li></ul>
+      <p class="foot rv">Production: in the apps I build at work. Shipped: in a released client app. Own builds: in my public projects.</p>
+      <header class="head head-2"><p class="eyebrow rv">Software and tools</p><h2 class="rv">My stack<em>.</em></h2></header>
+      <ul class="tools"><li class="tool glass rv" style="--c:#54C5F8"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M14.314 0L2.3 12 6 15.7 21.684.013h-7.357zm.014 11.072L7.857 17.53l6.47 6.47H21.7l-6.46-6.468 6.46-6.46h-7.37z"/></svg><span>Flutter</span></li><li class="tool glass rv" style="--c:#40C4FF"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M4.105 4.105S9.158 1.58 11.684.316a3.079 3.079 0 0 1 1.481-.315c.766.047 1.677.788 1.677.788L24 9.948v9.789h-4.263V24H9.789l-9-9C.303 14.5 0 13.795 0 13.105c0-.319.18-.818.316-1.105l3.789-7.895zm.679.679v11.787c.002.543.021 1.024.498 1.508L10.204 23h8.533v-4.263L4.784 4.784zm12.055-.678c-.899-.896-1.809-1.78-2.74-2.643-.302-.267-.567-.468-1.07-.462-.37.014-.87.195-.87.195L6.341 4.105l10.498.001z"/></svg><span>Dart</span></li><li class="tool glass rv" style="--c:#FFA000"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M19.455 8.369c-.538-.748-1.778-2.285-3.681-4.569-.826-.991-1.535-1.832-1.884-2.245a146 146 0 0 0-.488-.576l-.207-.245-.113-.133-.022-.032-.01-.005L12.57 0l-.609.488c-1.555 1.246-2.828 2.851-3.681 4.64-.523 1.064-.864 2.105-1.043 3.176-.047.241-.088.489-.121.738-.209-.017-.421-.028-.632-.033-.018-.001-.035-.002-.059-.003a7.46 7.46 0 0 0-2.28.274l-.317.089-.163.286c-.765 1.342-1.198 2.869-1.252 4.416-.07 2.01.477 3.954 1.583 5.625 1.082 1.633 2.61 2.882 4.42 3.611l.236.095.071.025.003-.001a9.59 9.59 0 0 0 2.941.568q.171.006.342.006c1.273 0 2.513-.249 3.69-.742l.008.004.313-.145a9.63 9.63 0 0 0 3.927-3.335c1.01-1.49 1.577-3.234 1.641-5.042.075-2.161-.643-4.304-2.133-6.371m-7.083 6.695c.328 1.244.264 2.44-.191 3.558-1.135-1.12-1.967-2.352-2.475-3.665-.543-1.404-.87-2.74-.974-3.975.48.157.922.366 1.315.622 1.132.737 1.914 1.902 2.325 3.461zm.207 6.022c.482.368.99.712 1.513 1.028-.771.21-1.565.302-2.369.273a8 8 0 0 1-.373-.022c.458-.394.869-.823 1.228-1.279zm1.347-6.431c-.516-1.957-1.527-3.437-3.002-4.398-.647-.421-1.385-.741-2.194-.95.011-.134.026-.268.043-.4.014-.113.03-.216.046-.313.133-.689.332-1.37.589-2.025.099-.25.206-.499.321-.74l.004-.008c.177-.358.376-.719.61-1.105l.092-.152-.003-.001c.544-.851 1.197-1.627 1.942-2.311l.288.341c.672.796 1.304 1.548 1.878 2.237 1.291 1.549 2.966 3.583 3.612 4.48 1.277 1.771 1.893 3.579 1.83 5.375-.049 1.395-.461 2.755-1.195 3.933-.694 1.116-1.661 2.05-2.8 2.708-.636-.318-1.559-.839-2.539-1.599.79-1.575.952-3.28.479-5.072zm-2.575 5.397c-.725.939-1.587 1.55-2.09 1.856-.081-.029-.163-.06-.243-.093l-.065-.026c-1.49-.616-2.747-1.656-3.635-3.01-.907-1.384-1.356-2.993-1.298-4.653.041-1.19.338-2.327.882-3.379.316-.07.638-.114.96-.131l.084-.002c.162-.003.324-.003.478 0 .227.011.454.035.677.07.073 1.513.445 3.145 1.105 4.852.637 1.644 1.694 3.162 3.144 4.515z"/></svg><span>Firebase</span></li><li class="tool glass rv" style="--c:#00ADD8"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M1.811 10.231c-.047 0-.058-.023-.035-.059l.246-.315c.023-.035.081-.058.128-.058h4.172c.046 0 .058.035.035.07l-.199.303c-.023.036-.082.07-.117.07zM.047 11.306c-.047 0-.059-.023-.035-.058l.245-.316c.023-.035.082-.058.129-.058h5.328c.047 0 .07.035.058.07l-.093.28c-.012.047-.058.07-.105.07zm2.828 1.075c-.047 0-.059-.035-.035-.07l.163-.292c.023-.035.07-.07.117-.07h2.337c.047 0 .07.035.07.082l-.023.28c0 .047-.047.082-.082.082zm12.129-2.36c-.736.187-1.239.327-1.963.514-.176.046-.187.058-.34-.117-.174-.199-.303-.327-.548-.444-.737-.362-1.45-.257-2.115.175-.795.514-1.204 1.274-1.192 2.22.011.935.654 1.706 1.577 1.835.795.105 1.46-.175 1.987-.77.105-.13.198-.27.315-.434H10.47c-.245 0-.304-.152-.222-.35.152-.362.432-.97.596-1.274a.315.315 0 01.292-.187h4.253c-.023.316-.023.631-.07.947a4.983 4.983 0 01-.958 2.29c-.841 1.11-1.94 1.8-3.33 1.986-1.145.152-2.209-.07-3.143-.77-.865-.655-1.356-1.52-1.484-2.595-.152-1.274.222-2.419.993-3.424.83-1.086 1.928-1.776 3.272-2.02 1.098-.2 2.15-.07 3.096.571.62.41 1.063.97 1.356 1.648.07.105.023.164-.117.2m3.868 6.461c-1.064-.024-2.034-.328-2.852-1.029a3.665 3.665 0 01-1.262-2.255c-.21-1.32.152-2.489.947-3.529.853-1.122 1.881-1.706 3.272-1.95 1.192-.21 2.314-.095 3.33.595.923.63 1.496 1.484 1.648 2.605.198 1.578-.257 2.863-1.344 3.962-.771.783-1.718 1.273-2.805 1.495-.315.06-.63.07-.934.106zm2.78-4.72c-.011-.153-.011-.27-.034-.387-.21-1.157-1.274-1.81-2.384-1.554-1.087.245-1.788.935-2.045 2.033-.21.912.234 1.835 1.075 2.21.643.28 1.285.244 1.905-.07.923-.48 1.425-1.228 1.484-2.233z"/></svg><span>Go</span></li><li class="tool glass rv" style="--c:#F24E1E"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M15.852 8.981h-4.588V0h4.588c2.476 0 4.49 2.014 4.49 4.49s-2.014 4.491-4.49 4.491zM12.735 7.51h3.117c1.665 0 3.019-1.355 3.019-3.019s-1.355-3.019-3.019-3.019h-3.117V7.51zm0 1.471H8.148c-2.476 0-4.49-2.014-4.49-4.49S5.672 0 8.148 0h4.588v8.981zm-4.587-7.51c-1.665 0-3.019 1.355-3.019 3.019s1.354 3.02 3.019 3.02h3.117V1.471H8.148zm4.587 15.019H8.148c-2.476 0-4.49-2.014-4.49-4.49s2.014-4.49 4.49-4.49h4.588v8.98zM8.148 8.981c-1.665 0-3.019 1.355-3.019 3.019s1.355 3.019 3.019 3.019h3.117V8.981H8.148zM8.172 24c-2.489 0-4.515-2.014-4.515-4.49s2.014-4.49 4.49-4.49h4.588v4.441c0 2.503-2.047 4.539-4.563 4.539zm-.024-7.51a3.023 3.023 0 0 0-3.019 3.019c0 1.665 1.365 3.019 3.044 3.019 1.705 0 3.093-1.376 3.093-3.068v-2.97H8.148zm7.704 0h-.098c-2.476 0-4.49-2.014-4.49-4.49s2.014-4.49 4.49-4.49h.098c2.476 0 4.49 2.014 4.49 4.49s-2.014 4.49-4.49 4.49zm-.097-7.509c-1.665 0-3.019 1.355-3.019 3.019s1.355 3.019 3.019 3.019h.098c1.665 0 3.019-1.355 3.019-3.019s-1.355-3.019-3.019-3.019h-.098z"/></svg><span>Figma</span></li><li class="tool glass rv" style="--c:#F05032"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M23.546 10.93L13.067.452c-.604-.603-1.582-.603-2.188 0L8.708 2.627l2.76 2.76c.645-.215 1.379-.07 1.889.441.516.515.658 1.258.438 1.9l2.658 2.66c.645-.223 1.387-.078 1.9.435.721.72.721 1.884 0 2.604-.719.719-1.881.719-2.6 0-.539-.541-.674-1.337-.404-1.996L12.86 8.955v6.525c.176.086.342.203.488.348.713.721.713 1.883 0 2.6-.719.721-1.889.721-2.609 0-.719-.719-.719-1.879 0-2.598.182-.18.387-.316.605-.406V8.835c-.217-.091-.424-.222-.6-.401-.545-.545-.676-1.342-.396-2.009L7.636 3.7.45 10.881c-.6.605-.6 1.584 0 2.189l10.48 10.477c.604.604 1.582.604 2.186 0l10.43-10.43c.605-.603.605-1.582 0-2.187"/></svg><span>Git</span></li><li class="tool glass rv" style="--c:#3DDC84"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M18.4395 5.5586c-.675 1.1664-1.352 2.3318-2.0274 3.498-.0366-.0155-.0742-.0286-.1113-.043-1.8249-.6957-3.484-.8-4.42-.787-1.8551.0185-3.3544.4643-4.2597.8203-.084-.1494-1.7526-3.021-2.0215-3.4864a1.1451 1.1451 0 0 0-.1406-.1914c-.3312-.364-.9054-.4859-1.379-.203-.475.282-.7136.9361-.3886 1.5019 1.9466 3.3696-.0966-.2158 1.9473 3.3593.0172.031-.4946.2642-1.3926 1.0177C2.8987 12.176.452 14.772 0 18.9902h24c-.119-1.1108-.3686-2.099-.7461-3.0683-.7438-1.9118-1.8435-3.2928-2.7402-4.1836a12.1048 12.1048 0 0 0-2.1309-1.6875c.6594-1.122 1.312-2.2559 1.9649-3.3848.2077-.3615.1886-.7956-.0079-1.1191a1.1001 1.1001 0 0 0-.8515-.5332c-.5225-.0536-.9392.3128-1.0488.5449zm-.0391 8.461c.3944.5926.324 1.3306-.1563 1.6503-.4799.3197-1.188.0985-1.582-.4941-.3944-.5927-.324-1.3307.1563-1.6504.4727-.315 1.1812-.1086 1.582.4941zM7.207 13.5273c.4803.3197.5506 1.0577.1563 1.6504-.394.5926-1.1038.8138-1.584.4941-.48-.3197-.5503-1.0577-.1563-1.6504.4008-.6021 1.1087-.8106 1.584-.4941z"/></svg><span>Android</span></li><li class="tool glass rv" style="--c:#EDEDED"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M12.152 6.896c-.948 0-2.415-1.078-3.96-1.04-2.04.027-3.91 1.183-4.961 3.014-2.117 3.675-.546 9.103 1.519 12.09 1.013 1.454 2.208 3.09 3.792 3.039 1.52-.065 2.09-.987 3.935-.987 1.831 0 2.35.987 3.96.948 1.637-.026 2.676-1.48 3.676-2.948 1.156-1.688 1.636-3.325 1.662-3.415-.039-.013-3.182-1.221-3.22-4.857-.026-3.04 2.48-4.494 2.597-4.559-1.429-2.09-3.623-2.324-4.39-2.376-2-.156-3.675 1.09-4.61 1.09zM15.53 3.83c.843-1.012 1.4-2.427 1.245-3.83-1.207.052-2.662.805-3.532 1.818-.78.896-1.454 2.338-1.273 3.714 1.338.104 2.715-.688 3.559-1.701"/></svg><span>iOS and macOS</span></li><li class="tool glass rv" style="--c:#8B85FF"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M13.976 9.15c-2.172-.806-3.356-1.426-3.356-2.409 0-.831.683-1.305 1.901-1.305 2.227 0 4.515.858 6.09 1.631l.89-5.494C18.252.975 15.697 0 12.165 0 9.667 0 7.589.654 6.104 1.872 4.56 3.147 3.757 4.992 3.757 7.218c0 4.039 2.467 5.76 6.476 7.219 2.585.92 3.445 1.574 3.445 2.583 0 .98-.84 1.545-2.354 1.545-1.875 0-4.965-.921-6.99-2.109l-.9 5.555C5.175 22.99 8.385 24 11.714 24c2.641 0 4.843-.624 6.328-1.813 1.664-1.305 2.525-3.236 2.525-5.732 0-4.128-2.524-5.851-6.594-7.305h.003z"/></svg><span>Stripe</span></li><li class="tool glass rv" style="--c:#3395FF"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M22.436 0l-11.91 7.773-1.174 4.276 6.625-4.297L11.65 24h4.391l6.395-24zM14.26 10.098L3.389 17.166 1.564 24h9.008l3.688-13.902Z"/></svg><span>Razorpay</span></li><li class="tool glass rv" style="--c:#5B9BFF"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M19.527 4.799c1.212 2.608.937 5.678-.405 8.173-1.101 2.047-2.744 3.74-4.098 5.614-.619.858-1.244 1.75-1.669 2.727-.141.325-.263.658-.383.992-.121.333-.224.673-.34 1.008-.109.314-.236.684-.627.687h-.007c-.466-.001-.579-.53-.695-.887-.284-.874-.581-1.713-1.019-2.525-.51-.944-1.145-1.817-1.79-2.671L19.527 4.799zM8.545 7.705l-3.959 4.707c.724 1.54 1.821 2.863 2.871 4.18.247.31.494.622.737.936l4.984-5.925-.029.01c-1.741.601-3.691-.291-4.392-1.987a3.377 3.377 0 0 1-.209-.716c-.063-.437-.077-.761-.004-1.198l.001-.007zM5.492 3.149l-.003.004c-1.947 2.466-2.281 5.88-1.117 8.77l4.785-5.689-.058-.05-3.607-3.035zM14.661.436l-3.838 4.563a.295.295 0 0 1 .027-.01c1.6-.551 3.403.15 4.22 1.626.176.319.323.683.377 1.045.068.446.085.773.012 1.22l-.003.016 3.836-4.561A8.382 8.382 0 0 0 14.67.439l-.009-.003zM9.466 5.868L14.162.285l-.047-.012A8.31 8.31 0 0 0 11.986 0a8.439 8.439 0 0 0-6.169 2.766l-.016.018 3.665 3.084z"/></svg><span>Google Maps</span></li></ul>
     </section>
 
-    <!-- ================= CODE ================= -->
-    <section class="section code" id="code" aria-labelledby="code-title">
-      <div class="code-head">
-        <h2 id="code-title" class="split-title">Read the code</h2>
-        <p>My public repositories are mostly 2023 learning projects. Client code stays private, so these are the honest sample.</p>
+    <section class="contact" id="contact">
+      <header class="head"><p class="eyebrow rv">Get in touch</p><h2 class="rv">Contact<em>.</em></h2></header>
+      <div class="contact-box">
+        <div class="glass mailcard rv">
+          <a href="mailto:sirajmuhammed718@gmail.com"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M24 5.457v13.909c0 .904-.732 1.636-1.636 1.636h-3.819V11.73L12 16.64l-6.545-4.91v9.273H1.636A1.636 1.636 0 0 1 0 19.366V5.457c0-2.023 2.309-3.178 3.927-1.964L5.455 4.64 12 9.548l6.545-4.91 1.528-1.145C21.69 2.28 24 3.434 24 5.457z"/></svg><span><small>Email</small><b>sirajmuhammed718@gmail.com</b></span></a>
+          <button class="pill pill-sm" id="copy" type="button" data-copy="sirajmuhammed718@gmail.com">Copy</button>
+        </div>
+        <form class="glass form rv" id="form" action="mailto:sirajmuhammed718@gmail.com" method="post" enctype="text/plain">
+          <label>Your name<input name="name" type="text" autocomplete="name" placeholder="Your name" required></label>
+          <label>Your email<input name="email" type="email" autocomplete="email" placeholder="you@example.com" required></label>
+          <label class="wide">Message and project scope<textarea name="message" rows="6" placeholder="Tell me what you're building and where it runs." required></textarea></label>
+          <button class="pill pill-solid" type="submit">Send message</button>
+          <p class="form-note" id="form-note" role="status">Opens your email app with the message filled in.</p>
+        </form>
+        <ul class="socials rv">
+          <li><a class="pill pill-sm" href="https://www.linkedin.com/in/muhammad-siraj-m-m-3ab64a202" target="_blank" rel="noopener"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433c-1.144 0-2.063-.926-2.063-2.065 0-1.138.92-2.063 2.063-2.063 1.14 0 2.064.925 2.064 2.063 0 1.139-.925 2.065-2.064 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/></svg>LinkedIn</a></li>
+          <li><a class="pill pill-sm" href="https://github.com/SirajMM" target="_blank" rel="noopener"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 .297c-6.63 0-12 5.373-12 12 0 5.303 3.438 9.8 8.205 11.385.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61C4.422 18.07 3.633 17.7 3.633 17.7c-1.087-.744.084-.729.084-.729 1.205.084 1.838 1.236 1.838 1.236 1.07 1.835 2.809 1.305 3.495.998.108-.776.417-1.305.76-1.605-2.665-.3-5.466-1.332-5.466-5.93 0-1.31.465-2.38 1.235-3.22-.135-.303-.54-1.523.105-3.176 0 0 1.005-.322 3.3 1.23.96-.267 1.98-.399 3-.405 1.02.006 2.04.138 3 .405 2.28-1.552 3.285-1.23 3.285-1.23.645 1.653.24 2.873.12 3.176.765.84 1.23 1.91 1.23 3.22 0 4.61-2.805 5.625-5.475 5.92.42.36.81 1.096.81 2.22 0 1.606-.015 2.896-.015 3.286 0 .315.21.69.825.57C20.565 22.092 24 17.592 24 12.297c0-6.627-5.373-12-12-12"/></svg>GitHub</a></li>
+          <li><a class="pill pill-sm" href="https://www.upwork.com/freelancers/~015c46144016569e31" target="_blank" rel="noopener"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M18.561 13.158c-1.102 0-2.135-.467-3.074-1.227l.228-1.076.008-.042c.207-1.143.849-3.06 2.839-3.06 1.492 0 2.703 1.212 2.703 2.703-.001 1.489-1.212 2.702-2.704 2.702zm0-8.14c-2.539 0-4.51 1.649-5.31 4.366-1.22-1.834-2.148-4.036-2.687-5.892H7.828v7.112c-.002 1.406-1.141 2.546-2.547 2.548-1.405-.002-2.543-1.143-2.545-2.548V3.492H0v7.112c0 2.914 2.37 5.303 5.281 5.303 2.913 0 5.283-2.389 5.283-5.303v-1.19c.529 1.107 1.182 2.229 1.974 3.221l-1.673 7.873h2.797l1.213-5.71c1.063.679 2.285 1.109 3.686 1.109 3 0 5.439-2.452 5.439-5.45 0-3-2.439-5.439-5.439-5.439z"/></svg>Upwork</a></li>
+          <li><a class="pill pill-sm" href="Muhammad_Siraj_Resume.pdf" target="_blank" rel="noopener">Résumé PDF <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 17 17 7M9 7h8v8" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></a></li>
+        </ul>
       </div>
-      <ul class="repos">
-        <li><a href="https://github.com/SirajMM/Quibix-ecommerce-app" target="_blank" rel="noopener"><b>Quibix-ecommerce-app</b><span>Store with Firebase and Razorpay</span></a></li>
-        <li><a href="https://github.com/SirajMM/MusicPlayer" target="_blank" rel="noopener"><b>MusicPlayer</b><span>Offline player with Hive</span></a></li>
-        <li><a href="https://github.com/SirajMM/weather_app" target="_blank" rel="noopener"><b>weather_app</b><span>Forecast for your current location</span></a></li>
-        <li><a href="https://github.com/SirajMM/Netflix_clone" target="_blank" rel="noopener"><b>Netflix_clone</b><span>Streaming UI rebuilt in Flutter</span></a></li>
-        <li><a href="https://github.com/SirajMM/Student-Managment-App" target="_blank" rel="noopener"><b>Student-Managment-App</b><span>Records and attendance</span></a></li>
-        <li><a href="https://github.com/SirajMM/sirajmm.github.io" target="_blank" rel="noopener"><b>sirajmm.github.io</b><span>This site, in plain HTML, CSS and JS</span></a></li>
-      </ul>
-      <a class="link" href="https://github.com/SirajMM" target="_blank" rel="noopener">All repositories on GitHub</a>
-    </section>
-
-    <!-- ================= CONTACT ================= -->
-    <div class="big-marquee" aria-hidden="true" data-marquee data-speed="0.6">
-      <div class="marquee-track"><span>Let's build it</span><span>Let's ship it</span><span>Let's build it</span><span>Let's ship it</span></div>
-    </div>
-
-    <section class="contact" id="contact" aria-labelledby="contact-title">
-      <svg class="guilloche guilloche-contact" id="guilloche-contact" aria-hidden="true" viewBox="-500 -500 1000 1000"></svg>
-      <canvas class="globe" id="globe" aria-hidden="true"></canvas>
-      <p class="contact-time" id="kochi-time" hidden></p>
-      <h2 id="contact-title" class="split-title">Have a Flutter app to build, or one to fix?</h2>
-      <p class="contact-sub">Email is the fastest way to reach me. Tell me what you're building and where it runs.</p>
-      <div class="mail-row">
-        <a class="mail" href="mailto:sirajmuhammed718@gmail.com" data-cursor="Write">sirajmuhammed718@gmail.com</a>
-        <button class="copy" type="button" data-copy="sirajmuhammed718@gmail.com" data-magnetic data-cursor="Copy">Copy</button>
-        <span class="copy-status" role="status" aria-live="polite"></span>
-      </div>
-      <ul class="elsewhere">
-        <li><a href="https://www.linkedin.com/in/muhammad-siraj-m-m-3ab64a202" target="_blank" rel="noopener">LinkedIn</a></li>
-        <li><a href="https://github.com/SirajMM" target="_blank" rel="noopener">GitHub</a></li>
-        <li><a href="https://www.upwork.com/freelancers/~015c46144016569e31" target="_blank" rel="noopener">Upwork</a></li>
-        <li><a href="/Muhammad_Siraj_Resume.pdf" target="_blank" rel="noopener">Résumé</a></li>
-      </ul>
     </section>
   </main>
 
   <footer class="footer">
-    <svg class="footer-band" aria-hidden="true" viewBox="0 0 1200 60" preserveAspectRatio="none" data-band></svg>
-    <canvas class="terrain" id="terrain" aria-hidden="true"></canvas>
-    <div class="finale" id="finale" aria-hidden="true"><span data-split>Siraj</span><i class="finale-dot"></i></div>
-    <div class="footer-row">
-      <p>© <span id="year">2026</span> Muhammad Siraj M M</p>
-      <p>Hand-built in HTML, CSS and JavaScript. Set in Archivo.</p>
-      <a href="#top">Back to top</a>
-    </div>
+    <a class="logo" href="#top"><em>S</em>IRAJ.</a>
+    <p>© 2026 Muhammad Siraj M M. Flutter developer.</p>
+    <nav aria-label="Footer"><a href="#top">Top</a><a href="#about">About</a><a href="#projects">Projects</a><a href="#contact">Contact</a></nav>
   </footer>
-  <div class="cursor" aria-hidden="true"><span class="cursor-label"></span></div>
-  <div class="peek" aria-hidden="true"><div class="peek-inner"></div></div>
+
+  <dialog class="sheet" id="sheet" aria-labelledby="sheet-title">
+    <button class="sheet-x" type="button" id="sheet-x" aria-label="Close">×</button>
+    <div class="sheet-body" id="sheet-body"></div>
+  </dialog>
 </body>
 </html>

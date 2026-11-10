@@ -6,11 +6,9 @@ Plain HTML, CSS and JavaScript with no build step. GitHub Pages serves the `mast
 
 ```
 index.html      all content and SEO metadata
-css/site.css    design tokens, layout, motion
-js/site.js      intro, platform switcher, token re-skin, pinned scroll scenes, WebGL lens, particle portrait, cursor
-js/depth.js     3D layer: globe, phone body, screenshot depth, footer terrain
-js/vendor/      Lenis smooth scroll (MIT), desktop pointers only
-demo/           built Flutter Web app that runs inside the hero device on request
+css/glass.css   design tokens, glass surfaces, layout, motion
+js/glass.js     counter loader, bokeh background, spark cursor, flying project grid, hanging photo, project sheet, contact form
+demo/           built Flutter Web app that runs inside the Live demo project sheet on request
 flutter_demo/   source of that app; rebuild with the command below
 fonts/          Archivo variable (SIL Open Font License)
 img/            optimized WebP/JPEG screenshots, social image
