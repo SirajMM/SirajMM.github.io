@@ -226,9 +226,16 @@ section { padding: clamp(80px, 11vw, 150px) 20px 0; }
 .marquee-track span { display: inline-flex; align-items: center; white-space: nowrap; font-size: clamp(4rem, 13vw, 12rem); line-height: 1; font-weight: 900; letter-spacing: -.03em; text-transform: uppercase; color: transparent; -webkit-text-stroke: 1px rgba(245,242,236,.26); padding-right: .25em; }
 .marquee-track span:nth-child(odd) { color: var(--acc); -webkit-text-stroke: 0; }
 .marquee-track span::after { content: "\2726"; font-size: .3em; color: var(--acc-2); -webkit-text-stroke: 0; text-shadow: none; margin-left: .6em; }
-.globe-wrap { display: none; justify-items: center; margin: clamp(20px, 3vw, 36px) auto 6px; }
+.pitch { max-width: 1120px; margin: clamp(30px, 4vw, 56px) auto 10px; display: grid; grid-template-columns: 1.05fr 1fr; align-items: center; gap: clamp(20px, 4vw, 60px); }
+.pitch-time { font-size: 11px; font-weight: 600; letter-spacing: .24em; text-transform: uppercase; color: var(--acc); margin-bottom: 18px; }
+.pitch-title { font-size: clamp(2.1rem, 4.6vw, 4.2rem); line-height: 1.02; font-weight: 800; letter-spacing: -.03em; text-wrap: balance; }
+.pitch-title em { font-style: normal; color: var(--acc); }
+.pitch-sub { margin-top: 20px; max-width: 34em; font-size: clamp(1rem, 1.2vw, 1.12rem); line-height: 1.6; color: rgba(245,242,236,.66); }
+.globe-wrap { display: none; justify-items: center; }
 .has-globe .globe-wrap { display: grid; }
-.globe { width: min(520px, 92%); aspect-ratio: 1; touch-action: pan-y; cursor: grab; filter: drop-shadow(0 0 60px rgba(var(--acc-rgb), .18)); }
+html:not(.has-globe) .pitch { grid-template-columns: 1fr; text-align: center; justify-items: center; }
+@media (max-width: 860px) { .pitch { grid-template-columns: 1fr; text-align: center; gap: 4px; } .pitch-sub { margin-inline: auto; } }
+.globe { width: min(520px, 100%); aspect-ratio: 1; touch-action: pan-y; cursor: grab; filter: drop-shadow(0 0 60px rgba(var(--acc-rgb), .18)); }
 .globe.is-grabbing { cursor: grabbing; }
 .globe-cap { margin-top: -34px; font-size: 11px; font-weight: 600; letter-spacing: .24em; text-transform: uppercase; color: var(--acc); }
 .globe-cap span { color: rgba(245,242,236,.5); margin-left: .8em; letter-spacing: .12em; }

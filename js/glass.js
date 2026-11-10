@@ -252,6 +252,12 @@
 
   /* ---------- contact ---------- */
   function contact() {
+    const timeEl = $('#kochi-time');
+    if (timeEl && window.Intl) {
+      const fmt = new Intl.DateTimeFormat('en-GB', { timeZone: 'Asia/Kolkata', hour: '2-digit', minute: '2-digit' });
+      const tick = () => { timeEl.textContent = "It's " + fmt.format(new Date()) + ' in Kochi right now'; };
+      tick(); timeEl.hidden = false; setInterval(tick, 30000);
+    }
     const copy = $('#copy');
     if (copy) copy.addEventListener('click', () => {
       const done = () => { copy.textContent = 'Copied'; setTimeout(() => { copy.textContent = 'Copy'; }, 1600); };
