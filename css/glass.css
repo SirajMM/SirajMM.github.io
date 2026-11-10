@@ -88,8 +88,8 @@ h2.left::after { left: 0; margin: 0; }
 .nav nav a.is-on { text-shadow: 0 0 14px rgba(var(--acc-rgb), .9); }
 
 /* hero */
-.hero { padding: 76px 14px 0; }
-.frame { position: relative; height: calc(100svh - 90px); min-height: 520px; max-width: 1400px; margin: 0 auto; border-radius: 30px; overflow: hidden; border: 1px solid var(--line); isolation: isolate;
+.hero { padding: 88px 14px 0; }
+.frame { position: relative; height: calc(100svh - 102px); min-height: 520px; max-width: 1400px; margin: 0 auto; border-radius: 30px; overflow: hidden; border: 1px solid var(--line); isolation: isolate;
   background: radial-gradient(120% 90% at 78% 40%, rgba(var(--acc-rgb), .2), transparent 60%), linear-gradient(180deg, #121216, #0a0a0e); box-shadow: inset 0 1px 0 rgba(255,255,255,.1), 0 40px 90px -50px rgba(var(--acc-rgb), .5);
   --px: 0; --py: 0; }
 .shard { position: absolute; z-index: 0; border: 1px solid rgba(255,255,255,.1); background: linear-gradient(140deg, rgba(255,255,255,.13), rgba(255,255,255,.01) 55%); transition: transform .5s var(--ease); }
@@ -278,7 +278,7 @@ section { padding: clamp(80px, 11vw, 150px) 20px 0; }
   .strings { height: 80px; } .frame-photo::before, .frame-photo::after { top: 74px; }
 }
 @media (max-width: 760px) {
-  .hero { padding: 70px 10px 0; }
+  .hero { padding: 86px 10px 0; }
   .frame { border-radius: 24px; }
   .hero-me { right: -12%; height: 52%; bottom: 46%; }
   .hero-copy .eyebrow { font-size: 9.5px; letter-spacing: .22em; text-shadow: 0 1px 10px #000, 0 0 22px #000; }
