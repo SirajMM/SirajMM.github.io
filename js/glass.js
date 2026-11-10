@@ -16,19 +16,68 @@
   function loader() {
     const el = $('#loader');
     if (!el || !root.classList.contains('loading')) return;
-    const count = $('#count'), line = $('#loader-line');
+    const count = $('#count'), word = $('#intro-word'), letters = $('#intro-letters');
+    const dot = $('.intro-dot', el), stem = $('.intro-stem', el), bang = $('.intro-bang', el);
     const cols = $$('.col b', count);
     cols.forEach(b => { b.textContent = '0\n1\n2\n3\n4\n5\n6\n7\n8\n9\n0'; b.style.lineHeight = '1'; });
-    line.innerHTML = line.innerHTML.split(/<br\s*\/?>/i).map(l => l.trim().split(/\s+/).map(w => '<span>' + w + '</span>').join(' ')).join('<br>');
-    $$('span', line).forEach((s, i) => s.style.setProperty('--w', i));
-    let done = false, t0 = performance.now();
-    const DUR = 2100;
-    function finish() {
-      if (done) return; done = true;
+    let done = false, flying = false, t0 = performance.now();
+    const DUR = 1500, wakers = [];
+    const wait = ms => new Promise(r => { const t = setTimeout(r, ms); wakers.push(() => { clearTimeout(t); r(); }); });
+    const unbind = () => ['pointerdown', 'keydown'].forEach(e => removeEventListener(e, skip));
+    // skipped: the plain wipe
+    function skip() {
+      if (done || flying) return; done = true; unbind(); wakers.forEach(w => w());
       el.classList.add('is-leaving');
       root.classList.remove('loading');
       setTimeout(() => { el.classList.remove('is-leaving'); el.style.display = 'none'; }, 1000);
-      ['pointerdown', 'keydown'].forEach(e => removeEventListener(e, finish));
+    }
+    // played through: the written name travels into the hero and becomes its headline
+    function land() {
+      const name = $('.name');
+      if (done || !name || !letters.animate) return skip();
+      flying = true; unbind();
+      const a = letters.getBoundingClientRect(), b = name.getBoundingClientRect();
+      const s = parseFloat(getComputedStyle(name).fontSize) / parseFloat(getComputedStyle(word).fontSize);
+      root.classList.add('flying'); el.classList.add('is-flying'); root.classList.remove('loading');
+      bang.animate({ opacity: [1, 0], transform: ['none', 'translateY(-.5em) scale(.2)'] }, { duration: 380, easing: 'ease-in', fill: 'forwards' });
+      const fl = letters.animate([
+        { transform: 'none' },
+        { transform: 'translate(' + (b.left - a.left) * .5 + 'px,' + ((b.top - a.top) * .5 - innerHeight * .05) + 'px) scale(' + (1 + (s - 1) * .5) * .9 + ')', offset: .45 },
+        { transform: 'translate(' + (b.left - a.left) + 'px,' + (b.top - a.top) + 'px) scale(' + s + ')' },
+      ], { duration: 1150, easing: 'cubic-bezier(.65,0,.25,1)', fill: 'forwards' });
+      const end = () => { done = true; root.classList.remove('flying'); el.classList.remove('is-flying'); el.style.display = 'none'; };
+      fl.finished.then(end, end);
+    }
+    async function intro() {
+      if (done) return;
+      word.classList.add('is-on');
+      // 1. the dot falls and bounces
+      dot.animate([
+        { transform: 'translateY(-62vh)', easing: 'cubic-bezier(.5,0,1,.6)' },
+        { transform: 'translateY(0) scale(1.25,.72)', offset: .46, easing: 'cubic-bezier(0,.5,.4,1)' },
+        { transform: 'translateY(-9vh)', offset: .66, easing: 'cubic-bezier(.5,0,1,.6)' },
+        { transform: 'translateY(0) scale(1.12,.86)', offset: .84, easing: 'cubic-bezier(0,.5,.4,1)' },
+        { transform: 'translateY(-2.2vh)', offset: .93, easing: 'ease-in' },
+        { transform: 'none' },
+      ], { duration: 1000, fill: 'backwards' });
+      await wait(1000); if (done) return;
+      // 2. a stem grows out of it: "!"
+      stem.animate({ transform: ['scaleY(0)', 'scaleY(1)'] }, { duration: 380, easing: 'cubic-bezier(.3,1.6,.5,1)', fill: 'forwards' });
+      await wait(480); if (done) return;
+      // 3. the letters tumble in and shove the "!" along
+      const spans = [...'SIRAJ'].map(c => { const sp = document.createElement('span'); sp.className = 'intro-l'; sp.textContent = c; letters.appendChild(sp); return sp; });
+      const widths = spans.map(sp => sp.getBoundingClientRect().width);
+      spans.forEach((sp, i) => {
+        sp.style.width = '0px'; sp.style.opacity = '0';
+        const dir = i % 2 ? 1 : -1;
+        sp.animate([
+          { width: '0px', opacity: 0, transform: 'translate(' + .5 * dir + 'em,-1.15em) rotate(' + 150 * dir + 'deg)' },
+          { width: widths[i] + 'px', opacity: 1, transform: 'translate(0,.06em) rotate(' + -10 * dir + 'deg)', offset: .7 },
+          { width: widths[i] + 'px', opacity: 1, transform: 'none' },
+        ], { duration: 520, delay: i * 150, easing: 'cubic-bezier(.3,.9,.4,1)', fill: 'forwards' });
+      });
+      await wait(520 + (spans.length - 1) * 150 + 380); if (done) return;
+      land();
     }
     function tick(now) {
       if (done) return;
@@ -41,11 +90,10 @@
       cols[0].parentNode.style.display = v < 99 ? 'none' : '';
       cols[1].parentNode.style.display = v < 10 ? 'none' : '';
       if (p < 1) return requestAnimationFrame(tick);
-      setTimeout(() => { count.classList.add('is-out'); line.classList.add('is-in'); }, 260);
-      setTimeout(finish, 2300);
+      wait(220).then(() => { if (!done) count.classList.add('is-out'); return wait(420); }).then(intro);
     }
     requestAnimationFrame(tick);
-    addEventListener('pointerdown', finish); addEventListener('keydown', finish);
+    addEventListener('pointerdown', skip); addEventListener('keydown', skip);
   }
 
   /* ---------- drifting glow background ---------- */
