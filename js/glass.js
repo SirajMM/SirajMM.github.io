@@ -268,5 +268,39 @@
     });
   }
 
-  loader(); bokeh(); sparks(); pointerFx(); reveals(); fly(); hang(); sheet(); contact();
+  /* Marquee that speeds up and leans with the scroll */
+  function marquee() {
+    const ms = $$('[data-marquee]').map(el => {
+      const track = $('.marquee-track', el);
+      track.innerHTML += track.innerHTML;
+      return { el, track, x: 0, w: track.scrollWidth / 2, speed: parseFloat(el.dataset.speed || '1'), on: false };
+    });
+    if (!ms.length || reduce || !('IntersectionObserver' in window)) return;
+    let vel = 0, dir = -1, prevY = scrollY, prevT = performance.now(), raf = 0;
+    const measure = () => ms.forEach(m => { m.w = m.track.scrollWidth / 2; });
+    addEventListener('resize', measure, { passive: true });
+    if (document.fonts) document.fonts.ready.then(measure);
+    const loop = now => {
+      const dt = Math.min(64, now - prevT); prevT = now;
+      const dy = scrollY - prevY; prevY = scrollY;
+      if (dy) dir = dy > 0 ? -1 : 1;
+      vel += (dy - vel) * 0.12;
+      const boost = Math.min(14, Math.abs(vel) * 0.5), skew = Math.max(-9, Math.min(9, -vel * 0.35));
+      ms.forEach(m => {
+        if (!m.on || !m.w) return;
+        m.x += dir * (0.05 + boost * 0.05) * dt * m.speed;
+        if (m.x <= -m.w) m.x += m.w; else if (m.x > 0) m.x -= m.w;
+        m.track.style.setProperty('--mq', m.x.toFixed(1) + 'px');
+        m.track.style.setProperty('--skew', skew.toFixed(2) + 'deg');
+      });
+      raf = ms.some(m => m.on) ? requestAnimationFrame(loop) : 0;
+    };
+    const io = new IntersectionObserver(es => {
+      es.forEach(e => { const m = ms.find(q => q.el === e.target); if (m) m.on = e.isIntersecting; });
+      if (!raf && ms.some(m => m.on)) { prevT = performance.now(); prevY = scrollY; raf = requestAnimationFrame(loop); }
+    });
+    ms.forEach(m => io.observe(m.el));
+  }
+
+  loader(); bokeh(); sparks(); pointerFx(); reveals(); fly(); hang(); sheet(); contact(); marquee();
 })();

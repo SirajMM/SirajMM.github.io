@@ -221,6 +221,11 @@ section { padding: clamp(80px, 11vw, 150px) 20px 0; }
 .tool:hover .ic { transform: scale(1.15); filter: drop-shadow(0 0 12px var(--c)); }
 
 /* contact */
+.big-marquee { overflow: hidden; padding-top: clamp(80px, 11vw, 150px); margin-bottom: clamp(-90px, -6vw, -40px); user-select: none; }
+.marquee-track { display: flex; width: max-content; will-change: transform; transform: translate3d(var(--mq, 0px), 0, 0) skewX(var(--skew, 0deg)); }
+.marquee-track span { display: inline-flex; align-items: center; white-space: nowrap; font-size: clamp(4rem, 13vw, 12rem); line-height: 1; font-weight: 900; letter-spacing: -.03em; text-transform: uppercase; color: transparent; -webkit-text-stroke: 1px rgba(245,242,236,.26); padding-right: .25em; }
+.marquee-track span:nth-child(odd) { color: var(--acc); -webkit-text-stroke: 0; }
+.marquee-track span::after { content: "\2726"; font-size: .3em; color: var(--acc-2); -webkit-text-stroke: 0; text-shadow: none; margin-left: .6em; }
 .contact { padding-bottom: clamp(80px, 10vw, 130px); }
 .contact-box { max-width: 800px; margin: clamp(30px, 4vw, 50px) auto 0; display: grid; gap: 16px; }
 .mailcard { display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 16px 18px 16px 22px; border-radius: 18px; }
@@ -306,4 +311,5 @@ section { padding: clamp(80px, 11vw, 150px) 20px 0; }
   .js .rv { opacity: 1; transform: none; filter: none; }
   .fly { height: auto; } .fly-pin { position: static; height: auto; padding-block: 120px 40px; }
   .sparks { display: none; }
+  .marquee-track { transform: none !important; }
 }
