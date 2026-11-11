@@ -409,7 +409,7 @@
     const N = 18;
     const vs = 'attribute vec2 a;varying vec2 v;void main(){v=a*.5+.5;gl_Position=vec4(a,0,1);}';
     const fs = `precision highp float;varying vec2 v;
-uniform sampler2D P,X;uniform float hasX,T,A;uniform vec2 px;uniform vec3 pts[${N}];
+uniform sampler2D P,X,H;uniform float hasX,hasH,T,A;uniform vec2 px;uniform vec3 pts[${N}];const float HX=.63,HY=.2,HS=.1,HR=.732;
 float h(vec2 p){return fract(sin(dot(p,vec2(127.1,311.7)))*43758.5453);}
 float n(vec2 p){vec2 i=floor(p),f=fract(p);f=f*f*(3.-2.*f);
  return mix(mix(h(i),h(i+vec2(1,0)),f.x),mix(h(i+vec2(0,1)),h(i+1.),f.x),f.y);}
@@ -417,6 +417,16 @@ float fld(vec2 uv){vec2 q=vec2(uv.x*A,uv.y);float f=0.;
  for(int i=0;i<${N};i++){vec3 p=pts[i];vec2 d=q-vec2(p.x*A,p.y);f+=p.z*p.z*.016/(dot(d,d)+.0006);}
  float w=n(uv*vec2(7.,5.)+vec2(0.,T*.7))+.5*n(uv*15.-T*.5);
  return f*(.78+.3*w);}
+vec4 heart(vec2 u,out float b){
+ float ph=fract(T/.86);
+ b=exp(-pow(ph*11.,2.))+.6*exp(-pow((ph-.2)*11.,2.))+exp(-pow((ph-1.)*11.,2.));
+ vec2 q=vec2(u.x*A,u.y)-vec2(HX*A,HY);
+ float c=cos(.12),s=sin(.12);q=mat2(c,-s,s,c)*q;
+ q.y+=HS*.35;q*=vec2(1.-.07*b,1.-.05*b);q.y-=HS*.35;q/=1.+.06*b;
+ vec2 t=vec2(q.x/(2.*HS*HR),q.y/(2.*HS))+.5;
+ vec4 k=texture2D(H,clamp(t,0.,1.))*step(0.,t.x)*step(t.x,1.)*step(0.,t.y)*step(t.y,1.);
+ k.rgb*=.8+.55*b;
+ return k;}
 float L(vec2 u){return dot(texture2D(P,u).rgb,vec3(.3,.59,.11));}
 void main(){
  vec2 uv=v;vec3 ph=texture2D(P,uv).rgb;
@@ -444,6 +454,10 @@ void main(){
   inside=tint+bone+vec3(.5,.8,1.)*sil*scan*.05+vec3(body.r-body.g,0.,body.b-body.g)*.6;
   inside+=vec3(1.,.6,.25)*pow(n(ru*vec2(40.,26.)+T*.3),6.)*sil*.7;
  }
+ if(hasH>.5){float b;vec2 hu=uv+off*.5;vec4 hc=heart(hu,b);
+  float bl=smoothstep(.4,.85,dot(inside,vec3(.33)));
+  inside=mix(inside,hc.rgb*1.1+inside*.22,hc.a*(.96-.38*bl));
+  vec2 d=vec2((hu.x-HX)*A,hu.y-HY);inside+=vec3(1.,.22,.06)*exp(-dot(d,d)/(HS*HS)*1.6)*(.12+.3*b);}
  vec3 nrm=normalize(vec3(-g*.0045,1.));
  float spec=pow(max(dot(nrm,normalize(vec3(-.45,.55,.9))),0.),36.)*(1.-m*.6);
  float rim=smoothstep(.86,1.,f)*(1.-smoothstep(1.,1.45,f));
@@ -459,13 +473,13 @@ void main(){
     gl.bufferData(gl.ARRAY_BUFFER, new Float32Array([-1, -1, 1, -1, -1, 1, 1, 1]), gl.STATIC_DRAW);
     const loc = gl.getAttribLocation(pr, 'a'); gl.enableVertexAttribArray(loc); gl.vertexAttribPointer(loc, 2, gl.FLOAT, false, 0, 0);
     const U = k => gl.getUniformLocation(pr, k);
-    const uT = U('T'), uA = U('A'), uPx = U('px'), uPts = U('pts'), uHas = U('hasX');
-    gl.uniform1i(U('P'), 0); gl.uniform1i(U('X'), 1);
-    const tex = (unit, src) => { const t = gl.createTexture(); gl.activeTexture(gl.TEXTURE0 + unit); gl.bindTexture(gl.TEXTURE_2D, t);
+    const uT = U('T'), uA = U('A'), uPx = U('px'), uPts = U('pts'), uHas = U('hasX'), uHasH = U('hasH');
+    gl.uniform1i(U('P'), 0); gl.uniform1i(U('X'), 1); gl.uniform1i(U('H'), 2);
+    const tex = (unit, src, fmt = gl.RGB) => { const t = gl.createTexture(); gl.activeTexture(gl.TEXTURE0 + unit); gl.bindTexture(gl.TEXTURE_2D, t);
       gl.pixelStorei(gl.UNPACK_FLIP_Y_WEBGL, true);
       [gl.TEXTURE_WRAP_S, gl.TEXTURE_WRAP_T].forEach(p => gl.texParameteri(gl.TEXTURE_2D, p, gl.CLAMP_TO_EDGE));
       gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR); gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.LINEAR);
-      gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGB, gl.RGB, gl.UNSIGNED_BYTE, src); };
+      gl.texImage2D(gl.TEXTURE_2D, 0, fmt, fmt, gl.UNSIGNED_BYTE, src); };
 
     const pts = Array.from({ length: N }, () => ({ x: 0, y: 0, life: 0, grow: 0 }));
     const buf = new Float32Array(N * 3);
@@ -490,9 +504,38 @@ void main(){
         buf[i * 3] = p.x; buf[i * 3 + 1] = p.y; buf[i * 3 + 2] = k * (i === head ? 1 : .82);
         if (p.life > 0) alive = true;
       });
-      gl.uniform3fv(uPts, buf); gl.uniform1f(uT, (now - t0) / 1000);
+      const T = (now - t0) / 1000;
+      gl.uniform3fv(uPts, buf); gl.uniform1f(uT, T);
+      beat(T);
       gl.drawArrays(gl.TRIANGLE_STRIP, 0, 4);
       if (alive && vis) raf = requestAnimationFrame(draw); else last = 0;
+    }
+    /* Heartbeat sound, in time with the drawn heart. Browsers only allow
+       audio after the visitor has clicked, tapped or pressed a key once. */
+    let ac = null, lastPh = 0;
+    const unlock = () => {
+      try { ac = ac || new (window.AudioContext || window.webkitAudioContext)(); ac.resume(); } catch (e) { ac = null; }
+    };
+    ['pointerdown', 'keydown', 'touchend'].forEach(ev => addEventListener(ev, unlock, { passive: true }));
+    function thump(vol, f0) {
+      const t = ac.currentTime + .01, o = ac.createOscillator(), o2 = ac.createOscillator(), g = ac.createGain(), g2 = ac.createGain();
+      o.frequency.setValueAtTime(f0, t); o.frequency.exponentialRampToValueAtTime(f0 * .55, t + .16);
+      o2.frequency.setValueAtTime(f0 * 2.1, t); o2.frequency.exponentialRampToValueAtTime(f0, t + .1);
+      g.gain.setValueAtTime(.0001, t); g.gain.exponentialRampToValueAtTime(vol, t + .012); g.gain.exponentialRampToValueAtTime(.0001, t + .26);
+      g2.gain.setValueAtTime(.0001, t); g2.gain.exponentialRampToValueAtTime(vol * .35, t + .008); g2.gain.exponentialRampToValueAtTime(.0001, t + .12);
+      o.connect(g).connect(ac.destination); o2.connect(g2).connect(ac.destination);
+      o.start(t); o2.start(t); o.stop(t + .3); o2.stop(t + .3);
+    }
+    function beat(T) {
+      const ph = (T / .86) % 1, prev = lastPh; lastPh = ph;
+      if (!ac || ac.state !== 'running') return;
+      const A = cv.width / cv.height, hx = .63 * A, hy = .2;
+      let f = 0;
+      for (let i = 0; i < N; i++) { const z = buf[i * 3 + 2], dx = hx - buf[i * 3] * A, dy = hy - buf[i * 3 + 1]; f += z * z * .016 / (dx * dx + dy * dy + .0006); }
+      const vol = Math.min(1, Math.max(0, (f - .8) / 1.4)) * .55;
+      if (vol < .02) return;
+      if (ph < prev) thump(vol, 72);
+      else if (prev < .2 && ph >= .2) thump(vol * .7, 84);
     }
     const kick = () => { if (!raf && ready) raf = requestAnimationFrame(draw); };
 
@@ -518,8 +561,10 @@ void main(){
     const start = () => {
       img.after(cv); size();
       Promise.all([img.decode ? img.decode().then(() => img) : load(img.currentSrc || img.src),
-        img.dataset.xray ? load(img.dataset.xray).catch(() => null) : null]).then(([p, x]) => {
-        tex(0, p); gl.uniform1f(uHas, x ? 1 : 0); if (x) tex(1, x); gl.activeTexture(gl.TEXTURE0);
+        img.dataset.xray ? load(img.dataset.xray).catch(() => null) : null,
+        img.dataset.heart ? load(img.dataset.heart).catch(() => null) : null]).then(([p, x, hr]) => {
+        tex(0, p); gl.uniform1f(uHas, x ? 1 : 0); if (x) tex(1, x);
+        gl.uniform1f(uHasH, hr ? 1 : 0); if (hr) tex(2, hr, gl.RGBA); gl.activeTexture(gl.TEXTURE0);
         ready = true; draw(performance.now()); frame.classList.add('xray-on');
       }).catch(() => cv.remove());
     };
