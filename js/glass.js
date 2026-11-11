@@ -429,7 +429,8 @@ void main(){
  vec2 ru=uv+off;
  vec3 inside;
  if(hasX>.5){
-  inside=vec3(texture2D(X,ru+off*.5).r,texture2D(X,ru).g,texture2D(X,ru-off*.5).b);
+  vec2 xu=uv+off*.45;inside=vec3(texture2D(X,xu+off*.18).r,texture2D(X,xu).g,texture2D(X,xu-off*.18).b);
+  inside=inside*1.08+texture2D(P,xu).rgb*.22*(1.-dot(inside,vec3(.33)));
  }else{
   float lr=L(ru+off*.7),lg=L(ru),lb=L(ru-off*.7);
   float gx=L(ru+vec2(px.x,0.))-L(ru-vec2(px.x,0.)),gy=L(ru+vec2(0.,px.y))-L(ru-vec2(0.,px.y));
