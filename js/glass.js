@@ -394,6 +394,140 @@
     document.documentElement.classList.add('has-globe');
   }
 
+  /* Hero portrait: a liquid glass "X-ray" melts open wherever the cursor
+     (or a finger) moves, then flows shut again. WebGL; the <img> stays as
+     the fallback. Set data-xray="img/your-glass-layer.webp" on .hero-me to
+     reveal an aligned second image instead of the drawn glass layer. */
+  function xray() {
+    const img = $('.hero-me'), frame = $('#frame');
+    if (!img || !frame || reduce) return;
+    const cv = document.createElement('canvas');
+    cv.className = 'hero-xray'; cv.setAttribute('aria-hidden', 'true');
+    cv.width = img.getAttribute('width'); cv.height = img.getAttribute('height');
+    const gl = cv.getContext('webgl', { alpha: false, antialias: false, premultipliedAlpha: false });
+    if (!gl) return;
+    const N = 18;
+    const vs = 'attribute vec2 a;varying vec2 v;void main(){v=a*.5+.5;gl_Position=vec4(a,0,1);}';
+    const fs = `precision highp float;varying vec2 v;
+uniform sampler2D P,X;uniform float hasX,T,A;uniform vec2 px;uniform vec3 pts[${N}];
+float h(vec2 p){return fract(sin(dot(p,vec2(127.1,311.7)))*43758.5453);}
+float n(vec2 p){vec2 i=floor(p),f=fract(p);f=f*f*(3.-2.*f);
+ return mix(mix(h(i),h(i+vec2(1,0)),f.x),mix(h(i+vec2(0,1)),h(i+1.),f.x),f.y);}
+float fld(vec2 uv){vec2 q=vec2(uv.x*A,uv.y);float f=0.;
+ for(int i=0;i<${N};i++){vec3 p=pts[i];vec2 d=q-vec2(p.x*A,p.y);f+=p.z*p.z*.016/(dot(d,d)+.0006);}
+ float w=n(uv*vec2(7.,5.)+vec2(0.,T*.7))+.5*n(uv*15.-T*.5);
+ return f*(.78+.3*w);}
+float L(vec2 u){return dot(texture2D(P,u).rgb,vec3(.3,.59,.11));}
+void main(){
+ vec2 uv=v;vec3 ph=texture2D(P,uv).rgb;
+ float f=fld(uv);
+ if(f<.55){gl_FragColor=vec4(ph,1.);return;}
+ float e=.0035;vec2 g=vec2(fld(uv+vec2(e,0.))-f,fld(uv+vec2(0.,e))-f)/e;
+ float m=smoothstep(.92,1.04,f);
+ float edge=1.-smoothstep(1.,2.6,f);
+ vec2 off=-clamp(g*.0009,-.05,.05)*(.35+edge);
+ vec2 ru=uv+off;
+ vec3 inside;
+ if(hasX>.5){
+  inside=vec3(texture2D(X,ru+off*.5).r,texture2D(X,ru).g,texture2D(X,ru-off*.5).b);
+ }else{
+  float lr=L(ru+off*.7),lg=L(ru),lb=L(ru-off*.7);
+  float gx=L(ru+vec2(px.x,0.))-L(ru-vec2(px.x,0.)),gy=L(ru+vec2(0.,px.y))-L(ru-vec2(0.,px.y));
+  float gx2=L(ru+vec2(px.x*3.,0.))-L(ru-vec2(px.x*3.,0.)),gy2=L(ru+vec2(0.,px.y*3.))-L(ru-vec2(0.,px.y*3.));
+  float ed=clamp(length(vec2(gx,gy))*5.+length(vec2(gx2,gy2))*2.2,0.,1.);
+  vec3 body=vec3(pow(lr,.75),pow(lg,.75),pow(lb,.75));
+  float sil=smoothstep(.04,.2,lg);
+  vec3 bone=vec3(.82,.92,1.)*pow(ed,1.3)*1.5;
+  vec3 tint=vec3(1.,.5,.14)*body.g*.55+vec3(.05,.09,.14)*sil;
+  float scan=.5+.5*sin(uv.y*420.+T*4.);
+  inside=tint+bone+vec3(.5,.8,1.)*sil*scan*.05+vec3(body.r-body.g,0.,body.b-body.g)*.6;
+  inside+=vec3(1.,.6,.25)*pow(n(ru*vec2(40.,26.)+T*.3),6.)*sil*.7;
+ }
+ vec3 nrm=normalize(vec3(-g*.0045,1.));
+ float spec=pow(max(dot(nrm,normalize(vec3(-.45,.55,.9))),0.),36.)*(1.-m*.6);
+ float rim=smoothstep(.86,1.,f)*(1.-smoothstep(1.,1.45,f));
+ vec3 c=mix(ph,inside,m)+vec3(1.,.66,.36)*rim*.75+vec3(1.,.93,.86)*spec*.9*smoothstep(.7,1.,f);
+ gl_FragColor=vec4(c,1.);}`;
+    const sh = (t, s) => { const o = gl.createShader(t); gl.shaderSource(o, s); gl.compileShader(o); return gl.getShaderParameter(o, gl.COMPILE_STATUS) ? o : null; };
+    const v = sh(gl.VERTEX_SHADER, vs), f = sh(gl.FRAGMENT_SHADER, fs);
+    if (!v || !f) return;
+    const pr = gl.createProgram(); gl.attachShader(pr, v); gl.attachShader(pr, f); gl.linkProgram(pr);
+    if (!gl.getProgramParameter(pr, gl.LINK_STATUS)) return;
+    gl.useProgram(pr);
+    gl.bindBuffer(gl.ARRAY_BUFFER, gl.createBuffer());
+    gl.bufferData(gl.ARRAY_BUFFER, new Float32Array([-1, -1, 1, -1, -1, 1, 1, 1]), gl.STATIC_DRAW);
+    const loc = gl.getAttribLocation(pr, 'a'); gl.enableVertexAttribArray(loc); gl.vertexAttribPointer(loc, 2, gl.FLOAT, false, 0, 0);
+    const U = k => gl.getUniformLocation(pr, k);
+    const uT = U('T'), uA = U('A'), uPx = U('px'), uPts = U('pts'), uHas = U('hasX');
+    gl.uniform1i(U('P'), 0); gl.uniform1i(U('X'), 1);
+    const tex = (unit, src) => { const t = gl.createTexture(); gl.activeTexture(gl.TEXTURE0 + unit); gl.bindTexture(gl.TEXTURE_2D, t);
+      gl.pixelStorei(gl.UNPACK_FLIP_Y_WEBGL, true);
+      [gl.TEXTURE_WRAP_S, gl.TEXTURE_WRAP_T].forEach(p => gl.texParameteri(gl.TEXTURE_2D, p, gl.CLAMP_TO_EDGE));
+      gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR); gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.LINEAR);
+      gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGB, gl.RGB, gl.UNSIGNED_BYTE, src); };
+
+    const pts = Array.from({ length: N }, () => ({ x: 0, y: 0, life: 0, grow: 0 }));
+    const buf = new Float32Array(N * 3);
+    let head = -1, inside = false, raf = 0, last = 0, t0 = performance.now(), vis = true, ready = false;
+
+    function size() {
+      const r = cv.getBoundingClientRect(); if (!r.height) return;
+      const dpr = Math.min(devicePixelRatio || 1, 1.75);
+      const hgt = Math.round(r.height * dpr), wid = Math.round(hgt * img.width / img.height || hgt * .805);
+      if (cv.height !== hgt) { cv.height = hgt; cv.width = wid; }
+      gl.viewport(0, 0, cv.width, cv.height);
+      gl.uniform2f(uPx, 1 / cv.width, 1 / cv.height); gl.uniform1f(uA, cv.width / cv.height);
+    }
+    function draw(now) {
+      raf = 0; const dt = Math.min(.05, (now - (last || now)) / 1000); last = now;
+      let alive = false;
+      pts.forEach((p, i) => {
+        const held = inside && i === head;
+        p.life = held ? 1 : Math.max(0, p.life - dt * (i === head ? .9 : 1.25));
+        p.grow = Math.min(1, p.grow + dt * 4);
+        const k = p.life * p.life * (3 - 2 * p.life) * (1 - Math.pow(1 - p.grow, 3));
+        buf[i * 3] = p.x; buf[i * 3 + 1] = p.y; buf[i * 3 + 2] = k * (i === head ? 1 : .82);
+        if (p.life > 0) alive = true;
+      });
+      gl.uniform3fv(uPts, buf); gl.uniform1f(uT, (now - t0) / 1000);
+      gl.drawArrays(gl.TRIANGLE_STRIP, 0, 4);
+      if (alive && vis) raf = requestAnimationFrame(draw); else last = 0;
+    }
+    const kick = () => { if (!raf && ready) raf = requestAnimationFrame(draw); };
+
+    function at(cx, cy) {
+      const r = cv.getBoundingClientRect();
+      const x = (cx - r.left) / r.width, y = 1 - (cy - r.top) / r.height;
+      inside = x > -.05 && x < 1.05 && y > -.05 && y < 1.05;
+      if (!inside) return kick();
+      const h = pts[head];
+      if (!h || Math.hypot((x - h.x) * r.width / r.height, y - h.y) > .028) {
+        head = (head + 1) % N; Object.assign(pts[head], { x, y, life: 1, grow: h && h.life > .3 ? .55 : 0 });
+      } else { h.x += (x - h.x) * .5; h.y += (y - h.y) * .5; }
+      kick();
+    }
+    frame.addEventListener('pointermove', e => { if (e.pointerType !== 'touch') at(e.clientX, e.clientY); });
+    frame.addEventListener('pointerleave', e => { if (e.pointerType !== 'touch') { inside = false; kick(); } });
+    const tm = e => { const t = e.touches[0]; if (t) at(t.clientX, t.clientY); };
+    frame.addEventListener('touchstart', tm, { passive: true });
+    frame.addEventListener('touchmove', tm, { passive: true });
+    frame.addEventListener('touchend', () => { inside = false; kick(); }, { passive: true });
+
+    const load = s => new Promise((ok, no) => { const i = new Image(); i.onload = () => ok(i); i.onerror = no; i.src = s; });
+    const start = () => {
+      img.after(cv); size();
+      Promise.all([img.decode ? img.decode().then(() => img) : load(img.currentSrc || img.src),
+        img.dataset.xray ? load(img.dataset.xray).catch(() => null) : null]).then(([p, x]) => {
+        tex(0, p); gl.uniform1f(uHas, x ? 1 : 0); if (x) tex(1, x); gl.activeTexture(gl.TEXTURE0);
+        ready = true; draw(performance.now()); frame.classList.add('xray-on');
+      }).catch(() => cv.remove());
+    };
+    if (img.complete) start(); else img.addEventListener('load', start, { once: true });
+    addEventListener('resize', () => { if (ready) { size(); draw(performance.now()); } });
+    new IntersectionObserver(([en]) => { vis = en.isIntersecting; if (vis) kick(); }).observe(frame);
+    cv.addEventListener('webglcontextlost', () => { frame.classList.remove('xray-on'); cv.remove(); });
+  }
+
   function marquee() {
     const ms = $$('[data-marquee]').map(el => {
       const track = $('.marquee-track', el);
@@ -427,5 +561,5 @@
     ms.forEach(m => io.observe(m.el));
   }
 
-  loader(); bokeh(); sparks(); pointerFx(); reveals(); fly(); hang(); sheet(); contact(); marquee(); globe();
+  loader(); bokeh(); sparks(); pointerFx(); reveals(); fly(); hang(); sheet(); contact(); marquee(); globe(); xray();
 })();
