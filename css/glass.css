@@ -339,3 +339,30 @@ html:not(.has-globe) .pitch { grid-template-columns: 1fr; text-align: center; ju
 .beat-hint::before { content: ""; display: inline-block; width: 7px; height: 7px; margin-right: 7px; border-radius: 50%; background: #ff4a2a; box-shadow: 0 0 8px #ff4a2a; animation: beatdot .86s infinite; vertical-align: 1px; }
 .beat-hint.on { opacity: 1; pointer-events: auto; transform: translate(-50%, -100%); }
 @keyframes beatdot { 0%, 30%, 100% { transform: scale(1); } 8% { transform: scale(1.5); } 22% { transform: scale(1.25); } }
+
+/* Availability badge and contact extras */
+.avail { display: inline-flex; align-items: center; gap: 9px; margin-bottom: 16px; padding: 7px 14px 7px 11px; border-radius: 99px; font-size: 11.5px; font-weight: 600; letter-spacing: .02em; color: var(--text); text-decoration: none;
+  background: rgba(12,12,16,.55); border: 1px solid rgba(255,255,255,.14); -webkit-backdrop-filter: blur(10px); backdrop-filter: blur(10px); transition: border-color .25s, transform .25s; }
+.avail span { color: var(--mut); font-weight: 500; }
+.avail:hover { border-color: rgba(74,222,128,.6); transform: translateY(-1px); }
+.avail-dot { position: relative; width: 8px; height: 8px; border-radius: 50%; background: #4ade80; box-shadow: 0 0 10px #4ade80; flex: none; }
+.avail-dot::after { content: ""; position: absolute; inset: 0; border-radius: 50%; background: #4ade80; animation: availping 2s ease-out infinite; }
+@keyframes availping { from { transform: scale(1); opacity: .7; } to { transform: scale(3); opacity: 0; } }
+@media (prefers-reduced-motion: reduce) { .avail-dot::after { animation: none; } }
+.pitch-cta { display: flex; flex-wrap: wrap; align-items: center; gap: 10px 16px; margin-top: 22px; }
+.pitch-cta[hidden] { display: none; }
+.pitch-cta .pill-acc { padding: 13px 22px; font-size: 11px; }
+.pitch-cta span { font-size: 13px; color: var(--mut); }
+.form .hp { position: absolute; left: -9999px; width: 1px; height: 1px; opacity: 0; }
+.form button:disabled { opacity: .6; cursor: progress; }
+.form-note a { color: var(--acc); }
+@media (max-width: 720px) { .avail { font-size: 10.5px; padding: 6px 12px 6px 10px; margin-bottom: 12px; } }
+
+/* Goo around the send button */
+.form .goo-wrap { grid-column: 1 / -1; justify-self: center; position: relative; display: inline-block; }
+.form .goo-wrap .goo { position: absolute; left: -200px; top: -200px; width: calc(100% + 400px); height: calc(100% + 400px); max-width: none; pointer-events: none; z-index: 0; }
+.form .goo-wrap button { position: relative; z-index: 1; transition: translate .25s var(--ease), transform .35s var(--ease), border-color .25s, box-shadow .25s; }
+.avail span { margin-left: -5px; }
+
+/* the goo canvas hangs 200px past the button; keep it from widening the page on phones */
+.contact { overflow-x: clip; }

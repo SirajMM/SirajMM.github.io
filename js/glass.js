@@ -263,15 +263,116 @@
       const done = () => { copy.textContent = 'Copied'; setTimeout(() => { copy.textContent = 'Copy'; }, 1600); };
       if (navigator.clipboard) navigator.clipboard.writeText(copy.dataset.copy).then(done, () => {}); 
     });
-    const form = $('#form'), note = $('#form-note');
-    if (form) form.addEventListener('submit', e => {
+    const form = $('#form'), note = $('#form-note'), cfg = $('#contact');
+    const key = cfg ? cfg.dataset.formKey.trim() : '', book = cfg ? cfg.dataset.booking.trim() : '';
+    if (book) { document.querySelectorAll('[data-book]').forEach(el => { el.querySelector('a').href = book; el.hidden = false; }); const ps = $('.pitch-sub'); if (ps) ps.textContent = "Tell me what you're building and where it runs, by a quick call or by email."; }
+    if (form && key) note.textContent = 'Goes straight to my inbox. I usually reply within a day.';
+    if (form) form.addEventListener('submit', async e => {
       e.preventDefault();
-      const d = new FormData(form), to = form.getAttribute('action');
+      const d = new FormData(form), to = form.getAttribute('action'), btn = form.querySelector('button');
       const subject = 'Project enquiry from ' + d.get('name');
       const text = d.get('message') + '\n\n' + d.get('name') + '\n' + d.get('email');
-      location.href = to + '?subject=' + encodeURIComponent(subject) + '&body=' + encodeURIComponent(text);
-      note.textContent = 'Your email app should have opened with the message ready to send.';
+      const viaMail = () => { location.href = to + '?subject=' + encodeURIComponent(subject) + '&body=' + encodeURIComponent(text); };
+      if (!key) { viaMail(); note.textContent = 'Your email app should have opened with the message ready to send.'; return; }
+      if (d.get('botcheck')) return;
+      btn.disabled = true; btn.textContent = 'Sending...'; note.textContent = '';
+      try {
+        const r = await fetch('https://api.web3forms.com/submit', { method: 'POST', headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
+          body: JSON.stringify({ access_key: key, subject, from_name: d.get('name'), name: d.get('name'), email: d.get('email'), replyto: d.get('email'), message: d.get('message') }) });
+        const j = await r.json().catch(() => ({}));
+        if (!r.ok || j.success === false) throw new Error(j.message || r.status);
+        form.reset(); btn.textContent = 'Sent'; note.textContent = 'Thanks, ' + d.get('name') + '. Your message is in my inbox and I will reply soon.';
+        setTimeout(() => { btn.disabled = false; btn.textContent = 'Send message'; }, 4000);
+      } catch (err) {
+        btn.disabled = false; btn.textContent = 'Send message';
+        note.innerHTML = 'That did not go through. <a href="#">Send it from your email app instead</a>.';
+        note.querySelector('a').addEventListener('click', ev => { ev.preventDefault(); viaMail(); });
+      }
     });
+  }
+
+  /* Living black goo around the send button: tendrils reach for a nearby cursor */
+  function goo() {
+    const wrap = $('.goo-wrap'), cv = wrap && $('.goo', wrap), btn = wrap && $('button', wrap);
+    if (!cv || reduce) return;
+    const ctx = cv.getContext('2d'), PAD = 200, R = 210, K = 18;
+    let W = 0, H = 0, bw = 0, bh = 0, mx = -1e4, my = -1e4, touchUntil = 0, act = 0, raf = 0, idle = 0, t0 = performance.now();
+    const ten = [];
+    function size() {
+      const d = Math.min(devicePixelRatio || 1, 2); bw = btn.offsetWidth; bh = btn.offsetHeight;
+      W = bw + PAD * 2; H = bh + PAD * 2; cv.width = W * d; cv.height = H * d; ctx.setTransform(d, 0, 0, d, 0, 0);
+      // base points around the pill outline, each with its outward normal
+      const r = bh / 2, straight = bw - bh, per = 2 * straight + 2 * Math.PI * r; ten.length = 0;
+      for (let i = 0; i < K; i++) {
+        let u = (i + .5) / K * per, x, y, nx, ny;
+        if (u < straight) { x = r + u; y = 0; nx = 0; ny = -1; }
+        else if ((u -= straight) < Math.PI * r) { const a = -Math.PI / 2 + u / r; x = bw - r + Math.cos(a) * r; y = r + Math.sin(a) * r; nx = Math.cos(a); ny = Math.sin(a); }
+        else if ((u -= Math.PI * r) < straight) { x = bw - r - u; y = bh; nx = 0; ny = 1; }
+        else { u -= straight; const a = Math.PI / 2 + u / r; x = r + Math.cos(a) * r; y = r + Math.sin(a) * r; nx = Math.cos(a); ny = Math.sin(a); }
+        const bx = PAD + x, by = PAD + y;
+        ten.push({ bx, by, nx, ny, tx: bx, ty: by, vx: 0, vy: 0, ph: Math.random() * 6.28, w: 9 + Math.random() * 5 });
+      }
+    }
+    function local() { const b = btn.getBoundingClientRect(); return { x: mx - b.left + PAD, y: my - b.top + PAD, b }; }
+    function frame(now) {
+      raf = 0;
+      const t = (now - t0) / 1000, L = local(), b = L.b;
+      // distance from cursor to the button's box drives how hungry the goo is
+      const dx = Math.max(b.left - mx, 0, mx - b.right), dy = Math.max(b.top - my, 0, my - b.bottom);
+      let a = Math.max(0, 1 - Math.hypot(dx, dy) / R); a = a * a * (3 - 2 * a);
+      if (performance.now() > touchUntil && matchMedia('(hover: none)').matches) a = 0;
+      act += (a - act) * .12;
+      btn.style.translate = act > .01 ? ((L.x - PAD - bw / 2) * .05 * act).toFixed(2) + 'px ' + ((L.y - PAD - bh / 2) * .08 * act).toFixed(2) + 'px' : '';
+      ctx.clearRect(0, 0, W, H);
+      let moving = act > .005;
+      // a skin of goo that swells over the button edge
+      if (act > .01) {
+        const inf = 2 + 5 * act + Math.sin(t * 4) * act;
+        ctx.save(); ctx.shadowColor = 'rgba(255,110,30,' + (.55 * act) + ')'; ctx.shadowBlur = 16 * act; ctx.fillStyle = '#050507';
+        ctx.beginPath(); ctx.roundRect(PAD - inf, PAD - inf, bw + inf * 2, bh + inf * 2, bh / 2 + inf); ctx.fill(); ctx.restore();
+      }
+      let best = .05;
+      for (const n of ten) { const cx = L.x - n.bx, cy = L.y - n.by, cd = Math.hypot(cx, cy) || 1; n.f = Math.max(0, (n.nx * cx + n.ny * cy) / cd); best = Math.max(best, n.f); }
+      for (const n of ten) {
+        const cx = L.x - n.bx, cy = L.y - n.by, cd = Math.hypot(cx, cy) || 1, ux = cx / cd, uy = cy / cd;
+        const f = n.f / best, w = Math.min(1, act * 1.6) * (.06 + .94 * Math.pow(f, 6));
+        const k = .7 + .3 * act, dirx = n.nx * (1 - k) + ux * k, diry = n.ny * (1 - k) + uy * k, dl = Math.hypot(dirx, diry) || 1;
+        const len = w * Math.min(cd - 8, 230) + Math.sin(t * 2.3 + n.ph) * 5 * act;
+        const gx = n.bx + dirx / dl * Math.max(0, len), gy = n.by + diry / dl * Math.max(0, len);
+        n.vx = n.vx * .8 + (gx - n.tx) * .09; n.vy = n.vy * .8 + (gy - n.ty) * .09; n.tx += n.vx; n.ty += n.vy;
+        const ex = n.tx - n.bx, ey = n.ty - n.by, el = Math.hypot(ex, ey);
+        if (Math.abs(n.vx) + Math.abs(n.vy) > .05 || el > .5) moving = true;
+        if (el < 3) continue;
+        // curved, tapered tendril with a bulb at the tip
+        const px = -ey / el, py = ex / el, wob = Math.sin(t * 3.1 + n.ph) * el * .1;
+        const qx = n.bx + n.nx * el * .45 + px * wob, qy = n.by + n.ny * el * .45 + py * wob;
+        const S = 18, left = [], right = [], wid = Math.min(n.w, 3 + el * .16);
+        for (let i = 0; i <= S; i++) {
+          const s = i / S, m = 1 - s;
+          const x = m * m * n.bx + 2 * m * s * qx + s * s * n.tx, y = m * m * n.by + 2 * m * s * qy + s * s * n.ty;
+          const tx = 2 * m * (qx - n.bx) + 2 * s * (n.tx - qx), ty = 2 * m * (qy - n.by) + 2 * s * (n.ty - qy), tl = Math.hypot(tx, ty) || 1;
+          const r = wid * (1 - s * .7) * (1 + .18 * Math.sin(s * 9 - t * 6 + n.ph));
+          left.push([x - ty / tl * r, y + tx / tl * r]); right.push([x + ty / tl * r, y - tx / tl * r]);
+        }
+        ctx.save(); ctx.shadowColor = 'rgba(255,110,30,' + (.5 * act) + ')'; ctx.shadowBlur = 10;
+        ctx.fillStyle = '#050507'; ctx.beginPath(); ctx.moveTo(left[0][0], left[0][1]);
+        for (const p of left) ctx.lineTo(p[0], p[1]);
+        for (let i = right.length - 1; i >= 0; i--) ctx.lineTo(right[i][0], right[i][1]);
+        ctx.closePath(); ctx.fill();
+        ctx.beginPath(); ctx.arc(n.tx, n.ty, 2 + wid * .4, 0, 6.283); ctx.fill(); ctx.restore();
+        // wet highlight along one side
+        ctx.strokeStyle = 'rgba(255,255,255,' + (.28 * Math.min(1, el / 30)) + ')'; ctx.lineWidth = 1; ctx.beginPath();
+        for (let i = 2; i < S - 2; i++) { const p = left[i], q = right[i], x = p[0] * .7 + q[0] * .3, y = p[1] * .7 + q[1] * .3; i === 2 ? ctx.moveTo(x, y) : ctx.lineTo(x, y); }
+        ctx.stroke();
+      }
+      if (moving) kick();
+    }
+    function kick() { if (!raf) raf = requestAnimationFrame(frame); }
+    function near(x, y) { const b = btn.getBoundingClientRect(); return x > b.left - R - 60 && x < b.right + R + 60 && y > b.top - R - 60 && y < b.bottom + R + 60; }
+    addEventListener('pointermove', e => { mx = e.clientX; my = e.clientY; if (e.pointerType !== 'mouse') touchUntil = performance.now() + 900; if (near(mx, my) || act > .005) kick(); }, { passive: true });
+    addEventListener('pointerdown', e => { if (e.pointerType === 'mouse') return; mx = e.clientX; my = e.clientY; touchUntil = performance.now() + 900; if (near(mx, my)) kick(); }, { passive: true });
+    addEventListener('scroll', () => { if (act > .005) kick(); }, { passive: true });
+    size(); new ResizeObserver(() => { size(); kick(); }).observe(btn);
   }
 
   /* Marquee that speeds up and leans with the scroll */
@@ -676,5 +777,5 @@ void main(){
     ms.forEach(m => io.observe(m.el));
   }
 
-  loader(); bokeh(); sparks(); pointerFx(); reveals(); fly(); hang(); sheet(); contact(); marquee(); globe(); xray();
+  loader(); bokeh(); sparks(); pointerFx(); reveals(); fly(); hang(); sheet(); contact(); marquee(); globe(); xray(); goo();
 })();

@@ -35,7 +35,6 @@
     "@type": "Person",
     "name": "Muhammad Siraj M M",
     "jobTitle": "Mobile Application Developer",
-    "knowsAbout": ["Flutter", "Dart", "BLoC", "gRPC", "Go", "Firebase", "Mobile payments", "LLM integration", "AI-assisted development"],
     "worksFor": { "@type": "Organization", "name": "ThoughtBox Online Services" },
     "address": { "@type": "PostalAddress", "addressLocality": "Kochi", "addressCountry": "IN" },
     "email": "mailto:sirajmuhammed718@gmail.com",
@@ -46,7 +45,7 @@
       "https://www.linkedin.com/in/muhammad-siraj-m-m-3ab64a202",
       "https://www.upwork.com/freelancers/~015c46144016569e31"
     ],
-    "knowsAbout": ["Flutter", "Dart", "BLoC", "gRPC", "Go", "Firebase", "Fintech", "Cross-platform app development"]
+    "knowsAbout": ["Flutter", "Dart", "BLoC", "gRPC", "Go", "Firebase", "Fintech", "Cross-platform app development", "LLM integration", "AI-assisted development"]
   }
   </script>
 </head>
@@ -71,6 +70,7 @@
         <i class="hero-glow"></i>
         <img class="hero-me" src="img/siraj-cine.webp" data-xray="img/siraj-xray.webp" alt="Portrait of Muhammad Siraj, backlit in orange" width="1200" height="1490" fetchpriority="high">
         <div class="hero-copy">
+          <a class="avail" href="#contact"><i class="avail-dot" aria-hidden="true"></i>Open to Flutter roles and freelance <span>· Nov 2026</span></a>
           <p class="eyebrow">Flutter developer • Kochi, India</p>
           <h1 class="name" aria-label="Siraj"><span>S</span><span>I</span><span>R</span><span>A</span><span>J</span></h1>
           <p class="role">Mobile apps <i>/</i> Cross-platform</p>
@@ -191,12 +191,15 @@
       <div class="marquee-track"><span>Let's build it</span><span>Let's ship it</span><span>Let's build it</span><span>Let's ship it</span></div>
     </div>
 
-    <section class="contact" id="contact">
+    <!-- Contact settings: data-form-key = your Web3Forms access key (web3forms.com), data-booking = your Cal.com or Calendly link.
+         Leave either empty and the form falls back to opening the visitor's email app, and the booking button stays hidden. -->
+    <section class="contact" id="contact" data-form-key="" data-booking="">
       <div class="pitch">
         <div class="pitch-copy rv">
           <p class="pitch-time" id="kochi-time" hidden></p>
           <p class="pitch-title">Have a Flutter app to build, <em>or one to fix?</em></p>
           <p class="pitch-sub">Email is the fastest way to reach me. Tell me what you're building and where it runs.</p>
+          <p class="pitch-cta" data-book hidden><a class="pill pill-acc" target="_blank" rel="noopener">Book a 20-min call <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 17 17 7M9 7h8v8" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></a><span>or email, whichever suits you</span></p>
         </div>
         <div class="globe-wrap rv">
           <canvas class="globe" id="globe" aria-hidden="true"></canvas>
@@ -213,7 +216,8 @@
           <label>Your name<input name="name" type="text" autocomplete="name" placeholder="Your name" required></label>
           <label>Your email<input name="email" type="email" autocomplete="email" placeholder="you@example.com" required></label>
           <label class="wide">Message and project scope<textarea name="message" rows="6" placeholder="Tell me what you're building and where it runs." required></textarea></label>
-          <button class="pill pill-solid" type="submit">Send message</button>
+          <input class="hp" type="checkbox" name="botcheck" tabindex="-1" autocomplete="off" aria-hidden="true">
+          <span class="goo-wrap"><canvas class="goo" aria-hidden="true"></canvas><button class="pill pill-solid" type="submit">Send message</button></span>
           <p class="form-note" id="form-note" role="status">Opens your email app with the message filled in.</p>
         </form>
         <ul class="socials rv">
