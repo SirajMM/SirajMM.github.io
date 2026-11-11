@@ -375,6 +375,16 @@
     size(); new ResizeObserver(() => { size(); kick(); }).observe(btn);
   }
 
+  /* Once the page is idle, fetch the images below the fold: the tiles, the About photo and the project screenshots are ready before anyone scrolls or opens one */
+  function warm() {
+    const go = () => {
+      $$('img[loading="lazy"]').forEach(i => { i.loading = 'eager'; });
+      $$('template').forEach(t => t.content.querySelectorAll('img').forEach(i => { const p = new Image(); p.src = i.getAttribute('src'); }));
+    };
+    const idle = () => (window.requestIdleCallback ? requestIdleCallback(go, { timeout: 2500 }) : setTimeout(go, 600));
+    if (document.readyState === 'complete') idle(); else addEventListener('load', idle, { once: true });
+  }
+
   /* Marquee that speeds up and leans with the scroll */
   function globe() {
     function fit(cv) {
@@ -777,5 +787,5 @@ void main(){
     ms.forEach(m => io.observe(m.el));
   }
 
-  loader(); bokeh(); sparks(); pointerFx(); reveals(); fly(); hang(); sheet(); contact(); marquee(); globe(); xray(); goo();
+  loader(); bokeh(); sparks(); pointerFx(); reveals(); fly(); hang(); sheet(); contact(); marquee(); globe(); xray(); goo(); warm();
 })();
