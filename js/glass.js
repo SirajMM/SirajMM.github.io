@@ -409,7 +409,7 @@
     const N = 18;
     const vs = 'attribute vec2 a;varying vec2 v;void main(){v=a*.5+.5;gl_Position=vec4(a,0,1);}';
     const fs = `precision highp float;varying vec2 v;
-uniform sampler2D P,X,H;uniform float hasX,hasH,T,A;uniform vec2 px;uniform vec3 pts[${N}];const float HX=.63,HY=.2,HS=.1,HR=.732;
+uniform sampler2D P,X;uniform float hasX,T,A;uniform vec2 px;uniform vec3 pts[${N}];const float HX=.63,HY=.2,HS=.11;
 float h(vec2 p){return fract(sin(dot(p,vec2(127.1,311.7)))*43758.5453);}
 float n(vec2 p){vec2 i=floor(p),f=fract(p);f=f*f*(3.-2.*f);
  return mix(mix(h(i),h(i+vec2(1,0)),f.x),mix(h(i+vec2(0,1)),h(i+1.),f.x),f.y);}
@@ -417,16 +417,58 @@ float fld(vec2 uv){vec2 q=vec2(uv.x*A,uv.y);float f=0.;
  for(int i=0;i<${N};i++){vec3 p=pts[i];vec2 d=q-vec2(p.x*A,p.y);f+=p.z*p.z*.016/(dot(d,d)+.0006);}
  float w=n(uv*vec2(7.,5.)+vec2(0.,T*.7))+.5*n(uv*15.-T*.5);
  return f*(.78+.3*w);}
-vec4 heart(vec2 u,out float b){
+float BV,BA;
+mat2 R(float a){float c=cos(a),s=sin(a);return mat2(c,-s,s,c);}
+float sdE(vec3 p,vec3 r){float k0=length(p/r),k1=length(p/(r*r));return k0*(k0-1.)/k1;}
+float sdC(vec3 p,vec3 a,vec3 b,float r){vec3 pa=p-a,ba=b-a;return length(pa-ba*clamp(dot(pa,ba)/dot(ba,ba),0.,1.))-r;}
+float smin(float a,float b,float k){float h=clamp(.5+.5*(b-a)/k,0.,1.);return mix(b,a,h)-k*h*(1.-h);}
+vec2 hmap(vec3 p){
+ vec3 q=p;q.xy=R(.5)*q.xy;q.xz*=1.+.32*clamp(-q.y-.1,0.,1.);
+ float sv=1.-.075*BV,sa=1.-.1*BA;
+ float m=smin(sdE(q-vec3(.12,-.2,-.05),vec3(.6,.85,.55)*sv),sdE(q-vec3(-.22,-.05,.14),vec3(.56,.7,.47)*sv),.22);
+ m=smin(m,sdE(p-vec3(-.6,.36,0.),vec3(.32,.36,.3)*sa),.16);
+ m=smin(m,sdE(p-vec3(.45,.42,-.25),vec3(.3,.27,.28)*sa),.16);
+ m=smin(m,sdE(p-vec3(-.4,.56,.24),vec3(.16,.1,.13)*sa),.08);
+ vec3 c=vec3(.12,.78,-.05),pa=p-c;pa.xz=R(-.9)*pa.xz;
+ float ar=pa.y>=0.?length(vec2(length(pa.xy)-.32,pa.z))-.13:1e3;
+ ar=min(ar,sdC(p,vec3(-.08,.78,.2),vec3(-.12,.22,.12),.13));
+ ar=min(ar,sdC(p,vec3(.32,.78,-.3),vec3(.42,-.3,-.45),.12));
+ ar=min(ar,sdC(p,vec3(.03,1.03,.07),vec3(-.04,1.4,.1),.06));
+ ar=min(ar,sdC(p,vec3(.12,1.07,-.05),vec3(.13,1.45,-.06),.055));
+ ar=min(ar,sdC(p,vec3(.21,1.03,-.17),vec3(.3,1.38,-.22),.055));
+ float pu=sdC(p,vec3(0.,.2,.36),vec3(.16,.6,.26),.14);
+ pu=min(pu,sdC(p,vec3(.16,.6,.26),vec3(.62,.64,.02),.085));
+ pu=min(pu,sdC(p,vec3(.16,.6,.26),vec3(-.2,.66,.02),.08));
+ float ve=sdC(p,vec3(-.62,.45,0.),vec3(-.6,1.3,0.),.11);
+ vec2 r=vec2(m,0.);
+ float a2=smin(m,ar,.08);if(ar<m)r=vec2(a2,1.);else r.x=a2;
+ float u2=smin(r.x,pu,.07);if(pu<r.x)r=vec2(u2,2.);else r.x=u2;
+ float v2=smin(r.x,ve,.07);if(ve<r.x)r=vec2(v2,2.);else r.x=v2;
+ return r;}
+vec4 heart(vec2 u){
+ vec2 q=(vec2(u.x*A,u.y)-vec2(HX*A,HY))/HS;
  float ph=fract(T/.86);
- b=exp(-pow(ph*11.,2.))+.6*exp(-pow((ph-.2)*11.,2.))+exp(-pow((ph-1.)*11.,2.));
- vec2 q=vec2(u.x*A,u.y)-vec2(HX*A,HY);
- float c=cos(.12),s=sin(.12);q=mat2(c,-s,s,c)*q;
- q.y+=HS*.35;q*=vec2(1.-.07*b,1.-.05*b);q.y-=HS*.35;q/=1.+.06*b;
- vec2 t=vec2(q.x/(2.*HS*HR),q.y/(2.*HS))+.5;
- vec4 k=texture2D(H,clamp(t,0.,1.))*step(0.,t.x)*step(t.x,1.)*step(0.,t.y)*step(t.y,1.);
- k.rgb*=.8+.55*b;
- return k;}
+ BV=exp(-pow(ph*11.,2.))+.6*exp(-pow((ph-.2)*11.,2.))+exp(-pow((ph-1.)*11.,2.));
+ BA=exp(-pow((ph-.88)*12.,2.));
+ if(abs(q.x)>1.5||q.y<-1.45||q.y>1.8)return vec4(0.);
+ mat2 Ry=R(-.3+.38*sin(T*.45)),Rx=R(.1);
+ vec3 ro=vec3(q,2.5),rd=vec3(0.,0.,-1.),Lt=normalize(vec3(-.5,.6,.85));
+ ro.xz=Ry*ro.xz;rd.xz=Ry*rd.xz;Lt.xz=Ry*Lt.xz;ro.yz=Rx*ro.yz;rd.yz=Rx*rd.yz;Lt.yz=Rx*Lt.yz;
+ float t=0.;vec2 h=vec2(1.);
+ for(int i=0;i<60;i++){h=hmap(ro+rd*t);if(h.x<.004||t>5.)break;t+=h.x*.75;}
+ if(h.x>.03)return vec4(0.);
+ vec3 p=ro+rd*t;vec2 e=vec2(.004,-.004);
+ vec3 N=normalize(e.xyy*hmap(p+e.xyy).x+e.yyx*hmap(p+e.yyx).x+e.yxy*hmap(p+e.yxy).x+e.xxx*hmap(p+e.xxx).x);
+ vec3 V=-rd;
+ vec3 base=h.y<.5?vec3(.6,.07,.05):h.y<1.5?vec3(.85,.2,.1):vec3(.3,.2,.46);
+ if(h.y<.5){vec3 k=p;k.xy=R(.5)*k.xy;
+  float gr=exp(-pow((k.x+.08-.12*sin(k.y*2.2))*13.,2.))*step(0.,k.z);
+  base=mix(base,vec3(1.,.62,.25),gr*.75);
+  base+=vec3(.9,.3,.1)*pow(n(k.xy*vec2(5.,9.)+k.z*4.),5.)*.6;}
+ float wr=clamp((dot(N,Lt)+.45)/1.45,0.,1.),fr=pow(1.-max(dot(N,V),0.),2.5);
+ float sp=pow(max(dot(reflect(-Lt,N),V),0.),38.);
+ vec3 col=base*(.25+1.05*wr)*(.85+.45*BV)+vec3(1.,.38,.16)*fr*.75+vec3(1.,.92,.85)*sp*.85;
+ return vec4(col,.94);}
 float L(vec2 u){return dot(texture2D(P,u).rgb,vec3(.3,.59,.11));}
 void main(){
  vec2 uv=v;vec3 ph=texture2D(P,uv).rgb;
@@ -454,10 +496,10 @@ void main(){
   inside=tint+bone+vec3(.5,.8,1.)*sil*scan*.05+vec3(body.r-body.g,0.,body.b-body.g)*.6;
   inside+=vec3(1.,.6,.25)*pow(n(ru*vec2(40.,26.)+T*.3),6.)*sil*.7;
  }
- if(hasH>.5){float b;vec2 hu=uv+off*.5;vec4 hc=heart(hu,b);
-  float bl=smoothstep(.4,.85,dot(inside,vec3(.33)));
-  inside=mix(inside,hc.rgb*1.1+inside*.22,hc.a*(.96-.38*bl));
-  vec2 d=vec2((hu.x-HX)*A,hu.y-HY);inside+=vec3(1.,.22,.06)*exp(-dot(d,d)/(HS*HS)*1.6)*(.12+.3*b);}
+ {vec2 hu=uv+off*.5;vec4 hc=heart(hu);
+  float bl=smoothstep(.55,.95,dot(inside,vec3(.33)));
+  inside=mix(inside,hc.rgb*1.15+inside*.12,hc.a*(.98-.28*bl));
+  vec2 d=vec2((hu.x-HX)*A,hu.y-HY);inside+=vec3(1.,.22,.06)*exp(-dot(d,d)/(HS*HS)*1.4)*(.1+.3*BV);}
  vec3 nrm=normalize(vec3(-g*.0045,1.));
  float spec=pow(max(dot(nrm,normalize(vec3(-.45,.55,.9))),0.),36.)*(1.-m*.6);
  float rim=smoothstep(.86,1.,f)*(1.-smoothstep(1.,1.45,f));
@@ -473,13 +515,13 @@ void main(){
     gl.bufferData(gl.ARRAY_BUFFER, new Float32Array([-1, -1, 1, -1, -1, 1, 1, 1]), gl.STATIC_DRAW);
     const loc = gl.getAttribLocation(pr, 'a'); gl.enableVertexAttribArray(loc); gl.vertexAttribPointer(loc, 2, gl.FLOAT, false, 0, 0);
     const U = k => gl.getUniformLocation(pr, k);
-    const uT = U('T'), uA = U('A'), uPx = U('px'), uPts = U('pts'), uHas = U('hasX'), uHasH = U('hasH');
-    gl.uniform1i(U('P'), 0); gl.uniform1i(U('X'), 1); gl.uniform1i(U('H'), 2);
-    const tex = (unit, src, fmt = gl.RGB) => { const t = gl.createTexture(); gl.activeTexture(gl.TEXTURE0 + unit); gl.bindTexture(gl.TEXTURE_2D, t);
+    const uT = U('T'), uA = U('A'), uPx = U('px'), uPts = U('pts'), uHas = U('hasX');
+    gl.uniform1i(U('P'), 0); gl.uniform1i(U('X'), 1);
+    const tex = (unit, src) => { const t = gl.createTexture(); gl.activeTexture(gl.TEXTURE0 + unit); gl.bindTexture(gl.TEXTURE_2D, t);
       gl.pixelStorei(gl.UNPACK_FLIP_Y_WEBGL, true);
       [gl.TEXTURE_WRAP_S, gl.TEXTURE_WRAP_T].forEach(p => gl.texParameteri(gl.TEXTURE_2D, p, gl.CLAMP_TO_EDGE));
       gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR); gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.LINEAR);
-      gl.texImage2D(gl.TEXTURE_2D, 0, fmt, fmt, gl.UNSIGNED_BYTE, src); };
+      gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGB, gl.RGB, gl.UNSIGNED_BYTE, src); };
 
     const pts = Array.from({ length: N }, () => ({ x: 0, y: 0, life: 0, grow: 0 }));
     const buf = new Float32Array(N * 3);
@@ -510,32 +552,61 @@ void main(){
       gl.drawArrays(gl.TRIANGLE_STRIP, 0, 4);
       if (alive && vis) raf = requestAnimationFrame(draw); else last = 0;
     }
-    /* Heartbeat sound, in time with the drawn heart. Browsers only allow
-       audio after the visitor has clicked, tapped or pressed a key once. */
-    let ac = null, lastPh = 0;
+    /* Heartbeat sound, in time with the drawn heart. Browsers keep audio
+       muted until the visitor clicks, taps or presses a key once, so a small
+       hint asks for that click while the glass is over the heart. */
+    let ac = null, out = null, lastPh = 0, noise = null;
+    const hint = document.createElement('button');
+    hint.type = 'button'; hint.className = 'beat-hint';
+    hint.textContent = matchMedia('(hover: none)').matches ? 'Tap to hear the heartbeat' : 'Click to hear the heartbeat';
+    frame.append(hint);
     const unlock = () => {
-      try { ac = ac || new (window.AudioContext || window.webkitAudioContext)(); ac.resume(); } catch (e) { ac = null; }
+      try {
+        if (navigator.audioSession) navigator.audioSession.type = 'playback';
+        if (!ac) {
+          ac = new (window.AudioContext || window.webkitAudioContext)();
+          const comp = ac.createDynamicsCompressor(); out = ac.createGain(); out.gain.value = .9;
+          out.connect(comp).connect(ac.destination);
+          noise = ac.createBuffer(1, ac.sampleRate * .08, ac.sampleRate);
+          const d = noise.getChannelData(0); for (let i = 0; i < d.length; i++) d[i] = (Math.random() * 2 - 1) * (1 - i / d.length);
+        }
+        if (ac.state !== 'running') ac.resume();
+      } catch (e) { ac = null; }
     };
-    ['pointerdown', 'keydown', 'touchend'].forEach(ev => addEventListener(ev, unlock, { passive: true }));
+    ['pointerdown', 'mousedown', 'touchstart', 'touchend', 'keydown', 'click'].forEach(ev => addEventListener(ev, unlock, { passive: true }));
+    hint.addEventListener('click', () => { unlock(); hint.classList.remove('on'); });
     function thump(vol, f0) {
-      const t = ac.currentTime + .01, o = ac.createOscillator(), o2 = ac.createOscillator(), g = ac.createGain(), g2 = ac.createGain();
-      o.frequency.setValueAtTime(f0, t); o.frequency.exponentialRampToValueAtTime(f0 * .55, t + .16);
-      o2.frequency.setValueAtTime(f0 * 2.1, t); o2.frequency.exponentialRampToValueAtTime(f0, t + .1);
-      g.gain.setValueAtTime(.0001, t); g.gain.exponentialRampToValueAtTime(vol, t + .012); g.gain.exponentialRampToValueAtTime(.0001, t + .26);
-      g2.gain.setValueAtTime(.0001, t); g2.gain.exponentialRampToValueAtTime(vol * .35, t + .008); g2.gain.exponentialRampToValueAtTime(.0001, t + .12);
-      o.connect(g).connect(ac.destination); o2.connect(g2).connect(ac.destination);
-      o.start(t); o2.start(t); o.stop(t + .3); o2.stop(t + .3);
+      const t = ac.currentTime + .01;
+      const tone = (f, fe, dur, v, type) => {
+        const o = ac.createOscillator(), g = ac.createGain(); o.type = type || 'sine';
+        o.frequency.setValueAtTime(f, t); o.frequency.exponentialRampToValueAtTime(fe, t + dur * .6);
+        g.gain.setValueAtTime(.0001, t); g.gain.exponentialRampToValueAtTime(v, t + .01); g.gain.exponentialRampToValueAtTime(.0001, t + dur);
+        o.connect(g).connect(out); o.start(t); o.stop(t + dur + .02);
+      };
+      tone(f0, f0 * .5, .28, vol);              /* chest-deep body */
+      tone(f0 * 2.2, f0 * 1.1, .16, vol);  /* the part small speakers can play */
+      tone(f0 * 4, f0 * 2, .07, vol * .25, 'triangle');
+      const n = ac.createBufferSource(), lp = ac.createBiquadFilter(), g = ac.createGain();
+      n.buffer = noise; lp.type = 'lowpass'; lp.frequency.value = 700;
+      g.gain.setValueAtTime(vol * .6, t); g.gain.exponentialRampToValueAtTime(.0001, t + .07);
+      n.connect(lp).connect(g).connect(out); n.start(t);
     }
     function beat(T) {
       const ph = (T / .86) % 1, prev = lastPh; lastPh = ph;
-      if (!ac || ac.state !== 'running') return;
       const A = cv.width / cv.height, hx = .63 * A, hy = .2;
       let f = 0;
       for (let i = 0; i < N; i++) { const z = buf[i * 3 + 2], dx = hx - buf[i * 3] * A, dy = hy - buf[i * 3 + 1]; f += z * z * .016 / (dx * dx + dy * dy + .0006); }
-      const vol = Math.min(1, Math.max(0, (f - .8) / 1.4)) * .55;
-      if (vol < .02) return;
-      if (ph < prev) thump(vol, 72);
-      else if (prev < .2 && ph >= .2) thump(vol * .7, 84);
+      const vol = Math.min(1, Math.max(0, (f - .8) / 1.2)) * .9;
+      const live = ac && ac.state === 'running';
+      if (vol > .02 && !live && !hint.classList.contains('on')) {
+        const r = cv.getBoundingClientRect(), fr = frame.getBoundingClientRect();
+        hint.style.left = (r.left - fr.left + hx / A * r.width) + 'px';
+        hint.style.top = (r.top - fr.top + (1 - hy - .13) * r.height) + 'px';
+        hint.classList.add('on');
+      } else if ((vol <= .02 || live) && hint.classList.contains('on')) hint.classList.remove('on');
+      if (!live || vol < .02) return;
+      if (ph < prev) thump(vol, 78);
+      else if (prev < .2 && ph >= .2) thump(vol * .7, 92);
     }
     const kick = () => { if (!raf && ready) raf = requestAnimationFrame(draw); };
 
@@ -561,10 +632,8 @@ void main(){
     const start = () => {
       img.after(cv); size();
       Promise.all([img.decode ? img.decode().then(() => img) : load(img.currentSrc || img.src),
-        img.dataset.xray ? load(img.dataset.xray).catch(() => null) : null,
-        img.dataset.heart ? load(img.dataset.heart).catch(() => null) : null]).then(([p, x, hr]) => {
-        tex(0, p); gl.uniform1f(uHas, x ? 1 : 0); if (x) tex(1, x);
-        gl.uniform1f(uHasH, hr ? 1 : 0); if (hr) tex(2, hr, gl.RGBA); gl.activeTexture(gl.TEXTURE0);
+        img.dataset.xray ? load(img.dataset.xray).catch(() => null) : null]).then(([p, x]) => {
+        tex(0, p); gl.uniform1f(uHas, x ? 1 : 0); if (x) tex(1, x); gl.activeTexture(gl.TEXTURE0);
         ready = true; draw(performance.now()); frame.classList.add('xray-on');
       }).catch(() => cv.remove());
     };
